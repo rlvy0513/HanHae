@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		427C4EDD2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */; };
+		427C4EDE2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EDC2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf */; };
+		427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */; };
+		427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EE32C91CC8B00DE7844 /* Colors.xcassets */; };
 		42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F22C918A6500AB5469 /* AppDelegate.swift */; };
 		42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F42C918A6500AB5469 /* SceneDelegate.swift */; };
 		42FA31F72C918A6500AB5469 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F62C918A6500AB5469 /* ViewController.swift */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EliceDigitalBaeumOTF_Bold.otf; sourceTree = "<group>"; };
+		427C4EDC2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EliceDigitalBaeumOTF_Regular.otf; sourceTree = "<group>"; };
+		427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
+		427C4EE32C91CC8B00DE7844 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		42FA31EF2C918A6500AB5469 /* HanHae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HanHae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42FA31F22C918A6500AB5469 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42FA31F42C918A6500AB5469 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +45,64 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		427C4ED62C91C2E500DE7844 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				42FA31F62C918A6500AB5469 /* ViewController.swift */,
+				42FA32002C918A6600AB5469 /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		427C4ED72C91C2F000DE7844 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		427C4ED82C91C2F600DE7844 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		427C4ED92C91C39400DE7844 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				427C4EDA2C91C3B100DE7844 /* Fonts */,
+				42FA31FE2C918A6600AB5469 /* Assets.xcassets */,
+				427C4EE32C91CC8B00DE7844 /* Colors.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		427C4EDA2C91C3B100DE7844 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */,
+				427C4EDC2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		427C4EDF2C91C54500DE7844 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				427C4EE02C91C56100DE7844 /* Extensions */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		427C4EE02C91C56100DE7844 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		42FA31E62C918A6500AB5469 = {
 			isa = PBXGroup;
 			children = (
@@ -58,9 +124,11 @@
 			children = (
 				42FA31F22C918A6500AB5469 /* AppDelegate.swift */,
 				42FA31F42C918A6500AB5469 /* SceneDelegate.swift */,
-				42FA31F62C918A6500AB5469 /* ViewController.swift */,
-				42FA31FE2C918A6600AB5469 /* Assets.xcassets */,
-				42FA32002C918A6600AB5469 /* LaunchScreen.storyboard */,
+				427C4ED72C91C2F000DE7844 /* Models */,
+				427C4ED62C91C2E500DE7844 /* Views */,
+				427C4ED82C91C2F600DE7844 /* ViewModels */,
+				427C4EDF2C91C54500DE7844 /* Utilities */,
+				427C4ED92C91C39400DE7844 /* Resources */,
 				42FA32032C918A6600AB5469 /* Info.plist */,
 				42FA31FB2C918A6500AB5469 /* HanHae.xcdatamodeld */,
 			);
@@ -125,8 +193,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */,
 				42FA31FF2C918A6600AB5469 /* Assets.xcassets in Resources */,
 				42FA32022C918A6600AB5469 /* Base in Resources */,
+				427C4EDE2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf in Resources */,
+				427C4EDD2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +211,7 @@
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
 				42FA31F72C918A6500AB5469 /* ViewController.swift in Sources */,
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,
+				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
