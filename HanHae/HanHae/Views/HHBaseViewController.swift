@@ -14,7 +14,9 @@ class HHBaseViewController: UIViewController {
         
         updateBackgroudColor()
         
-        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, previousTraitCollection: UITraitCollection) in
+        registerForTraitChanges(
+            [UITraitUserInterfaceStyle.self]
+        ) { (self: Self, previousTraitCollection: UITraitCollection) in
             self.updateBackgroudColor()
         }
     }
@@ -38,7 +40,10 @@ class HHBaseViewController: UIViewController {
     private func setDarkBackground() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor.hhGradient1.cgColor, UIColor.hhGradient2.cgColor]
+        gradientLayer.colors = [
+            UIColor.hhGradient1.cgColor,
+            UIColor.hhGradient2.cgColor
+        ]
         
         if let sublayers = view.layer.sublayers, sublayers.contains(where: { $0 is CAGradientLayer }) {
             sublayers.first { $0 is CAGradientLayer }?.removeFromSuperlayer()
