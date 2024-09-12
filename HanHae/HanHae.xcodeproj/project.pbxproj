@@ -17,6 +17,8 @@
 		42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31FB2C918A6500AB5469 /* HanHae.xcdatamodeld */; };
 		42FA31FF2C918A6600AB5469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42FA31FE2C918A6600AB5469 /* Assets.xcassets */; };
 		42FA32022C918A6600AB5469 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 42FA32012C918A6600AB5469 /* Base */; };
+		42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC1E2C92993A002F5A4D /* SampleModel.swift */; };
+		42FBAC212C92994B002F5A4D /* SampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC202C92994B002F5A4D /* SampleViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		42FA31FE2C918A6600AB5469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		42FA32012C918A6600AB5469 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42FA32032C918A6600AB5469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42FBAC1E2C92993A002F5A4D /* SampleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleModel.swift; sourceTree = "<group>"; };
+		42FBAC202C92994B002F5A4D /* SampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,7 @@
 		427C4ED72C91C2F000DE7844 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				42FBAC1E2C92993A002F5A4D /* SampleModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -64,6 +69,7 @@
 		427C4ED82C91C2F600DE7844 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				42FBAC202C92994B002F5A4D /* SampleViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -211,8 +217,10 @@
 				427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */,
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,
+				42FBAC212C92994B002F5A4D /* SampleViewModel.swift in Sources */,
 				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
+				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
