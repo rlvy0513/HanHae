@@ -34,7 +34,7 @@ class HHBaseViewController: UIViewController {
             sublayers.first { $0 is CAGradientLayer }?.removeFromSuperlayer()
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .hhBackground
     }
     
     private func setDarkBackground() {
