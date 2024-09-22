@@ -11,12 +11,12 @@ final class YearHeaderView: UICollectionReusableView {
     
     static let identifier = "YearHeaderView"
     
-    private let yearLabel: UILabel = {
+    let yearLabel: UILabel = {
         let lb = UILabel()
         lb.textAlignment = .left
         lb.font = .hhLargeTitle
         lb.textColor = .hhText
-        lb.text = "연도 표시"
+        lb.text = "0000년"
         return lb
     }()
     

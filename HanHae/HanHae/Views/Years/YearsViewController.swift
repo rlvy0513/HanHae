@@ -9,6 +9,8 @@ import UIKit
 
 final class YearsViewController: HHBaseViewController {
     
+    private let viewModel = YearsViewModel()
+    
     private let flowLayout = UICollectionViewFlowLayout()
     private lazy var collectionView = UICollectionView(
         frame: .zero,
@@ -78,6 +80,8 @@ final class YearsViewController: HHBaseViewController {
         
         setupNavigationBar()
         setupNavigationBarButtons()
+        
+        setupData()
     }
     
     private func setupConstraints() {
@@ -139,6 +143,10 @@ final class YearsViewController: HHBaseViewController {
             [settingBarButton, changeCollectionViewLayoutBarButton],
             animated: true
         )
+    }
+    
+    private func setupData() {
+        viewModel.fetchYearsData()
     }
     
     @objc
@@ -221,6 +229,8 @@ extension YearsViewController: UICollectionViewDataSource {
             withReuseIdentifier: YearHeaderView.identifier,
             for: indexPath
         ) as! YearHeaderView
+        headerView.yearLabel.text = viewModel.getYearNumberString(index: indexPath.section)
+        headerView.yearLabel.textColor = viewModel.getLabelColor(index: indexPath.section)
         
         return headerView
     }
@@ -228,7 +238,7 @@ extension YearsViewController: UICollectionViewDataSource {
 
 extension YearsViewController: UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 79
+        return viewModel.getYearsCount()
     }
     
     func collectionView(
