@@ -51,15 +51,21 @@ final class YearsViewController: HHBaseViewController {
     
     // CollectionView layout 관련 상수
     private let collectionViewSideInset: CGFloat = 16
-    private let collectionViewCollumsCount: CGFloat = 3
+    private var collectionViewCollumsCount: CGFloat = 3
     private let collectionViewInteritemSpacing: CGFloat = 8
     private let collectionViewLineSpacing: CGFloat = 8
+    private lazy var collectionViewEdgeInsets = UIEdgeInsets(
+        top: 10,
+        left: collectionViewSideInset,
+        bottom: 30,
+        right: collectionViewSideInset
+    )
     
     private lazy var cellWidth = ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount
     private lazy var cellHeight = cellWidth
     
     private var isSingleColumn = false
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,12 +105,7 @@ final class YearsViewController: HHBaseViewController {
     
     private func setupCollectionViewLayout() {
         flowLayout.scrollDirection = .vertical
-        flowLayout.sectionInset = UIEdgeInsets(
-            top: 10,
-            left: collectionViewSideInset,
-            bottom: 30,
-            right: collectionViewSideInset
-        )
+        flowLayout.sectionInset = collectionViewEdgeInsets
         
         flowLayout.itemSize = CGSize(
             width: cellWidth,
@@ -147,11 +148,42 @@ final class YearsViewController: HHBaseViewController {
             self.changeCollectionViewLayoutButton.tintColor = self.isSingleColumn ? .white : .hhAccent
             self.changeCollectionViewLayoutButton.backgroundColor = self.isSingleColumn ? .hhAccent : .clear
         }
+        
+        changeCollectionViewLayout()
     }
     
     @objc
     private func settingBarButtonTapped() {
         
+    }
+    
+    private func changeCollectionViewLayout() {
+        let newFlowLayout = UICollectionViewFlowLayout()
+        newFlowLayout.minimumInteritemSpacing = collectionViewInteritemSpacing
+        newFlowLayout.sectionInset = collectionViewEdgeInsets
+        
+        if isSingleColumn {
+            collectionViewCollumsCount = 1
+            
+            newFlowLayout.minimumLineSpacing = 14
+            newFlowLayout.itemSize = CGSize(
+                width: ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount,
+                // TODO: - 셀의 높이는 content에 따라 유동적으로 변하는 방식으로 변경 필요
+                height: 100
+            )
+        } else {
+            collectionViewCollumsCount = 3
+            
+            newFlowLayout.minimumLineSpacing = collectionViewLineSpacing
+            newFlowLayout.itemSize = CGSize(
+                width: ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount,
+                height: cellWidth
+            )
+        }
+        
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.setCollectionViewLayout(newFlowLayout, animated: true)
+        }
     }
     
 }
