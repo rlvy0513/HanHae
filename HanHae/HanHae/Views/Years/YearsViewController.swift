@@ -15,6 +15,40 @@ final class YearsViewController: HHBaseViewController {
         collectionViewLayout: flowLayout
     )
     
+    private lazy var moveThisMonthBarButton: UIBarButtonItem = {
+        let barBtn = UIBarButtonItem(
+            title: "이번 달",
+            style: .plain,
+            target: self,
+            action: #selector(moveThisMonthBarButtonTapped)
+        )
+        barBtn.tintColor = .hhAccent
+        barBtn.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.hhBody], for: .normal)
+        barBtn.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.hhBody], for: .highlighted)
+        return barBtn
+    }()
+    
+    private lazy var changeCollectionViewLayoutButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setImage(UIImage(systemName: "rectangle.grid.1x2"), for: .normal)
+        btn.tintColor = .hhAccent
+        btn.addTarget(self, action: #selector(changeCollectionViewLayoutButtonTapped), for: .touchUpInside)
+        btn.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        btn.layer.cornerRadius = 4
+        return btn
+    }()
+    
+    private lazy var settingBarButton: UIBarButtonItem = {
+        let barBtn = UIBarButtonItem(
+            image: UIImage(systemName: "gearshape"),
+            style: .plain,
+            target: self,
+            action: #selector(settingBarButtonTapped)
+        )
+        barBtn.tintColor = .hhAccent
+        return barBtn
+    }()
+    
     // CollectionView layout 관련 상수
     private let collectionViewSideInset: CGFloat = 16
     private let collectionViewCollumsCount: CGFloat = 3
@@ -23,6 +57,8 @@ final class YearsViewController: HHBaseViewController {
     
     private lazy var cellWidth = ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount
     private lazy var cellHeight = cellWidth
+    
+    private var isSingleColumn = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +69,9 @@ final class YearsViewController: HHBaseViewController {
         
         setupCollectionView()
         setupCollectionViewLayout()
+        
+        setupNavigationBar()
+        setupNavigationBarButtons()
     }
     
     private func setupConstraints() {
@@ -75,6 +114,46 @@ final class YearsViewController: HHBaseViewController {
         flowLayout.minimumInteritemSpacing = collectionViewInteritemSpacing
         flowLayout.minimumLineSpacing = collectionViewLineSpacing
     }
+    
+    // TODO: - 효과가 있는지 체크
+    private func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+    
+    private func setupNavigationBarButtons() {
+        let changeCollectionViewLayoutBarButton = UIBarButtonItem(customView: changeCollectionViewLayoutButton)
+        
+        navigationItem.setLeftBarButton(moveThisMonthBarButton, animated: true)
+        navigationItem.setRightBarButtonItems(
+            [settingBarButton, changeCollectionViewLayoutBarButton],
+            animated: true
+        )
+    }
+    
+    @objc
+    private func moveThisMonthBarButtonTapped() {
+        
+    }
+    
+    @objc
+    private func changeCollectionViewLayoutButtonTapped() {
+        isSingleColumn.toggle()
+        
+        UIView.animate(withDuration: 0.4) {
+            self.changeCollectionViewLayoutButton.tintColor = self.isSingleColumn ? .white : .hhAccent
+            self.changeCollectionViewLayoutButton.backgroundColor = self.isSingleColumn ? .hhAccent : .clear
+        }
+    }
+    
+    @objc
+    private func settingBarButtonTapped() {
+        
+    }
+    
 }
 
 extension YearsViewController: UICollectionViewDataSource {
