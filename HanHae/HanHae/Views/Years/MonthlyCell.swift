@@ -36,4 +36,5 @@ final class MonthlyCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
     }
+    
 }
