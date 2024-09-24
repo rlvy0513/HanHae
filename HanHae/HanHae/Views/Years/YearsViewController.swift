@@ -202,12 +202,14 @@ final class YearsViewController: HHBaseViewController {
     
 }
 
+
+// MARK: - UICollectionViewDataSource
 extension YearsViewController: UICollectionViewDataSource {
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return 12
+        return viewModel.getMonthsCount()
     }
     
     func collectionView(
@@ -215,6 +217,18 @@ extension YearsViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
+        cell.monthLabel.text = viewModel.getMonthLabelText(
+            yeariIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        cell.monthLabel.textColor = viewModel.getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        ).color
+        cell.monthLabel.font = viewModel.getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        ).font
         
         return cell
     }
@@ -229,13 +243,15 @@ extension YearsViewController: UICollectionViewDataSource {
             withReuseIdentifier: YearHeaderView.identifier,
             for: indexPath
         ) as! YearHeaderView
-        headerView.yearLabel.text = viewModel.getYearNumberString(index: indexPath.section)
-        headerView.yearLabel.textColor = viewModel.getLabelColor(index: indexPath.section)
+        headerView.yearLabel.text = viewModel.getYearLabelText(index: indexPath.section)
+        headerView.yearLabel.textColor = viewModel.getYearLabelColor(index: indexPath.section)
         
         return headerView
     }
 }
 
+
+// MARK: - UICollectionViewDelegateFlowLayout
 extension YearsViewController: UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel.getYearsCount()

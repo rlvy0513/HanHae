@@ -19,6 +19,7 @@ final class YearsViewModel {
         return calendar
     }()
     var now = Date()
+    lazy var yearOfNow = calendar.component(.year, from: now)
     
     // MARK: - input
     
@@ -27,18 +28,34 @@ final class YearsViewModel {
         return years.count
     }
     
-    func getYearNumberString(index: Int) -> String {
+    func getMonthsCount() -> Int {
+        return 12
+    }
+    
+    func getYearLabelText(index: Int) -> String {
         return "\(years[index].year)년"
     }
     
-    // 추후 월에도 색상 적용할지 확인 필요
-    func getLabelColor(index: Int) -> UIColor {
-        let yearOfNow = calendar.component(.year, from: now)
-        
+    func getMonthLabelText(yeariIndex: Int, monthIndex: Int) -> String {
+        return "\(years[yeariIndex].months[monthIndex].month)월"
+    }
+    
+    func getYearLabelColor(index: Int) -> UIColor {
         if yearOfNow == years[index].year {
             return UIColor.hhAccent
         } else {
             return UIColor.hhText
+        }
+    }
+    
+    func getMonthLabelStyle(yearIndex: Int, monthIndex: Int) -> (color: UIColor, font: UIFont) {
+        let monthOfNow = calendar.component(.month, from: now)
+        
+        if yearOfNow == years[yearIndex].year,
+           monthOfNow == years[yearIndex].months[monthIndex].month {
+            return (UIColor.hhAccent, UIFont.hhHeadLine)
+        } else {
+            return (UIColor.hhText, UIFont.hhBody)
         }
     }
     
@@ -51,7 +68,7 @@ final class YearsViewModel {
         let buyIPhone = ToDo(title: "아이폰 16 Pro 구매하기")
         let getLicense = ToDo(title: "컴퓨터 자격증 따기", note: "엑셀, 파워포인트", priority: 1)
         let doDiet = ToDo(title: "다이어트 하기")
-
+        
         for year in yearNumbers {
             let jan = HHMonth(year: year, month: 1)
             let feb = HHMonth(year: year, month: 2, monthlyComment: "2월이 시작되었습니다.", toDoList: [goToJeju, getLicense, doDiet])

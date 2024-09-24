@@ -11,7 +11,7 @@ final class MonthlyCell: UICollectionViewCell {
     
     static let identifier = "MonthlyCell"
     
-    private let monthLabel: UILabel = {
+    let monthLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = .hhText
         lb.textAlignment = .left
@@ -20,7 +20,7 @@ final class MonthlyCell: UICollectionViewCell {
         return lb
     }()
     
-    private let percentNumberLabel: UILabel = {
+    let percentNumberLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = .hhText
         lb.textAlignment = .right
@@ -45,7 +45,7 @@ final class MonthlyCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let toDoCountLabel: UILabel = {
+    let toDoCountLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = .hhLightGray
         lb.textAlignment = .right
