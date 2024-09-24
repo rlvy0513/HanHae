@@ -96,7 +96,7 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func setupCollectionView() {
-        collectionView.dataSource = self
+        collectionView.dataSource = viewModel
         collectionView.delegate = self
         
         collectionView.backgroundColor = .clear
@@ -136,13 +136,11 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func setupNavigationBarButtons() {
-        let changeCollectionViewLayoutBarButton = UIBarButtonItem(customView: changeCollectionViewLayoutButton)
+        let leftButton = moveThisMonthBarButton
+        let rightButtons = [settingBarButton, UIBarButtonItem(customView: changeCollectionViewLayoutButton)]
         
-        navigationItem.setLeftBarButton(moveThisMonthBarButton, animated: true)
-        navigationItem.setRightBarButtonItems(
-            [settingBarButton, changeCollectionViewLayoutBarButton],
-            animated: true
-        )
+        navigationItem.setLeftBarButton(leftButton, animated: true)
+        navigationItem.setRightBarButtonItems(rightButtons, animated: true)
     }
     
     private func setupData() {
@@ -203,60 +201,7 @@ final class YearsViewController: HHBaseViewController {
 }
 
 
-// MARK: - UICollectionViewDataSource
-extension YearsViewController: UICollectionViewDataSource {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        return viewModel.getMonthsCount()
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
-        cell.monthLabel.text = viewModel.getMonthLabelText(
-            yeariIndex: indexPath.section,
-            monthIndex: indexPath.row
-        )
-        cell.monthLabel.textColor = viewModel.getMonthLabelStyle(
-            yearIndex: indexPath.section,
-            monthIndex: indexPath.row
-        ).color
-        cell.monthLabel.font = viewModel.getMonthLabelStyle(
-            yearIndex: indexPath.section,
-            monthIndex: indexPath.row
-        ).font
-        
-        return cell
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        viewForSupplementaryElementOfKind kind: String,
-        at indexPath: IndexPath
-    ) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: YearHeaderView.identifier,
-            for: indexPath
-        ) as! YearHeaderView
-        headerView.yearLabel.text = viewModel.getYearLabelText(index: indexPath.section)
-        headerView.yearLabel.textColor = viewModel.getYearLabelColor(index: indexPath.section)
-        
-        return headerView
-    }
-}
-
-
-// MARK: - UICollectionViewDelegateFlowLayout
 extension YearsViewController: UICollectionViewDelegateFlowLayout {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return viewModel.getYearsCount()
-    }
-    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

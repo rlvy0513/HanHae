@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class YearsViewModel {
+final class YearsViewModel: NSObject {
     
     // MARK: - data
     var years: [HHYear] = []
@@ -20,18 +20,11 @@ final class YearsViewModel {
     }()
     var now = Date()
     lazy var yearOfNow = calendar.component(.year, from: now)
+    lazy var monthOfNow = calendar.component(.month, from: now)
     
     // MARK: - input
     
     // MARK: - ouput
-    func getYearsCount() -> Int {
-        return years.count
-    }
-    
-    func getMonthsCount() -> Int {
-        return 12
-    }
-    
     func getYearLabelText(index: Int) -> String {
         return "\(years[index].year)년"
     }
@@ -49,8 +42,6 @@ final class YearsViewModel {
     }
     
     func getMonthLabelStyle(yearIndex: Int, monthIndex: Int) -> (color: UIColor, font: UIFont) {
-        let monthOfNow = calendar.component(.month, from: now)
-        
         if yearOfNow == years[yearIndex].year,
            monthOfNow == years[yearIndex].months[monthIndex].month {
             return (UIColor.hhAccent, UIFont.hhHeadLine)
@@ -92,3 +83,52 @@ final class YearsViewModel {
 }
 
 
+extension YearsViewModel: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return years.count
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        return 12
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
+        cell.monthLabel.text = getMonthLabelText(
+            yeariIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        cell.monthLabel.textColor = getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        ).color
+        cell.monthLabel.font = getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        ).font
+        
+        return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: YearHeaderView.identifier,
+            for: indexPath
+        ) as! YearHeaderView
+        headerView.yearLabel.text = getYearLabelText(index: indexPath.section)
+        headerView.yearLabel.textColor = getYearLabelColor(index: indexPath.section)
+        
+        return headerView
+    }
+}
