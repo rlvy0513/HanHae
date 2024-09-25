@@ -10,17 +10,17 @@ import UIKit
 final class YearsViewModel: NSObject {
     
     // MARK: - data
-    var years: [HHYear] = []
+    private var years: [HHYear] = []
     
-    var calendar: Calendar = {
+    private var calendar: Calendar = {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "ko_KR")
         calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
         return calendar
     }()
-    var now = Date()
-    lazy var yearOfNow = calendar.component(.year, from: now)
-    lazy var monthOfNow = calendar.component(.month, from: now)
+    private var now = Date()
+    private lazy var yearOfNow = calendar.component(.year, from: now)
+    private lazy var monthOfNow = calendar.component(.month, from: now)
     
     // MARK: - input
     
@@ -50,14 +50,39 @@ final class YearsViewModel: NSObject {
         }
     }
     
+    func getNumericLabelText(yearIndex: Int, monthIndex: Int) -> (toDoCount: String, percent: String) {
+        let toDoList = getMonthlyTDL(yearIndex: yearIndex, monthIndex: monthIndex)
+        let toDoListCount = toDoList.count
+        let completedToDoListCount = toDoList.filter { $0.isCompleted == true }.count
+        
+        let toDoCountString: String
+        let percentString: String
+        
+        if !toDoList.isEmpty {
+            toDoCountString = "\(completedToDoListCount) / \(toDoListCount)"
+            
+            if completedToDoListCount == 0 {
+                percentString = "0"
+            } else {
+                let percentNumber = (Double(completedToDoListCount) / Double(toDoListCount)) * 100
+                percentString = String(format: "%.0f", percentNumber)
+            }
+        } else {
+            toDoCountString = "- / -"
+            percentString = "--"
+        }
+        
+        return (toDoCountString, percentString)
+    }
+    
     // MARK: - logic
     func fetchYearsData() {
         // MARK: - 샘플 데이터
         let yearNumbers = 2020...2099
         
         let goToJeju = ToDo(title: "제주도 여행가기", note: "13일 ~ 15일까지", priority: 0)
-        let buyIPhone = ToDo(title: "아이폰 16 Pro 구매하기")
-        let getLicense = ToDo(title: "컴퓨터 자격증 따기", note: "엑셀, 파워포인트", priority: 1)
+        let buyIPhone = ToDo(title: "아이폰 16 Pro 구매하기", isCompleted: true)
+        let getLicense = ToDo(title: "컴퓨터 자격증 따기", note: "엑셀, 파워포인트", isCompleted: true, priority: 1)
         let doDiet = ToDo(title: "다이어트 하기")
         
         for year in yearNumbers {
@@ -80,6 +105,10 @@ final class YearsViewModel: NSObject {
         }
     }
     
+    private func getMonthlyTDL(yearIndex: Int, monthIndex: Int) -> [ToDo]{
+        return years[yearIndex].months[monthIndex].toDoList
+    }
+    
 }
 
 
@@ -100,18 +129,25 @@ extension YearsViewModel: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
+        
+        let monthLabelStyle = getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        
         cell.monthLabel.text = getMonthLabelText(
             yeariIndex: indexPath.section,
             monthIndex: indexPath.row
         )
-        cell.monthLabel.textColor = getMonthLabelStyle(
+        cell.monthLabel.textColor = monthLabelStyle.color
+        cell.monthLabel.font = monthLabelStyle.font
+        
+        let numericLabelText = getNumericLabelText(
             yearIndex: indexPath.section,
             monthIndex: indexPath.row
-        ).color
-        cell.monthLabel.font = getMonthLabelStyle(
-            yearIndex: indexPath.section,
-            monthIndex: indexPath.row
-        ).font
+        )
+        cell.percentNumberLabel.text = numericLabelText.percent
+        cell.toDoCountLabel.text = numericLabelText.toDoCount
         
         return cell
     }
