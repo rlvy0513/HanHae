@@ -96,7 +96,7 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func setupCollectionView() {
-        collectionView.dataSource = viewModel
+        collectionView.dataSource = self
         collectionView.delegate = self
         
         collectionView.backgroundColor = .clear
@@ -208,5 +208,63 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
+    }
+}
+
+
+extension YearsViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return viewModel.getYearsCount()
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        return 12
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
+        
+        let monthLabelStyle = viewModel.getMonthLabelStyle(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        
+        cell.monthLabel.text = viewModel.getMonthLabelText(
+            yeariIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        cell.monthLabel.textColor = monthLabelStyle.color
+        cell.monthLabel.font = monthLabelStyle.font
+        
+        let numericLabelText = viewModel.getNumericLabelText(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
+        )
+        cell.percentNumberLabel.text = numericLabelText.percent
+        cell.toDoCountLabel.text = numericLabelText.toDoCount
+        
+        return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: YearHeaderView.identifier,
+            for: indexPath
+        ) as! YearHeaderView
+        headerView.yearLabel.text = viewModel.getYearLabelText(index: indexPath.section)
+        headerView.yearLabel.textColor = viewModel.getYearLabelColor(index: indexPath.section)
+        
+        return headerView
     }
 }
