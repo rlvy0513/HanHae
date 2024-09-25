@@ -162,6 +162,12 @@ final class YearsViewController: HHBaseViewController {
         }
         
         changeCollectionViewLayout()
+        
+        for indexPath in collectionView.indexPathsForVisibleItems {
+            let cell = collectionView.cellForItem(at: indexPath) as! MonthlyCell
+            
+            cell.changeMonthlyCellLayout(isSingleColumn: isSingleColumn)
+        }
     }
     
     @objc
@@ -248,6 +254,8 @@ extension YearsViewController: UICollectionViewDataSource {
         )
         cell.percentNumberLabel.text = numericLabelText.percent
         cell.toDoCountLabel.text = numericLabelText.toDoCount
+        
+        cell.changeMonthlyCellLayout(isSingleColumn: isSingleColumn)
         
         return cell
     }
