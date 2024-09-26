@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		421FA13B2C930C7800207006 /* YearSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FA13A2C930C7800207006 /* YearSampleViewController.swift */; };
 		421FA13D2C930C9900207006 /* MonthSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FA13C2C930C9900207006 /* MonthSampleViewController.swift */; };
 		4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223B9652CA02CA600BD9708 /* YearsViewModel.swift */; };
 		42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42322B422C9F12AA008C54FD /* MonthlyCell.swift */; };
@@ -23,14 +22,12 @@
 		42FA31FF2C918A6600AB5469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42FA31FE2C918A6600AB5469 /* Assets.xcassets */; };
 		42FA32022C918A6600AB5469 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 42FA32012C918A6600AB5469 /* Base */; };
 		42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC1E2C92993A002F5A4D /* SampleModel.swift */; };
-		42FBAC212C92994B002F5A4D /* SampleYearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC202C92994B002F5A4D /* SampleYearsViewModel.swift */; };
 		42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */; };
 		42FD5ADB2C9C195100B1AF81 /* SampleMonthsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADA2C9C195100B1AF81 /* SampleMonthsViewModel.swift */; };
 		42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		421FA13A2C930C7800207006 /* YearSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearSampleViewController.swift; sourceTree = "<group>"; };
 		421FA13C2C930C9900207006 /* MonthSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthSampleViewController.swift; sourceTree = "<group>"; };
 		4223B9652CA02CA600BD9708 /* YearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewModel.swift; sourceTree = "<group>"; };
 		42322B422C9F12AA008C54FD /* MonthlyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCell.swift; sourceTree = "<group>"; };
@@ -48,7 +45,6 @@
 		42FA32012C918A6600AB5469 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42FA32032C918A6600AB5469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42FBAC1E2C92993A002F5A4D /* SampleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleModel.swift; sourceTree = "<group>"; };
-		42FBAC202C92994B002F5A4D /* SampleYearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleYearsViewModel.swift; sourceTree = "<group>"; };
 		42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HHBaseViewController.swift; sourceTree = "<group>"; };
 		42FD5ADA2C9C195100B1AF81 /* SampleMonthsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMonthsViewModel.swift; sourceTree = "<group>"; };
 		42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
@@ -76,7 +72,6 @@
 		421FA1392C930C4E00207006 /* Years */ = {
 			isa = PBXGroup;
 			children = (
-				421FA13A2C930C7800207006 /* YearSampleViewController.swift */,
 				42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */,
 				42322B422C9F12AA008C54FD /* MonthlyCell.swift */,
 				42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */,
@@ -183,7 +178,6 @@
 		42FD5AD82C9C194000B1AF81 /* Years */ = {
 			isa = PBXGroup;
 			children = (
-				42FBAC202C92994B002F5A4D /* SampleYearsViewModel.swift */,
 				4223B9652CA02CA600BD9708 /* YearsViewModel.swift */,
 			);
 			path = Years;
@@ -273,10 +267,8 @@
 				427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */,
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,
-				42FBAC212C92994B002F5A4D /* SampleYearsViewModel.swift in Sources */,
 				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
-				421FA13B2C930C7800207006 /* YearSampleViewController.swift in Sources */,
 				42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */,
 				42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */,
 				4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */,
