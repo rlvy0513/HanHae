@@ -78,7 +78,6 @@ final class YearsViewController: HHBaseViewController {
         setupCollectionView()
         setupCollectionViewLayout()
         
-        setupNavigationBar()
         setupNavigationBarButtons()
         
         setupData()
@@ -126,15 +125,6 @@ final class YearsViewController: HHBaseViewController {
         flowLayout.minimumLineSpacing = collectionViewLineSpacing
     }
     
-    // TODO: - 효과가 있는지 체크
-    private func setupNavigationBar() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    }
-    
     private func setupNavigationBarButtons() {
         let leftButton = moveThisMonthBarButton
         let rightButtons = [settingBarButton, UIBarButtonItem(customView: changeCollectionViewLayoutButton)]
@@ -163,6 +153,7 @@ final class YearsViewController: HHBaseViewController {
         
         changeCollectionViewLayout()
         
+        // 현재 보여지고 있는 Cell의 Layout도 변경해주는 코드
         for indexPath in collectionView.indexPathsForVisibleItems {
             let cell = collectionView.cellForItem(at: indexPath) as! MonthlyCell
             
@@ -182,21 +173,10 @@ final class YearsViewController: HHBaseViewController {
         
         if isSingleColumn {
             collectionViewCollumsCount = 1
-            
             newFlowLayout.minimumLineSpacing = 14
-            newFlowLayout.itemSize = CGSize(
-                width: ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount,
-                // TODO: - 셀의 높이는 content에 따라 유동적으로 변하는 방식으로 변경 필요
-                height: 100
-            )
         } else {
             collectionViewCollumsCount = 3
-            
             newFlowLayout.minimumLineSpacing = collectionViewLineSpacing
-            newFlowLayout.itemSize = CGSize(
-                width: ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount,
-                height: cellWidth
-            )
         }
         
         UIView.animate(withDuration: 0.4) {
@@ -215,6 +195,61 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let calculatedWidth = ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount
+        
+        if isSingleColumn {
+            let toDoList = viewModel.getMonthlyTDL(
+                yearIndex: indexPath.section,
+                monthIndex: indexPath.row
+            )
+            let estimatedHeight = calculateHeightForToDoList(toDoList: toDoList)
+            
+            return CGSize(
+                width: calculatedWidth,
+                height: estimatedHeight
+            )
+        } else {
+            return CGSize(
+                width: calculatedWidth,
+                height: cellWidth
+            )
+        }
+    }
+    
+    private func calculateHeightForToDoList(toDoList: [ToDo]) -> CGFloat {
+        if toDoList.isEmpty {
+            return 72
+        } else {
+            let totalHeight = toDoList.reduce(39) { (currentHeight, toDo) -> CGFloat in
+                let toDoHeight = calculateHeightForText(toDo.title)
+                return currentHeight + toDoHeight + 8
+            }
+            
+            return totalHeight
+        }
+    }
+    
+    private func calculateHeightForText(_ text: String) -> CGFloat {
+        let maxWidth = (UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - 24 - 8 - 20
+        let boundingRect = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
+        let attributes: [NSAttributedString.Key: Any] = [.font: UIFont.hhBody]
+        
+        let height = text.boundingRect(
+            with: boundingRect,
+            options: [.usesLineFragmentOrigin],
+            attributes: attributes,
+            context: nil
+        ).height
+        
+        return ceil(height)
+    }
+    
 }
 
 
@@ -256,6 +291,13 @@ extension YearsViewController: UICollectionViewDataSource {
         cell.toDoCountLabel.text = numericLabelText.toDoCount
         
         cell.changeMonthlyCellLayout(isSingleColumn: isSingleColumn)
+        
+        cell.viewModel = TestMonthlyTDLViewModel(
+            toDoList: viewModel.getMonthlyTDL(
+                yearIndex: indexPath.section,
+                monthIndex: indexPath.row
+            )
+        )
         
         return cell
     }

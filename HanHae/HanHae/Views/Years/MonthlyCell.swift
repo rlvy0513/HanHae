@@ -11,6 +11,12 @@ final class MonthlyCell: UICollectionViewCell {
     
     static let identifier = "MonthlyCell"
     
+    var viewModel: TestMonthlyTDLViewModel? {
+        didSet {
+            bindViewModel()
+        }
+    }
+    
     let monthLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = .hhText
@@ -76,14 +82,32 @@ final class MonthlyCell: UICollectionViewCell {
         return stackView
     }()
     
+    let toDoEmptyLabel: UILabel = {
+        let lb = UILabel()
+        lb.text = "해당 월의 목표가 없습니다."
+        lb.textColor = .hhLightGray
+        lb.font = .hhBody
+        lb.textAlignment = .left
+        lb.numberOfLines = 0
+        return lb
+    }()
+    
+    lazy var toDoListStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.alignment = .leading
+        return stackView
+    }()
+    
     // 값이 변경될 제약
     private var monthLabelTopConstraint: NSLayoutConstraint!
-    private var toDoCountStackTopConstraint: NSLayoutConstraint!
-    private var toDoCountStackBottomConstraint: NSLayoutConstraint!
-    private var percentStackTopConstraint: NSLayoutConstraint!
-    private var percentStackBottomConstraint: NSLayoutConstraint!
-    private var percentStackTrailingConstraintForMultiColumns: NSLayoutConstraint!
-    private var percentStackTrailingConstraintForSingleColumn: NSLayoutConstraint!
+    private var toDoCountStackViewTopConstraint: NSLayoutConstraint!
+    private var toDoCountStackViewBottomConstraint: NSLayoutConstraint!
+    private var percentStackViewTopConstraint: NSLayoutConstraint!
+    private var percentStackViewBottomConstraint: NSLayoutConstraint!
+    private var percentStackViewTrailingConstraintForMultiColumns: NSLayoutConstraint!
+    private var percentStackViewTrailingConstraintForSingleColumn: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -128,24 +152,24 @@ final class MonthlyCell: UICollectionViewCell {
         
         monthLabelTopConstraint = monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8)
         
-        toDoCountStackTopConstraint = toDoCountStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
-        toDoCountStackBottomConstraint = toDoCountStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+        toDoCountStackViewTopConstraint = toDoCountStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+        toDoCountStackViewBottomConstraint = toDoCountStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         
-        percentStackTopConstraint = percentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
-        percentStackBottomConstraint = percentStackView.bottomAnchor.constraint(equalTo: toDoCountStackView.topAnchor)
-        percentStackTrailingConstraintForMultiColumns = percentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12)
-        percentStackTrailingConstraintForSingleColumn = percentStackView.trailingAnchor.constraint(equalTo: toDoCountStackView.leadingAnchor, constant: -8)
+        percentStackViewTopConstraint = percentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+        percentStackViewBottomConstraint = percentStackView.bottomAnchor.constraint(equalTo: toDoCountStackView.topAnchor)
+        percentStackViewTrailingConstraintForMultiColumns = percentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12)
+        percentStackViewTrailingConstraintForSingleColumn = percentStackView.trailingAnchor.constraint(equalTo: toDoCountStackView.leadingAnchor, constant: -8)
         
         
         NSLayoutConstraint.activate([
             monthLabelTopConstraint,
             monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             
-            toDoCountStackBottomConstraint,
+            toDoCountStackViewBottomConstraint,
             toDoCountStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             
-            percentStackBottomConstraint,
-            percentStackTrailingConstraintForMultiColumns,
+            percentStackViewBottomConstraint,
+            percentStackViewTrailingConstraintForMultiColumns,
             
             toDoCountSymbolImageView.heightAnchor.constraint(equalToConstant: toDoCountLabel.font.lineHeight)
         ])
@@ -156,8 +180,9 @@ final class MonthlyCell: UICollectionViewCell {
         changePercentNumberLabel(isSingleColumn: isSingleColumn)
         changePercentSymbolLabel(isSingleColumn: isSingleColumn)
         changeToDoCountLabel(isSingleColumn: isSingleColumn)
-        changeToDoCountStack(isSingleColumn: isSingleColumn)
-        changePercentStack(isSingleColumn: isSingleColumn)
+        changeToDoCountStackView(isSingleColumn: isSingleColumn)
+        changePercentStackView(isSingleColumn: isSingleColumn)
+        changeToDoListStackView(isSingleColumn: isSingleColumn)
         
         UIView.animate(withDuration: 0.4) {
             self.layoutIfNeeded()
@@ -203,29 +228,94 @@ final class MonthlyCell: UICollectionViewCell {
         }
     }
     
-    private func changeToDoCountStack(isSingleColumn: Bool) {
-        NSLayoutConstraint.deactivate([toDoCountStackTopConstraint, toDoCountStackBottomConstraint])
+    private func changeToDoCountStackView(isSingleColumn: Bool) {
+        NSLayoutConstraint.deactivate([toDoCountStackViewTopConstraint, toDoCountStackViewBottomConstraint])
         
         if isSingleColumn {
-            NSLayoutConstraint.activate([toDoCountStackTopConstraint])
+            NSLayoutConstraint.activate([toDoCountStackViewTopConstraint])
         } else {
-            NSLayoutConstraint.activate([toDoCountStackBottomConstraint])
+            NSLayoutConstraint.activate([toDoCountStackViewBottomConstraint])
         }
     }
     
-    private func changePercentStack(isSingleColumn: Bool) {
+    private func changePercentStackView(isSingleColumn: Bool) {
         NSLayoutConstraint.deactivate([
-            percentStackTopConstraint,
-            percentStackBottomConstraint,
-            percentStackTrailingConstraintForSingleColumn,
-            percentStackTrailingConstraintForMultiColumns
+            percentStackViewTopConstraint,
+            percentStackViewBottomConstraint,
+            percentStackViewTrailingConstraintForSingleColumn,
+            percentStackViewTrailingConstraintForMultiColumns
         ])
         
         if isSingleColumn {
-            NSLayoutConstraint.activate([percentStackTopConstraint, percentStackTrailingConstraintForSingleColumn])
+            NSLayoutConstraint.activate([
+                percentStackViewTopConstraint,
+                percentStackViewTrailingConstraintForSingleColumn
+            ])
         } else {
-            NSLayoutConstraint.activate([percentStackBottomConstraint, percentStackTrailingConstraintForMultiColumns])
+            NSLayoutConstraint.activate([
+                percentStackViewBottomConstraint,
+                percentStackViewTrailingConstraintForMultiColumns
+            ])
         }
+    }
+    
+    private func changeToDoListStackView(isSingleColumn: Bool) {
+        if isSingleColumn {
+            if toDoListStackView.superview == nil {
+                contentView.addSubview(toDoListStackView)
+                setupToDoListStackViewConstraints()
+            }
+        } else {
+            toDoListStackView.removeFromSuperview()
+        }
+    }
+    
+    private func setupToDoListStackViewConstraints() {
+        toDoListStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            toDoListStackView.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 5),
+            toDoListStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            toDoListStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12)
+        ])
+    }
+    
+    private func bindViewModel() {
+        guard let viewModel = viewModel else { return }
+        
+        toDoListStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        if viewModel.toDoList.isEmpty {
+            toDoListStackView.addArrangedSubview(toDoEmptyLabel)
+        } else {
+            for toDo in viewModel.toDoList {
+                toDoListStackView.addArrangedSubview(createToDoStackView(for: toDo))
+            }
+        }
+    }
+    
+    private func createToDoStackView(for toDo: ToDo) -> UIStackView {
+        let checkBoxImageView = UIImageView(image: UIImage(systemName: toDo.isCompleted ? "checkmark.square.fill" : "square"))
+        checkBoxImageView.tintColor = .hhAccent
+        checkBoxImageView.contentMode = .scaleAspectFill
+        
+        let titleLabel = UILabel()
+        titleLabel.text = toDo.title
+        titleLabel.textColor = .hhText
+        titleLabel.font = .hhBody
+        titleLabel.textAlignment = .left
+        titleLabel.numberOfLines = 0
+        titleLabel.lineBreakMode = .byCharWrapping
+        
+        let toDoStackView = UIStackView(arrangedSubviews: [checkBoxImageView, titleLabel])
+        toDoStackView.axis = .horizontal
+        toDoStackView.spacing = 8
+        toDoStackView.alignment = .top
+        
+        checkBoxImageView.translatesAutoresizingMaskIntoConstraints = false
+        checkBoxImageView.heightAnchor.constraint(equalToConstant: titleLabel.font.lineHeight).isActive = true
+        
+        return toDoStackView
     }
     
 }
