@@ -19,8 +19,12 @@ final class YearsViewModel {
         return calendar
     }()
     private var now = Date()
-    private lazy var yearOfNow = calendar.component(.year, from: now)
-    private lazy var monthOfNow = calendar.component(.month, from: now)
+    var yearOfNow: Int {
+        calendar.component(.year, from: now)
+    }
+    var monthOfNow: Int {
+        calendar.component(.month, from: now)
+    }
     
     // MARK: - input
     
@@ -81,7 +85,7 @@ final class YearsViewModel {
     
     // MARK: - logic
     func fetchYearsData() {
-        // MARK: - 샘플 데이터
+        // MARK: 샘플 데이터
         let yearNumbers = 2020...2099
         
         let goToJeju = ToDo(title: "제주도 여행가기", note: "13일 ~ 15일까지", priority: 0)
@@ -112,6 +116,12 @@ final class YearsViewModel {
     
     func getMonthlyTDL(yearIndex: Int, monthIndex: Int) -> [ToDo] {
         return years[yearIndex].months[monthIndex].toDoList
+    }
+    
+    func getScrollIndexPath(atYear: Int, atMonth: Int) -> IndexPath {
+        let section = atYear - 2020
+        let item = atMonth - 1
+        return IndexPath(item: item, section: section)
     }
     
 }

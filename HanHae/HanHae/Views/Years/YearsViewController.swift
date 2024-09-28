@@ -139,7 +139,7 @@ final class YearsViewController: HHBaseViewController {
     
     @objc
     private func moveThisMonthBarButtonTapped() {
-        
+        scrollCollectionView(atYear: viewModel.yearOfNow, atMonth: viewModel.monthOfNow)
     }
     
     @objc
@@ -181,6 +181,32 @@ final class YearsViewController: HHBaseViewController {
         
         UIView.animate(withDuration: 0.4) {
             self.collectionView.setCollectionViewLayout(newFlowLayout, animated: true)
+        }
+    }
+    
+    private func scrollCollectionView(atYear: Int, atMonth: Int) {
+        let indexPath = viewModel.getScrollIndexPath(atYear: atYear, atMonth: atMonth)
+        
+        if isSingleColumn {
+            if let attributes = collectionView.layoutAttributesForItem(at: indexPath) {
+                var cellFrame = attributes.frame
+                cellFrame.size.height = view.safeAreaLayoutGuide.layoutFrame.height
+                cellFrame.origin.y -= 14
+                
+                collectionView.scrollRectToVisible(cellFrame, animated: true)
+            }
+        } else {
+            let headerIndexPath = IndexPath(item: 0, section: indexPath.section)
+            
+            if let layoutAttributes = collectionView.layoutAttributesForSupplementaryElement(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                at: headerIndexPath
+            ) {
+                var headerFrame = layoutAttributes.frame
+                headerFrame.size.height = view.safeAreaLayoutGuide.layoutFrame.height
+                
+                collectionView.scrollRectToVisible(headerFrame, animated: true)
+            }
         }
     }
     
