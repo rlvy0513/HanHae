@@ -85,8 +85,6 @@ final class YearsViewController: HHBaseViewController {
         
         setupNavigationBarTitle()
         setupNavigationBarButtons()
-        
-        setupData()
     }
     
     private func setupConstraints() {
@@ -145,13 +143,9 @@ final class YearsViewController: HHBaseViewController {
         navigationItem.setRightBarButtonItems(rightButtons, animated: true)
     }
     
-    private func setupData() {
-        viewModel.fetchYearsData()
-    }
-    
     @objc
     private func moveThisMonthBarButtonTapped() {
-        scrollCollectionView(atYear: viewModel.yearOfNow, atMonth: viewModel.monthOfNow)
+        scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
     }
     
     @objc
@@ -345,32 +339,10 @@ extension YearsViewController: UICollectionViewDataSource {
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthlyCell.identifier, for: indexPath) as! MonthlyCell
         
-        let monthLabelStyle = viewModel.getMonthLabelStyle(
-            yearIndex: indexPath.section,
-            monthIndex: indexPath.row
-        )
-        
-        cell.monthLabel.text = viewModel.getMonthLabelText(
-            yeariIndex: indexPath.section,
-            monthIndex: indexPath.row
-        )
-        cell.monthLabel.textColor = monthLabelStyle.color
-        cell.monthLabel.font = monthLabelStyle.font
-        
-        let numericLabelText = viewModel.getNumericLabelText(
-            yearIndex: indexPath.section,
-            monthIndex: indexPath.row
-        )
-        cell.percentNumberLabel.text = numericLabelText.percent
-        cell.toDoCountLabel.text = numericLabelText.toDoCount
-        
         cell.changeMonthlyCellLayout(isSingleColumn: isSingleColumn)
-        
-        cell.viewModel = TestMonthlyTDLViewModel(
-            toDoList: viewModel.getMonthlyTDL(
-                yearIndex: indexPath.section,
-                monthIndex: indexPath.row
-            )
+        cell.viewModel = viewModel.makeMonthlyTDLViewModelAt(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row
         )
         
         return cell

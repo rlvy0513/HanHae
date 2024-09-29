@@ -13,7 +13,7 @@ final class MonthlyCell: UICollectionViewCell {
     
     var viewModel: TestMonthlyTDLViewModel? {
         didSet {
-            bindViewModel()
+            configureUI()
         }
     }
     
@@ -194,7 +194,6 @@ final class MonthlyCell: UICollectionViewCell {
             monthLabel.font = .hhTitle
             monthLabelTopConstraint.constant = 6
         } else {
-            // TODO: - 여기 아마 수정 필요, 뷰모델 필요~
             monthLabel.font = .hhBody
             monthLabelTopConstraint.constant = 8
         }
@@ -280,7 +279,7 @@ final class MonthlyCell: UICollectionViewCell {
         ])
     }
     
-    private func bindViewModel() {
+    private func configureUI() {
         guard let viewModel = viewModel else { return }
         
         toDoListStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -292,6 +291,13 @@ final class MonthlyCell: UICollectionViewCell {
                 toDoListStackView.addArrangedSubview(createToDoStackView(for: toDo))
             }
         }
+        
+        monthLabel.text = viewModel.getMonthLabelText()
+        monthLabel.textColor = viewModel.getMonthLabelColor()
+        
+        let numericLableText = viewModel.getNumericLabelText()
+        percentNumberLabel.text = numericLableText.percent
+        toDoCountLabel.text = numericLableText.toDoCount
     }
     
     private func createToDoStackView(for toDo: ToDo) -> UIStackView {
