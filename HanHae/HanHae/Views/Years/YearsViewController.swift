@@ -145,7 +145,21 @@ final class YearsViewController: HHBaseViewController {
     
     @objc
     private func moveThisMonthBarButtonTapped() {
-        scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
+        let targetSection = Date.todayYear - 2020
+        let targetRow = Date.todayMonth - 1
+        
+        // 현재 보이는 IndexPaths에 목표하는 연도와 월이 있는지 확인
+        let isAlreadyVisible = collectionView.indexPathsForVisibleItems.contains { indexPath in
+            indexPath.section == targetSection && indexPath.row == targetRow
+        }
+        
+        if isAlreadyVisible {
+            // TODO: - MonthlyTDLView로 이동하는 로직 구현하기
+            print("MonntlyTDLView로 이동")
+            return
+        } else {
+            scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
+        }
     }
     
     @objc
