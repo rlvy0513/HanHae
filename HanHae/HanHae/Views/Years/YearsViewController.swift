@@ -68,6 +68,11 @@ final class YearsViewController: HHBaseViewController {
     
     private var isSingleColumn = false
     
+    private var currentSection = 0
+    private var yearTitle: String {
+        "\(currentSection + 2020)년"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -78,6 +83,7 @@ final class YearsViewController: HHBaseViewController {
         setupCollectionView()
         setupCollectionViewLayout()
         
+        setupNavigationBarTitle()
         setupNavigationBarButtons()
         
         setupData()
@@ -123,6 +129,12 @@ final class YearsViewController: HHBaseViewController {
         
         flowLayout.minimumInteritemSpacing = collectionViewInteritemSpacing
         flowLayout.minimumLineSpacing = collectionViewLineSpacing
+    }
+    
+    private func setupNavigationBarTitle() {
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont(name: FontName.eliceDigitalBaeumBold.rawValue, size: 17)!
+        ]
     }
     
     private func setupNavigationBarButtons() {
@@ -174,14 +186,20 @@ final class YearsViewController: HHBaseViewController {
         if isSingleColumn {
             collectionViewCollumsCount = 1
             newFlowLayout.minimumLineSpacing = 14
+            
+            title = yearTitle
         } else {
             collectionViewCollumsCount = 3
             newFlowLayout.minimumLineSpacing = collectionViewLineSpacing
+            
+            title = nil
         }
         
         UIView.animate(withDuration: 0.4) {
             self.collectionView.setCollectionViewLayout(newFlowLayout, animated: true)
         }
+        
+        updateNavigationBarTitle()
     }
     
     private func scrollCollectionView(atYear: Int, atMonth: Int) {
@@ -208,6 +226,32 @@ final class YearsViewController: HHBaseViewController {
                 collectionView.scrollRectToVisible(headerFrame, animated: true)
             }
         }
+    }
+    
+    private func updateNavigationBarTitle() {
+        let centerPoint = CGPoint(
+            x: collectionView.bounds.midX,
+            y: collectionView.bounds.midY
+        )
+        
+        if let centerIndexPath = collectionView.indexPathForItem(at: centerPoint) {
+            let newSection = centerIndexPath.section
+            
+            if newSection != currentSection {
+                currentSection = newSection
+                
+                generateHapticFeedback()
+                
+                if isSingleColumn {
+                    title = yearTitle
+                }
+            }
+        }
+    }
+    
+    private func generateHapticFeedback() {
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light, view: view)
+        feedbackGenerator.impactOccurred()
     }
     
 }
@@ -274,6 +318,10 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
         ).height
         
         return ceil(height)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateNavigationBarTitle()
     }
     
 }
