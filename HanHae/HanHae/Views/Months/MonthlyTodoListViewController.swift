@@ -9,7 +9,6 @@ import UIKit
 
 class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
-    // MARK: - Properties
     private var tableView: UITableView!
     private var emptyStateImageView: UIImageView!
     private var emptyStateLabel: UILabel!
@@ -19,7 +18,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     var viewModel: MonthlyTodoListViewModel!
     var onContentHeightUpdated: ((CGFloat) -> Void)?
     
-    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,7 +35,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
 
-    // MARK: - Setup Methods
     private func bindViewModel() {
         viewModel.onTodoListUpdated = { [weak self] todoList in
             self?.updateEmptyStateView(isEmpty: todoList.isEmpty)
@@ -189,7 +186,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         present(alertController, animated: true, completion: nil)
     }
     
-    // MARK: - UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         updateTableViewContentHeight()
         return viewModel.todoList.count
