@@ -252,6 +252,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         if noteTextView.isFirstResponder {
             noteTextView.resignFirstResponder()
         }
+        delegate?.showModalForTodoList(at: index)
     }
 
     private func findTableView() -> UITableView? {
@@ -280,4 +281,20 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 }
 
+extension MonthlyTodoListViewController {
+    func showModalForTodoList(at index: Int) {
+        let todo = viewModel.todoList[index]
+        let startDate = todo.startDate
+        let completionDate = todo.completionDate
+        let detailVC = DetailViewController()
+        detailVC.todo = todo
+        detailVC.index = index
+        detailVC.start = startDate
+        detailVC.completion = completionDate
+        detailVC.delegate = self
+
+        detailVC.modalPresentationStyle = .pageSheet
+        present(detailVC, animated: true, completion: nil)
+    }
+}
 
