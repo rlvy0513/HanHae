@@ -28,7 +28,6 @@
 		D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0792CAC9AFF006010F4 /* DetailViewController.swift */; };
 		D787E07C2CACA52B006010F4 /* MonthlyMottoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */; };
 		D787E07E2CACA729006010F4 /* MonthlyTodoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */; };
-		D787E0802CACA737006010F4 /* TodoListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07F2CACA72E006010F4 /* TodoListCellViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +54,6 @@
 		D787E0792CAC9AFF006010F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewModel.swift; sourceTree = "<group>"; };
 		D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyTodoListViewModel.swift; sourceTree = "<group>"; };
-		D787E07F2CACA72E006010F4 /* TodoListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListCellViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,7 +196,6 @@
 			children = (
 				D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */,
 				D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */,
-				D787E07F2CACA72E006010F4 /* TodoListCellViewModel.swift */,
 			);
 			path = Months;
 			sourceTree = "<group>";
@@ -287,7 +284,6 @@
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 				D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */,
 				421FA13B2C930C7800207006 /* YearSampleViewController.swift in Sources */,
-				D787E0802CACA737006010F4 /* TodoListCellViewModel.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */,
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
