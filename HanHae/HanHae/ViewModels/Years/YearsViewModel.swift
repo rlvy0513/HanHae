@@ -51,4 +51,9 @@ final class YearsViewModel {
         return IndexPath(item: item, section: section)
     }
     
+    func pushMonthlyViewController(vc: UIViewController) {
+        let monthlyVC = MonthlyViewController()
+        vc.navigationController?.pushViewController(monthlyVC, animated: true)
+    }
+    
 }

@@ -61,7 +61,13 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
         let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
+        button.addTarget(self, action: #selector(popMonthlyViewController), for: .touchUpInside)
         return button
+    }
+    
+    @objc
+    private func popMonthlyViewController() {
+        navigationController?.popViewController(animated: true)
     }
 
     private func createSettingButton() -> UIButton {

@@ -156,6 +156,7 @@ final class YearsViewController: HHBaseViewController {
         if isAlreadyVisible {
             // TODO: - MonthlyTDLView로 이동하는 로직 구현하기
             print("MonntlyTDLView로 이동")
+            viewModel.pushMonthlyViewController(vc: self)
             return
         } else {
             scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
