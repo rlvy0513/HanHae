@@ -14,12 +14,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        // 필요한 ViewController들을 작성한다.
-        
         window = UIWindow(windowScene: windowScene)
-        // App의 첫 시작점(root view)을 정해준다.
-        window?.rootViewController = ViewController()
+        
+        let navigationVC = UINavigationController(rootViewController: YearsViewController())
+        
+        // TODO: - 앱을 실행했을 때, 네비게이션 스택이 하나 쌓인 상태로 앱 실행되는지
+        /*
+        let monthlyTDLView = MonthlyTDLView()
+        
+        DispatchQueue.main.async {
+            navigationVC.pushViewController(monthlyTDLView, animated: false)
+        }
+         */
+        
+        window?.rootViewController = navigationVC
         window?.makeKeyAndVisible()
     }
     
