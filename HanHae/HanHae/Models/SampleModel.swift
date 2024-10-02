@@ -8,8 +8,8 @@
 import UIKit
 
 // MARK: - 샘플 데이터 모델
-struct ToDo {
-    let id: String = UUID().uuidString
+struct ToDo: Codable {
+    var id: String = UUID().uuidString
     var title: String
     var note: String?
     

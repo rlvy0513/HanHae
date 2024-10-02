@@ -195,12 +195,11 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
 
     private func createAddTodoListButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle("목표 추가하기", for: .normal)
+        button.setTitle(" 목표 추가하기", for: .normal)
         button.setImage(UIImage(systemName: "plus.square.fill"), for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)
         button.tintColor = .hhAccent
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         button.contentHorizontalAlignment = .left
         button.sizeToFit()
         button.addTarget(self, action: #selector(didTapAddTodoListButton), for: .touchUpInside)

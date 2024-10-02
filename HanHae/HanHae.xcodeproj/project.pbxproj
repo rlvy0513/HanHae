@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		421FA13B2C930C7800207006 /* YearSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FA13A2C930C7800207006 /* YearSampleViewController.swift */; };
-		421FA13D2C930C9900207006 /* MonthSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FA13C2C930C9900207006 /* MonthSampleViewController.swift */; };
 		422010842CA68EAE00721175 /* TestMonthlyTDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */; };
 		4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223B9652CA02CA600BD9708 /* YearsViewModel.swift */; };
 		42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42322B422C9F12AA008C54FD /* MonthlyCell.swift */; };
@@ -27,6 +25,7 @@
 		42FA32022C918A6600AB5469 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 42FA32012C918A6600AB5469 /* Base */; };
 		42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC1E2C92993A002F5A4D /* SampleModel.swift */; };
 		42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */; };
+		42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */; };
 		D787E0722CAC9ABA006010F4 /* MonthlyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0712CAC9A7E006010F4 /* MonthlyViewController.swift */; };
 		D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */; };
 		D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0752CAC9ADA006010F4 /* MonthlyTodoListViewController.swift */; };
@@ -37,13 +36,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		421FA13A2C930C7800207006 /* YearSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearSampleViewController.swift; sourceTree = "<group>"; };
-		42FD5ADB2C9C195100B1AF81 /* SampleMonthsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADA2C9C195100B1AF81 /* SampleMonthsViewModel.swift */; };
-		42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXFileReference section */
-		421FA13C2C930C9900207006 /* MonthSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthSampleViewController.swift; sourceTree = "<group>"; };
 		422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMonthlyTDLViewModel.swift; sourceTree = "<group>"; };
 		4223B9652CA02CA600BD9708 /* YearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewModel.swift; sourceTree = "<group>"; };
 		42322B422C9F12AA008C54FD /* MonthlyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCell.swift; sourceTree = "<group>"; };
@@ -64,6 +56,7 @@
 		42FA32032C918A6600AB5469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42FBAC1E2C92993A002F5A4D /* SampleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleModel.swift; sourceTree = "<group>"; };
 		42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HHBaseViewController.swift; sourceTree = "<group>"; };
+		42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 		D787E0712CAC9A7E006010F4 /* MonthlyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyViewController.swift; sourceTree = "<group>"; };
 		D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewController.swift; sourceTree = "<group>"; };
 		D787E0752CAC9ADA006010F4 /* MonthlyTodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyTodoListViewController.swift; sourceTree = "<group>"; };
@@ -71,8 +64,6 @@
 		D787E0792CAC9AFF006010F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewModel.swift; sourceTree = "<group>"; };
 		D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyTodoListViewModel.swift; sourceTree = "<group>"; };
-		42FD5ADA2C9C195100B1AF81 /* SampleMonthsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMonthsViewModel.swift; sourceTree = "<group>"; };
-		42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,7 +218,6 @@
 			children = (
 				D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */,
 				D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */,
-				42FD5ADA2C9C195100B1AF81 /* SampleMonthsViewModel.swift */,
 				422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */,
 			);
 			path = Months;
@@ -261,7 +251,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					42FA31EE2C918A6500AB5469 = {
 						CreatedOnToolsVersion = 15.4;
@@ -315,7 +305,6 @@
 				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 				D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */,
-				421FA13B2C930C7800207006 /* YearSampleViewController.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */,
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
@@ -325,13 +314,9 @@
 				42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */,
 				42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */,
 				4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */,
-				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 				422010842CA68EAE00721175 /* TestMonthlyTDLViewModel.swift in Sources */,
-				42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */,
-				42FD5ADB2C9C195100B1AF81 /* SampleMonthsViewModel.swift in Sources */,
 				42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */,
 				42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */,
-				421FA13D2C930C9900207006 /* MonthSampleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
