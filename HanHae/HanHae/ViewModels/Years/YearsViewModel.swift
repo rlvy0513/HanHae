@@ -56,4 +56,11 @@ final class YearsViewModel {
         vc.navigationController?.pushViewController(monthlyVC, animated: true)
     }
     
+    func presentSettingsViewController(vc: UIViewController) {
+        let settingsVC = SettingsViewController()
+        settingsVC.modalPresentationStyle = .formSheet
+        
+        vc.present(settingsVC, animated: true)
+    }
+    
 }

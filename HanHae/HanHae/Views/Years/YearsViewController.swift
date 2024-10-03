@@ -184,7 +184,7 @@ final class YearsViewController: HHBaseViewController {
     
     @objc
     private func settingBarButtonTapped() {
-        
+        viewModel.presentSettingsViewController(vc: self)
     }
     
     private func changeCollectionViewLayout() {
