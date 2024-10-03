@@ -111,16 +111,16 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
             monthlyBox.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             monthlyBox.heightAnchor.constraint(greaterThanOrEqualToConstant: 165),
             
-            openingQuoteLabel.topAnchor.constraint(equalTo: monthlyBox.topAnchor, constant: 0),
+            openingQuoteLabel.topAnchor.constraint(equalTo: monthlyBox.topAnchor, constant: 5),
             openingQuoteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             monthlyMottoTextView.leadingAnchor.constraint(equalTo: monthlyBox.leadingAnchor, constant: 10),
             monthlyMottoTextView.trailingAnchor.constraint(equalTo: monthlyBox.trailingAnchor, constant: -10),
             
-            closingQuoteLabel.topAnchor.constraint(equalTo: monthlyMottoFooterLabel.bottomAnchor, constant: 0),
+            closingQuoteLabel.topAnchor.constraint(equalTo: monthlyMottoFooterLabel.bottomAnchor, constant: -3),
             closingQuoteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            monthlyMottoFooterLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 125),
+            monthlyMottoFooterLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             monthlyMottoFooterLabel.leadingAnchor.constraint(equalTo: monthlyBox.leadingAnchor, constant: 10),
             monthlyMottoFooterLabel.trailingAnchor.constraint(equalTo: monthlyBox.trailingAnchor, constant: -10)
         ])
