@@ -15,6 +15,7 @@
 		427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */; };
 		427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EE32C91CC8B00DE7844 /* Colors.xcassets */; };
 		427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE52C91D5B200DE7844 /* ViewController.swift */; };
+		42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */; };
 		42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7C2CA933D000270234 /* Date+Extension.swift */; };
 		42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */; };
 		42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */; };
@@ -44,6 +45,7 @@
 		427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		427C4EE32C91CC8B00DE7844 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		427C4EE52C91D5B200DE7844 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		42CE1D7C2CA933D000270234 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearHeaderView.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			children = (
 				421FA1392C930C4E00207006 /* Years */,
 				421FA1382C930C3C00207006 /* Months */,
+				42BC1FEB2CAE4F7700BED6F2 /* Settings */,
 				42FA32002C918A6600AB5469 /* LaunchScreen.storyboard */,
 				427C4EE52C91D5B200DE7844 /* ViewController.swift */,
 				42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */,
@@ -162,6 +165,14 @@
 				427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		42BC1FEB2CAE4F7700BED6F2 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		42CE1D7E2CA93B5400270234 /* Services */ = {
@@ -309,6 +320,7 @@
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 				D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */,
+				42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */,
 				42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */,
 				42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */,
 				42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */,
