@@ -40,7 +40,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(currentMonth.month)월"
+        navigationItem.title = "\(Date.todayMonth)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhBlack
@@ -55,7 +55,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
 
     private func createYearsButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle("\(currentMonth.year)", for: .normal)
+        button.setTitle(" \(Date.todayYear)", for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)
         let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
@@ -80,7 +80,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
         let divider = UIMenu(title: "", options: .displayInline, children: topActions)
 
         let bottomAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), attributes: .destructive, handler: { [weak self] _ in
-            self?.deleteAllTodos()
+            self?.todoListVC.didTapDeleteAllButton()
         })
         let items = [divider, bottomAction]
         let menu = UIMenu(title: "", children: items)
@@ -113,10 +113,6 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
         isEditingMode = false
         todoListVC.didTapEditListButton()
         setupNavigationBar()
-    }
-
-    private func deleteAllTodos() {
-        todoListVC.didTapDeleteAllButton()
     }
 
     private func setupScrollView() {
