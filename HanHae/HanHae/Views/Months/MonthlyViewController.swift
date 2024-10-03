@@ -145,7 +145,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     }
 
     private func setupSubViewControllers() {
-        mottoVC = MonthlyMottoViewController(model: currentMonth)
+        mottoVC = MonthlyMottoViewController(viewModel: MonthlyMottoViewModel(model: currentMonth))
         addChild(mottoVC)
         contentView.addSubview(mottoVC.view)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
