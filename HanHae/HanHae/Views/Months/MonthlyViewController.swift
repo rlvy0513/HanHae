@@ -13,13 +13,14 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     private var contentView: UIView!
     private var mottoVC: MonthlyMottoViewController!
     private var todoListVC: MonthlyTodoListViewController!
-    private var currentMonth: HHMonth!
+    private var viewModel: MonthlyMottoViewModel!
     private var isEditingMode = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        currentMonth = HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: [])
+        viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+
         
         setupNavigationBar()
         setupScrollView()
@@ -40,7 +41,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(Date.todayMonth)월"
+        navigationItem.title = "\(viewModel.currentMonth.month)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhBlack
@@ -62,6 +63,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
         button.addTarget(self, action: #selector(popMonthlyViewController), for: .touchUpInside)
+        button.contentVerticalAlignment = .bottom
         return button
     }
     
@@ -141,7 +143,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     }
 
     private func setupSubViewControllers() {
-        mottoVC = MonthlyMottoViewController(viewModel: MonthlyMottoViewModel(model: currentMonth))
+        mottoVC = MonthlyMottoViewController(viewModel: viewModel)
         addChild(mottoVC)
         contentView.addSubview(mottoVC.view)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false

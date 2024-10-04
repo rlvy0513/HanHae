@@ -11,9 +11,6 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     
     private var viewModel: MonthlyMottoViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
-    private var defaultMottoText: String {
-        return "\(Date.todayMonth)월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요."
-    }
     
     private let monthlyMottoTextView: UITextView = {
         let textView = UITextView()
@@ -28,9 +25,9 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         return textView
     }()
     
-    private let monthlyMottoFooterLabel: UILabel = {
+    private lazy var monthlyMottoFooterLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(Date.todayMonth)월의 나에게"
+        label.text = "\(viewModel.currentMonth.month)월의 나에게"
         label.font = .hhCaption1
         label.textColor = .hhLightGray
         label.textAlignment = .center
@@ -63,8 +60,12 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         view.backgroundColor = .hhCharacter
         view.layer.cornerRadius = 10
         view.alpha = 0.5
-        view.clipsToBounds = true
+        view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.shadowColor = UIColor.hhBlack.cgColor
+        view.layer.shadowOpacity = 0.25
+        view.layer.shadowOffset = CGSize(width: 0, height: 4)
+        view.layer.shadowRadius = 5
         return view
     }()
     
@@ -130,8 +131,8 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     }
     
     private func updateMottoTextView(for text: String) {
-        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == defaultMottoText {
-            monthlyMottoTextView.text = defaultMottoText
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == viewModel.defaultMottoText {
+            monthlyMottoTextView.text = viewModel.defaultMottoText
             monthlyMottoTextView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
@@ -141,7 +142,7 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     }
     
     private func updateTextViewPosition() {
-            let isDefaultText = monthlyMottoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || monthlyMottoTextView.text == defaultMottoText
+            let isDefaultText = monthlyMottoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || monthlyMottoTextView.text == viewModel.defaultMottoText
             mottoTextViewTopConstraint.isActive = false
             
             if isDefaultText {
@@ -157,7 +158,7 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         }
         
         func textViewDidBeginEditing(_ textView: UITextView) {
-            if textView.tag == 1, textView.text == defaultMottoText {
+            if textView.tag == 1, textView.text == viewModel.defaultMottoText {
                 textView.text = ""
                 textView.textColor = .hhText
                 showFooterAndQuoteLabels()
@@ -168,12 +169,10 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if textView.tag == 1 && trimmedText.isEmpty {
-            // 공백/줄바꿈만 있을 때 기본 문구로 설정
-            textView.text = defaultMottoText
+            textView.text = viewModel.defaultMottoText
             textView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
-            // 유효한 텍스트가 있을 때 업데이트
             viewModel.updateMotto(textView.text)
             textView.textColor = .hhText
             showFooterAndQuoteLabels()
@@ -185,8 +184,6 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.tag == 1 {
             let maxNumberOfLines = 3
-            
-            // 텍스트가 입력 중일 때는 기본 문구로 돌아가지 않음
             let size = CGSize(width: textView.frame.width, height: .infinity)
             let textViewSize = textView.sizeThatFits(size)
             let lineHeight = textView.font?.lineHeight ?? 0
