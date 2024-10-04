@@ -58,9 +58,10 @@ final class YearsViewModel {
     
     func presentSettingsViewController(vc: UIViewController) {
         let settingsVC = SettingsViewController()
-        settingsVC.modalPresentationStyle = .formSheet
+        let naviController = UINavigationController(rootViewController: settingsVC)
+        naviController.modalPresentationStyle = .formSheet
         
-        vc.present(settingsVC, animated: true)
+        vc.present(naviController, animated: true)
     }
     
 }
