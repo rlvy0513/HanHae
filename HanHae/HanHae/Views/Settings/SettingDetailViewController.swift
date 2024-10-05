@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class SettingsViewController: HHBaseViewController {
+final class SettingDetailViewController: HHBaseViewController {
+    
+    private var kindOfSetting: Setting = .theme
     
     private let tableView = UITableView(
         frame: .zero,
@@ -25,12 +27,17 @@ final class SettingsViewController: HHBaseViewController {
         return barBtn
     }()
     
-    private let remindAlarmSwitch: UISwitch = {
-        let alarmSwitch = UISwitch()
-        alarmSwitch.onTintColor = .hhAccent
-        return alarmSwitch
-    }()
-
+    init(indexOfRow: Int) {
+        self.kindOfSetting = Setting(rawValue: indexOfRow)!
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @MainActor
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,21 +73,11 @@ final class SettingsViewController: HHBaseViewController {
     }
     
     private func setupNavigationBar() {
-        title = "앱 설정"
+        title = kindOfSetting == .theme ? "앱 테마 설정" : "언어 설정"
         
-        let appearance = UINavigationBar.appearance()
-        appearance.tintColor = .hhAccent
-        appearance.titleTextAttributes = [
-            .font: UIFont.hhHeadLine
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont(name: FontName.eliceDigitalBaeumBold.rawValue, size: 17)!
         ]
-        
-        let barButtonAppearance = UIBarButtonItem.appearance()
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhBody
-        ]
-        barButtonAppearance.setTitleTextAttributes(attributes, for: .normal)
-        barButtonAppearance.setTitleTextAttributes(attributes, for: .highlighted)
-        
         navigationItem.rightBarButtonItem = closeSettingsBarButton
     }
     
@@ -92,7 +89,7 @@ final class SettingsViewController: HHBaseViewController {
 }
 
 
-extension SettingsViewController: UITableViewDelegate {
+extension SettingDetailViewController: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
@@ -108,25 +105,24 @@ extension SettingsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+        switch kindOfSetting {
+        case .theme:
             switch indexPath.row {
             case 0:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
+                print("시스템")
             case 1:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
+                print("라이트")
+            case 2:
+                print("다크")
             default:
                 break
             }
-        } else {
+        case .language:
             switch indexPath.row {
             case 0:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
+                print("한국어")
             case 1:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
+                print("영어")
             default:
                 break
             }
@@ -135,16 +131,16 @@ extension SettingsViewController: UITableViewDelegate {
 }
 
 
-extension SettingsViewController: UITableViewDataSource {
+extension SettingDetailViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return section == 0 ? 3 : 2
+        return kindOfSetting == .theme ? 3 : 2
     }
     
     func tableView(
@@ -162,39 +158,36 @@ extension SettingsViewController: UITableViewDataSource {
         content.imageProperties.tintColor = .hhAccent
         content.textProperties.font = .hhBody
         
-        if indexPath.section == 0 {
+        switch kindOfSetting {
+        case .theme:
             switch indexPath.row {
             case 0:
-                content.image = UIImage(systemName: "sun.max")
-                content.text = "앱 테마 설정"
-                cell.accessoryType = .disclosureIndicator
+                content.text = "시스템 설정과 동일"
             case 1:
-                content.image = UIImage(systemName: "a.square")
-                content.text = "언어 설정"
-                cell.accessoryType = .disclosureIndicator
+                content.text = "라이트 모드"
             case 2:
-                content.image = UIImage(systemName: "bell")
-                content.text = "리마인드 알림"
-                cell.accessoryView = remindAlarmSwitch
+                content.text = "다크 모드"
             default:
                 break
             }
-        } else {
+        case .language:
             switch indexPath.row {
             case 0:
-                content.image = UIImage(systemName: "square.and.pencil")
-                content.text = "앱 피드백 남기기"
-                cell.accessoryType = .disclosureIndicator
+                content.text = "한국어"
             case 1:
-                content.image = UIImage(systemName: "star")
-                content.text = "앱 평점 남기기"
-                cell.accessoryType = .disclosureIndicator
+                content.text = "English"
             default:
                 break
             }
         }
-        
+
         cell.contentConfiguration = content
         return cell
     }
+}
+
+
+fileprivate enum Setting: Int {
+    case theme
+    case language
 }

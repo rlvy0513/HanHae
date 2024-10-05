@@ -19,6 +19,7 @@
 		42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7C2CA933D000270234 /* Date+Extension.swift */; };
 		42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */; };
 		42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */; };
+		42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */; };
 		42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F22C918A6500AB5469 /* AppDelegate.swift */; };
 		42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F42C918A6500AB5469 /* SceneDelegate.swift */; };
 		42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31FB2C918A6500AB5469 /* HanHae.xcdatamodeld */; };
@@ -49,6 +50,7 @@
 		42CE1D7C2CA933D000270234 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearHeaderView.swift; sourceTree = "<group>"; };
+		42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
 		42FA31EF2C918A6500AB5469 /* HanHae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HanHae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42FA31F22C918A6500AB5469 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42FA31F42C918A6500AB5469 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */,
+				42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 				D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */,
+				42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */,
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 				D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */,
