@@ -7,25 +7,9 @@
 
 import UIKit
 
-final class SettingDetailViewController: HHBaseViewController {
+final class SettingDetailViewController: SettingsBaseViewController {
     
     var viewModel: SettingsViewModel
-    
-    private let tableView = UITableView(
-        frame: .zero,
-        style: .insetGrouped
-    )
-    private let cellIdentifier = "Cell"
-    
-    private lazy var closeSettingsBarButton: UIBarButtonItem = {
-        let barBtn = UIBarButtonItem(
-            title: "닫기",
-            style: .plain,
-            target: self,
-            action: #selector(dismissView)
-        )
-        return barBtn
-    }()
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
@@ -41,49 +25,21 @@ final class SettingDetailViewController: HHBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        
-        setupConstraints()
         setupTableView()
         setupNavigationBar()
     }
     
-    private func setupConstraints() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-    }
-    
-    private func setupTableView() {
+    override func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.backgroundColor = .clear
-        tableView.isScrollEnabled = false
-        
-        tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: cellIdentifier
-        )
+        super.setupTableView()
     }
     
-    private func setupNavigationBar() {
+    override func setupNavigationBar() {
         title = viewModel.getDetailTitle()
         
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont(name: FontName.eliceDigitalBaeumBold.rawValue, size: 17)!
-        ]
-        navigationItem.rightBarButtonItem = closeSettingsBarButton
-    }
-    
-    @objc
-    private func dismissView() {
-        dismiss(animated: true, completion: nil)
+        super.setupNavigationBar()
     }
 
 }

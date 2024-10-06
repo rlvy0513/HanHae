@@ -7,25 +7,9 @@
 
 import UIKit
 
-final class SettingsViewController: HHBaseViewController {
+final class SettingsViewController: SettingsBaseViewController {
     
     private let viewModel = SettingsViewModel()
-    
-    private let tableView = UITableView(
-        frame: .zero,
-        style: .insetGrouped
-    )
-    private let cellIdentifier = "Cell"
-    
-    private lazy var closeSettingsBarButton: UIBarButtonItem = {
-        let barBtn = UIBarButtonItem(
-            title: "닫기",
-            style: .plain,
-            target: self,
-            action: #selector(dismissView)
-        )
-        return barBtn
-    }()
     
     private let remindAlarmSwitch: UISwitch = {
         let alarmSwitch = UISwitch()
@@ -35,60 +19,19 @@ final class SettingsViewController: HHBaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(tableView)
-        
-        setupConstraints()
-        setupTableView()
-        setupNavigationBar()
     }
     
-    private func setupConstraints() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-    }
-    
-    private func setupTableView() {
+    override func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.backgroundColor = .clear
-        tableView.isScrollEnabled = false
-        
-        tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: cellIdentifier
-        )
+        super.setupTableView()
     }
     
-    private func setupNavigationBar() {
+    override func setupNavigationBar() {
         title = "앱 설정"
         
-        let appearance = UINavigationBar.appearance()
-        appearance.tintColor = .hhAccent
-        appearance.titleTextAttributes = [
-            .font: UIFont.hhHeadLine
-        ]
-        
-        let barButtonAppearance = UIBarButtonItem.appearance()
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhBody
-        ]
-        barButtonAppearance.setTitleTextAttributes(attributes, for: .normal)
-        barButtonAppearance.setTitleTextAttributes(attributes, for: .highlighted)
-        
-        navigationItem.rightBarButtonItem = closeSettingsBarButton
-    }
-    
-    @objc
-    private func dismissView() {
-        dismiss(animated: true, completion: nil)
+        super.setupNavigationBar()
     }
 
 }
