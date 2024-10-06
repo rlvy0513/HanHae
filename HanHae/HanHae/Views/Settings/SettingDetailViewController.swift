@@ -9,7 +9,7 @@ import UIKit
 
 final class SettingDetailViewController: HHBaseViewController {
     
-    private var kindOfSetting: Setting = .theme
+    var viewModel: SettingsViewModel
     
     private let tableView = UITableView(
         frame: .zero,
@@ -27,8 +27,8 @@ final class SettingDetailViewController: HHBaseViewController {
         return barBtn
     }()
     
-    init(indexOfRow: Int) {
-        self.kindOfSetting = Setting(rawValue: indexOfRow)!
+    init(viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,7 +73,7 @@ final class SettingDetailViewController: HHBaseViewController {
     }
     
     private func setupNavigationBar() {
-        title = kindOfSetting == .theme ? "앱 테마 설정" : "언어 설정"
+        title = viewModel.getDetailTitle()
         
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont(name: FontName.eliceDigitalBaeumBold.rawValue, size: 17)!
@@ -105,42 +105,17 @@ extension SettingDetailViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch kindOfSetting {
-        case .theme:
-            switch indexPath.row {
-            case 0:
-                print("시스템")
-            case 1:
-                print("라이트")
-            case 2:
-                print("다크")
-            default:
-                break
-            }
-        case .language:
-            switch indexPath.row {
-            case 0:
-                print("한국어")
-            case 1:
-                print("영어")
-            default:
-                break
-            }
-        }
+        viewModel.handleSelection(of: indexPath.row)
     }
 }
 
 
 extension SettingDetailViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return kindOfSetting == .theme ? 3 : 2
+        return viewModel.getDetailNumberOfRowsInSection()
     }
     
     func tableView(
@@ -151,43 +126,16 @@ extension SettingDetailViewController: UITableViewDataSource {
             withIdentifier: cellIdentifier,
             for: indexPath
         )
+        var content = cell.defaultContentConfiguration()
+        
+        content.imageProperties.tintColor = .hhAccent
+        content.textProperties.font = .hhBody
+        content.text = viewModel.getDetailOptionTextForRow(at: indexPath.row)
+        
+        cell.contentConfiguration = content
         cell.backgroundColor = .hhModalCell
         cell.selectionStyle = .none
         
-        var content = cell.defaultContentConfiguration()
-        content.imageProperties.tintColor = .hhAccent
-        content.textProperties.font = .hhBody
-        
-        switch kindOfSetting {
-        case .theme:
-            switch indexPath.row {
-            case 0:
-                content.text = "시스템 설정과 동일"
-            case 1:
-                content.text = "라이트 모드"
-            case 2:
-                content.text = "다크 모드"
-            default:
-                break
-            }
-        case .language:
-            switch indexPath.row {
-            case 0:
-                content.text = "한국어"
-            case 1:
-                content.text = "English"
-            default:
-                break
-            }
-        }
-
-        cell.contentConfiguration = content
         return cell
     }
-}
-
-
-fileprivate enum Setting: Int {
-    case theme
-    case language
 }

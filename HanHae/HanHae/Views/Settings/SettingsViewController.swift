@@ -9,6 +9,8 @@ import UIKit
 
 final class SettingsViewController: HHBaseViewController {
     
+    private let viewModel = SettingsViewModel()
+    
     private let tableView = UITableView(
         frame: .zero,
         style: .insetGrouped
@@ -108,43 +110,24 @@ extension SettingsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            switch indexPath.row {
-            case 0:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
-            case 1:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
-            default:
-                break
-            }
-        } else {
-            switch indexPath.row {
-            case 0:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
-            case 1:
-                let detailVC = SettingDetailViewController(indexOfRow: indexPath.row)
-                navigationController?.pushViewController(detailVC, animated: true)
-            default:
-                break
-            }
-        }
+        let section = viewModel.sections[indexPath.section]
+        let option = section.options[indexPath.row]
+        
+        viewModel.handleSelection(of: option, navigationController: navigationController)
     }
 }
 
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return viewModel.getSectionsCount()
     }
     
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return section == 0 ? 3 : 2
+        return viewModel.getNumberOfRowsInSection(section: section)
     }
     
     func tableView(
@@ -155,46 +138,26 @@ extension SettingsViewController: UITableViewDataSource {
             withIdentifier: cellIdentifier,
             for: indexPath
         )
-        cell.backgroundColor = .hhModalCell
-        cell.selectionStyle = .none
-        
         var content = cell.defaultContentConfiguration()
+        
         content.imageProperties.tintColor = .hhAccent
         content.textProperties.font = .hhBody
         
-        if indexPath.section == 0 {
-            switch indexPath.row {
-            case 0:
-                content.image = UIImage(systemName: "sun.max")
-                content.text = "앱 테마 설정"
-                cell.accessoryType = .disclosureIndicator
-            case 1:
-                content.image = UIImage(systemName: "a.square")
-                content.text = "언어 설정"
-                cell.accessoryType = .disclosureIndicator
-            case 2:
-                content.image = UIImage(systemName: "bell")
-                content.text = "리마인드 알림"
-                cell.accessoryView = remindAlarmSwitch
-            default:
-                break
-            }
+        let section = viewModel.sections[indexPath.section]
+        let option = section.options[indexPath.row]
+        content.image = viewModel.getOptionImage(for: option)
+        content.text = viewModel.getOptionTitle(for: option)
+        
+        if option == .reminder {
+            cell.accessoryView = remindAlarmSwitch
         } else {
-            switch indexPath.row {
-            case 0:
-                content.image = UIImage(systemName: "square.and.pencil")
-                content.text = "앱 피드백 남기기"
-                cell.accessoryType = .disclosureIndicator
-            case 1:
-                content.image = UIImage(systemName: "star")
-                content.text = "앱 평점 남기기"
-                cell.accessoryType = .disclosureIndicator
-            default:
-                break
-            }
+            cell.accessoryType = .disclosureIndicator
         }
         
         cell.contentConfiguration = content
+        cell.backgroundColor = .hhModalCell
+        cell.selectionStyle = .none
+        
         return cell
     }
 }
