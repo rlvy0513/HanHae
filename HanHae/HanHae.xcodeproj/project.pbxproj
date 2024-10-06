@@ -9,15 +9,19 @@
 /* Begin PBXBuildFile section */
 		422010842CA68EAE00721175 /* TestMonthlyTDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */; };
 		4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223B9652CA02CA600BD9708 /* YearsViewModel.swift */; };
+		4231E7592CB17E11006EFD99 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */; };
 		42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42322B422C9F12AA008C54FD /* MonthlyCell.swift */; };
 		427C4EDD2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */; };
 		427C4EDE2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EDC2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf */; };
 		427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */; };
 		427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EE32C91CC8B00DE7844 /* Colors.xcassets */; };
 		427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE52C91D5B200DE7844 /* ViewController.swift */; };
+		42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */; };
 		42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7C2CA933D000270234 /* Date+Extension.swift */; };
 		42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */; };
 		42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */; };
+		42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */; };
+		42EB0BFB2CB284DF00E38A49 /* SettingsBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EB0BFA2CB284DF00E38A49 /* SettingsBaseViewController.swift */; };
 		42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F22C918A6500AB5469 /* AppDelegate.swift */; };
 		42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31F42C918A6500AB5469 /* SceneDelegate.swift */; };
 		42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42FA31FB2C918A6500AB5469 /* HanHae.xcdatamodeld */; };
@@ -38,15 +42,19 @@
 /* Begin PBXFileReference section */
 		422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMonthlyTDLViewModel.swift; sourceTree = "<group>"; };
 		4223B9652CA02CA600BD9708 /* YearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewModel.swift; sourceTree = "<group>"; };
+		4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		42322B422C9F12AA008C54FD /* MonthlyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCell.swift; sourceTree = "<group>"; };
 		427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EliceDigitalBaeumOTF_Bold.otf; sourceTree = "<group>"; };
 		427C4EDC2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EliceDigitalBaeumOTF_Regular.otf; sourceTree = "<group>"; };
 		427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		427C4EE32C91CC8B00DE7844 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		427C4EE52C91D5B200DE7844 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		42CE1D7C2CA933D000270234 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		42DBE6DB2C9FD3330012BC63 /* YearHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearHeaderView.swift; sourceTree = "<group>"; };
+		42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
+		42EB0BFA2CB284DF00E38A49 /* SettingsBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBaseViewController.swift; sourceTree = "<group>"; };
 		42FA31EF2C918A6500AB5469 /* HanHae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HanHae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42FA31F22C918A6500AB5469 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42FA31F42C918A6500AB5469 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,11 +107,20 @@
 			path = Years;
 			sourceTree = "<group>";
 		};
+		4231E7572CB17DD7006EFD99 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		427C4ED62C91C2E500DE7844 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				421FA1392C930C4E00207006 /* Years */,
 				421FA1382C930C3C00207006 /* Months */,
+				42BC1FEB2CAE4F7700BED6F2 /* Settings */,
 				42FA32002C918A6600AB5469 /* LaunchScreen.storyboard */,
 				427C4EE52C91D5B200DE7844 /* ViewController.swift */,
 				42FBAC222C929AC5002F5A4D /* HHBaseViewController.swift */,
@@ -124,6 +141,7 @@
 			children = (
 				42FD5AD82C9C194000B1AF81 /* Years */,
 				42FD5AD92C9C194700B1AF81 /* Months */,
+				4231E7572CB17DD7006EFD99 /* Settings */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -162,6 +180,16 @@
 				427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		42BC1FEB2CAE4F7700BED6F2 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */,
+				42E2BB3F2CB107D100C102DE /* SettingDetailViewController.swift */,
+				42EB0BFA2CB284DF00E38A49 /* SettingsBaseViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		42CE1D7E2CA93B5400270234 /* Services */ = {
@@ -298,6 +326,7 @@
 			files = (
 				D787E07C2CACA52B006010F4 /* MonthlyMottoViewModel.swift in Sources */,
 				D787E0722CAC9ABA006010F4 /* MonthlyViewController.swift in Sources */,
+				42EB0BFB2CB284DF00E38A49 /* SettingsBaseViewController.swift in Sources */,
 				D787E07E2CACA729006010F4 /* MonthlyTodoListViewModel.swift in Sources */,
 				427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */,
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
@@ -306,9 +335,11 @@
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 				D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */,
+				42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */,
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 				D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */,
+				42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */,
 				42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */,
 				42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */,
 				42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */,
@@ -317,6 +348,7 @@
 				422010842CA68EAE00721175 /* TestMonthlyTDLViewModel.swift in Sources */,
 				42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */,
 				42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */,
+				4231E7592CB17E11006EFD99 /* SettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
