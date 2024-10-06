@@ -62,6 +62,7 @@ extension SettingDetailViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.handleSelection(of: indexPath.row)
+        tableView.reloadData()
     }
 }
 
@@ -91,6 +92,10 @@ extension SettingDetailViewController: UITableViewDataSource {
         cell.contentConfiguration = content
         cell.backgroundColor = .hhModalCell
         cell.selectionStyle = .none
+        cell.accessoryView = viewModel.presentCheckmark(
+            of: cell,
+            indexPathOfRow: indexPath.row
+        )
         
         return cell
     }

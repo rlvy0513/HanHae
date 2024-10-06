@@ -61,6 +61,9 @@ final class SettingsViewModel {
     
     var currentSetting: SettingOption?
     
+    var selectedTheme: Int = 0         // 0: 시스템, 1: 라이트, 2: 다크
+    var selectedLanguage: Int = 0      // 0: 한국어, 1: 영어
+    
     // MARK: - input
     
     // MARK: - output
@@ -73,7 +76,7 @@ final class SettingsViewModel {
     }
     
     func getDetailTitle() -> String {
-        guard let currentSetting else { return ""}
+        guard let currentSetting else { return "" }
         
         return currentSetting.title
     }
@@ -99,6 +102,19 @@ final class SettingsViewModel {
         return currentSetting.detailOptions.count
     }
     
+    func presentCheckmark(of cell: UITableViewCell, indexPathOfRow: Int) -> UIView? {
+        let checkmarkImage = customCheckmarkImage()
+        
+        switch currentSetting {
+        case .theme:
+            return indexPathOfRow == selectedTheme ? UIImageView(image: checkmarkImage) : nil
+        case .language:
+            return indexPathOfRow == selectedLanguage ? UIImageView(image: checkmarkImage) : nil
+        default:
+            return nil
+        }
+    }
+    
     // MARK: - logic
     func handleSelection(
         of option: SettingOption,
@@ -122,12 +138,14 @@ final class SettingsViewModel {
         }
     }
     
-    func handleSelection(of detailOptionIndex: Int) {
+    func handleSelection(of detailOptionIndexOfRow: Int) {
         guard let currentSetting = currentSetting else { return }
         
         switch currentSetting {
         case .theme:
-            switch detailOptionIndex {
+            selectedTheme = detailOptionIndexOfRow
+            
+            switch detailOptionIndexOfRow {
             case 0:
                 print("시스템")
             case 1:
@@ -138,7 +156,9 @@ final class SettingsViewModel {
                 break
             }
         case .language:
-            switch detailOptionIndex {
+            selectedLanguage = detailOptionIndexOfRow
+            
+            switch detailOptionIndexOfRow {
             case 0:
                 print("한국어")
             case 1:
@@ -149,6 +169,19 @@ final class SettingsViewModel {
         default:
             break
         }
+    }
+    
+    private func customCheckmarkImage() -> UIImage? {
+        let checkmarkConfig = UIImage.SymbolConfiguration(
+            pointSize: 17,
+            weight: .medium
+        )
+        let checkmarkImage = UIImage(
+            systemName: "checkmark",
+            withConfiguration: checkmarkConfig
+        )?.withTintColor(.hhAccent, renderingMode: .alwaysOriginal)
+        
+        return checkmarkImage
     }
     
 }
