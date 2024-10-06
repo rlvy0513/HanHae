@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol TodoListEditingDelegate: AnyObject {
+    func todoListEditingDidBegin()
+    func todoListEditingDidEnd()
+}
+
 class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     private var tableView: UITableView!
@@ -15,6 +20,7 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     private var completionLabel: UILabel!
     private var testButtonStackView: UIStackView!
     
+    weak var delegate: TodoListEditingDelegate?
     var viewModel: MonthlyTodoListViewModel!
     var onContentHeightUpdated: ((CGFloat) -> Void)?
     
@@ -242,5 +248,17 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     
     func saveCompletionStatus(at index: Int, isCompleted: Bool) {
         viewModel.updateCompletionStatus(at: index, isCompleted: isCompleted)
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        delegate?.todoListEditingDidBegin()
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        delegate?.todoListEditingDidEnd()
+    }
+    
+    func finishEditing() {
+        tableView.setEditing(false, animated: true)
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
+class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, MonthlyMottoDelegate, TodoListEditingDelegate {
     
     private var scrollView: UIScrollView!
     private var contentView: UIView!
@@ -144,12 +144,14 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
 
     private func setupSubViewControllers() {
         mottoVC = MonthlyMottoViewController(viewModel: viewModel)
+        mottoVC.delegate = self
         addChild(mottoVC)
         contentView.addSubview(mottoVC.view)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
         mottoVC.didMove(toParent: self)
 
         todoListVC = MonthlyTodoListViewController()
+        todoListVC.delegate = self
         addChild(todoListVC)
         contentView.addSubview(todoListVC.view)
         todoListVC.view.translatesAutoresizingMaskIntoConstraints = false
@@ -220,5 +222,44 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
         let totalHeight = mottoHeight + todoHeight + 20
 
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: totalHeight)
+    }
+    
+    private func createDoneButton(selector: Selector) -> UIBarButtonItem {
+        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
+        doneButton.tintColor = .hhAccent
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.hhHeadLine,
+            .foregroundColor: UIColor.hhAccent
+        ]
+        doneButton.setTitleTextAttributes(attributes, for: .normal)
+        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
+        return doneButton
+    }
+    
+    func mottoEditingDidBegin() {
+        let doneButton = createDoneButton(selector: #selector(endMottoEditing))
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func mottoEditingDidEnd() {
+        setupNavigationBar()
+    }
+    
+    @objc private func endMottoEditing() {
+        view.endEditing(true)
+    }
+    
+    func todoListEditingDidBegin() {
+        let doneButton = createDoneButton(selector: #selector(endTodoEditing))
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func todoListEditingDidEnd() {
+        setupNavigationBar()
+    }
+    
+    @objc private func endTodoEditing() {
+        view.endEditing(true)
+        todoListVC.finishEditing()
     }
 }

@@ -181,6 +181,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = false
             noteTextView.becomeFirstResponder()
         }
+        delegate?.textViewDidBeginEditing(textView)
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -206,6 +207,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
             noteTextView.isHidden = false
         }
+        delegate?.textViewDidEndEditing(textView)
     }
 
     func textViewDidChange(_ textView: UITextView) {
@@ -215,10 +217,8 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         }
     }
 
-    // MARK: - User Interaction Methods
     @objc private func toggleCheckBox() {
         if isCompleted {
-            // 체크박스 알럿
             let alertController = UIAlertController(
                 title: "목표 상태 변경하기",
                 message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
@@ -296,5 +296,20 @@ extension MonthlyTodoListViewController {
         detailVC.modalPresentationStyle = .pageSheet
         present(detailVC, animated: true, completion: nil)
     }
+    
+    func showDoneButton(for textView: UITextView) {
+        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(endEditing))
+        doneButton.tintColor = .hhAccent
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func hideDoneButton() {
+        navigationItem.rightBarButtonItem = nil
+    }
+    
+    @objc private func endEditing() {
+        view.endEditing(true)
+    }
+    
 }
 
