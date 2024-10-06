@@ -17,9 +17,8 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     private var tableView: UITableView!
     private var emptyStateImageView: UIImageView!
     private var emptyStateLabel: UILabel!
-    private var completionLabel: UILabel!
     private var testButtonStackView: UIStackView!
-    
+    var completionLabel: UILabel!
     weak var delegate: TodoListEditingDelegate?
     var viewModel: MonthlyTodoListViewModel!
     var onContentHeightUpdated: ((CGFloat) -> Void)?
@@ -161,7 +160,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         viewModel.addTodo()
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.scrollToBottom()
         }
     }
     
@@ -225,14 +223,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
         viewModel.moveTodo(from: fromIndexPath.row, to: to.row)
-    }
-    
-    private func scrollToBottom() {
-        let lastRow = self.viewModel.todoList.count - 1
-        if lastRow >= 0 {
-            let indexPath = IndexPath(row: lastRow, section: 0)
-            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        }
     }
     
     func saveText(at index: Int, text: String) {

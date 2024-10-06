@@ -15,19 +15,22 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
     private var todoListVC: MonthlyTodoListViewController!
     private var viewModel: MonthlyMottoViewModel!
     private var isEditingMode = false
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
-
         
+        viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+            
         setupNavigationBar()
         setupScrollView()
         setupSubViewControllers()
         setupToolbar()
+        
+        DispatchQueue.main.async {
+            print("시작 시 스크롤뷰 크기: \(self.scrollView.contentSize)")
+        }
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateScrollViewContentSize()
@@ -37,7 +40,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         super.viewDidLayoutSubviews()
         updateScrollViewContentSize()
     }
-
+    
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -46,14 +49,14 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhBlack
         ]
-
+        
         let yearsButton = createYearsButton()
         let settingButton = createSettingButton()
-
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: yearsButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
     }
-
+    
     private func createYearsButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(" \(Date.todayYear)", for: .normal)
@@ -71,7 +74,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
     private func popMonthlyViewController() {
         navigationController?.popViewController(animated: true)
     }
-
+    
     private func createSettingButton() -> UIButton {
         let topActions = [
             UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
@@ -80,13 +83,13 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
             UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in })
         ]
         let divider = UIMenu(title: "", options: .displayInline, children: topActions)
-
+        
         let bottomAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), attributes: .destructive, handler: { [weak self] _ in
             self?.todoListVC.didTapDeleteAllButton()
         })
         let items = [divider, bottomAction]
         let menu = UIMenu(title: "", children: items)
-
+        
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
         button.tintColor = .hhAccent
@@ -94,13 +97,13 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         button.menu = menu
         return button
     }
-
+    
     private func enterEditingMode() {
         isEditingMode = true
         todoListVC.didTapEditListButton()
         
         let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(exitEditingMode))
-
+        
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.hhHeadLine,
             .foregroundColor: UIColor.hhAccent
@@ -110,30 +113,30 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         
         navigationItem.rightBarButtonItem = doneButton
     }
-
+    
     @objc private func exitEditingMode() {
         isEditingMode = false
         todoListVC.didTapEditListButton()
         setupNavigationBar()
     }
-
+    
     private func setupScrollView() {
         scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.delegate = self
-
+        
         contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-
+        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
@@ -141,7 +144,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
     }
-
+    
     private func setupSubViewControllers() {
         mottoVC = MonthlyMottoViewController(viewModel: viewModel)
         mottoVC.delegate = self
@@ -149,14 +152,14 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         contentView.addSubview(mottoVC.view)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
         mottoVC.didMove(toParent: self)
-
+        
         todoListVC = MonthlyTodoListViewController()
         todoListVC.delegate = self
         addChild(todoListVC)
         contentView.addSubview(todoListVC.view)
         todoListVC.view.translatesAutoresizingMaskIntoConstraints = false
         todoListVC.didMove(toParent: self)
-
+        
         todoListVC.onContentHeightUpdated = { [weak self] updatedHeight in
             if let heightConstraint = self?.todoListVC.view.constraints.first(where: { $0.firstAttribute == .height }) {
                 heightConstraint.isActive = false
@@ -178,27 +181,27 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
             todoListVC.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
-
+    
     private func setupToolbar() {
         let addTodoListButton = createAddTodoListButton()
-
+        
         let addTodoListBarButton = UIBarButtonItem(customView: addTodoListButton)
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
+        
         let toolbar = UIToolbar()
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.items = [addTodoListBarButton, flexSpace]
         toolbar.tintColor = .hhAccent
-
+        
         view.addSubview(toolbar)
-
+        
         NSLayoutConstraint.activate([
             toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
+    
     private func createAddTodoListButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(" 목표 추가하기", for: .normal)
@@ -211,17 +214,26 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         button.addTarget(self, action: #selector(didTapAddTodoListButton), for: .touchUpInside)
         return button
     }
-
+    
     @objc private func didTapAddTodoListButton() {
         todoListVC.didTapAddTodoListButton()
-    }
 
+        DispatchQueue.main.async {
+            self.todoListVC.view.layoutIfNeeded()
+            self.updateScrollViewContentSize()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.scrollToBottom()
+            }
+        }
+    }
     private func updateScrollViewContentSize() {
         let mottoHeight = mottoVC.view.frame.height
         let todoHeight = todoListVC.view.frame.height
         let totalHeight = mottoHeight + todoHeight + 20
 
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: totalHeight)
+        scrollView.layoutIfNeeded()
     }
     
     private func createDoneButton(selector: Selector) -> UIBarButtonItem {
@@ -261,5 +273,18 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
     @objc private func endTodoEditing() {
         view.endEditing(true)
         todoListVC.finishEditing()
+    }
+    
+    private func scrollToBottom() {
+        let completionLabelHeight = todoListVC.completionLabel.frame.height
+
+        let bottomOffset = CGPoint(
+            x: 0,
+            y: scrollView.contentSize.height - scrollView.bounds.size.height + completionLabelHeight
+        )
+
+        if bottomOffset.y > 0 {
+            scrollView.setContentOffset(bottomOffset, animated: true)
+        }
     }
 }
