@@ -61,7 +61,18 @@ final class SettingsViewModel {
     
     var currentSetting: SettingOption?
     
-    var selectedTheme: Int = 0         // 0: 시스템, 1: 라이트, 2: 다크
+    private let userDefaults = UserDefaults.standard
+    private let themeKey = "selectedTheme"
+    
+    var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
+        get {
+            return userDefaults.integer(forKey: themeKey)
+        }
+        set {
+            userDefaults.setValue(newValue, forKey: themeKey)
+        }
+    }
+    
     var selectedLanguage: Int = 0      // 0: 한국어, 1: 영어
     
     // MARK: - input
@@ -144,17 +155,7 @@ final class SettingsViewModel {
         switch currentSetting {
         case .theme:
             selectedTheme = detailOptionIndexOfRow
-            
-            switch detailOptionIndexOfRow {
-            case 0:
-                print("시스템")
-            case 1:
-                print("라이트")
-            case 2:
-                print("다크")
-            default:
-                break
-            }
+            applyTheme(detailOptionIndexOfRow)
         case .language:
             selectedLanguage = detailOptionIndexOfRow
             
@@ -182,6 +183,39 @@ final class SettingsViewModel {
         )?.withTintColor(.hhAccent, renderingMode: .alwaysOriginal)
         
         return checkmarkImage
+    }
+    
+    private func applyTheme(_ themeIndex: Int?) {
+        guard let themeIndex = themeIndex else { return }
+        
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+        
+        windows.forEach { window in
+            UIView.transition(
+                with: window,
+                duration: 0.4,
+                options: [.transitionCrossDissolve], animations: {
+                    switch themeIndex {
+                    case 0:
+                        window.overrideUserInterfaceStyle = .unspecified
+                    case 1:
+                        window.overrideUserInterfaceStyle = .light
+                    case 2:
+                        window.overrideUserInterfaceStyle = .dark
+                    default:
+                        window.overrideUserInterfaceStyle = .unspecified
+                    }
+                },
+                completion: nil
+            )
+        }
+    }
+    
+    func loadSavedTheme() {
+        let savedThemeIndex = userDefaults.integer(forKey: themeKey)
+        applyTheme(savedThemeIndex)
     }
     
 }

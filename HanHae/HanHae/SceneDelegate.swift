@@ -16,6 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
+        let settingsVM = SettingsViewModel()
+        settingsVM.loadSavedTheme()
+        
         let navigationVC = UINavigationController(rootViewController: YearsViewController())
         
         // TODO: - 앱을 실행했을 때, 네비게이션 스택이 하나 쌓인 상태로 앱 실행되는지
