@@ -63,6 +63,7 @@ final class SettingsViewModel {
     
     private let userDefaults = UserDefaults.standard
     private let themeKey = "selectedTheme"
+    private let languageKey = "selectedLanguage"
     
     var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
         get {
@@ -73,7 +74,14 @@ final class SettingsViewModel {
         }
     }
     
-    var selectedLanguage: Int = 0      // 0: 한국어, 1: 영어
+    var selectedLanguage: Int? {          // 0: 한국어, 1: 영어
+        get {
+            return userDefaults.integer(forKey: languageKey)
+        }
+        set {
+            userDefaults.setValue(newValue, forKey: languageKey)
+        }
+    }
     
     // MARK: - input
     
@@ -186,7 +194,7 @@ final class SettingsViewModel {
     }
     
     private func applyTheme(_ themeIndex: Int?) {
-        guard let themeIndex = themeIndex else { return }
+        guard let themeIndex else { return }
         
         let windows = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
@@ -213,9 +221,19 @@ final class SettingsViewModel {
         }
     }
     
+    private func applyLanguage(_ languageIndex: Int?) {
+        // TODO: - 기능 구현 필요
+        // guard let languageIndex else { return }
+    }
+    
     func loadSavedTheme() {
         let savedThemeIndex = userDefaults.integer(forKey: themeKey)
         applyTheme(savedThemeIndex)
+    }
+    
+    func loadSavedLanguage() {
+        let savedLanguageIndex = userDefaults.integer(forKey: languageKey)
+        applyLanguage(savedLanguageIndex)
     }
     
 }
