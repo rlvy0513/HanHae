@@ -69,10 +69,10 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         view.alpha = 0.5
         view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.shadowColor = UIColor.hhBlack.cgColor
-        view.layer.shadowOpacity = 0.25
-        view.layer.shadowOffset = CGSize(width: 0, height: 4)
-        view.layer.shadowRadius = 5
+        view.layer.shadowColor = UIColor.hhShadow.cgColor
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        view.layer.shadowOpacity = 1
+        view.layer.masksToBounds = false
         return view
     }()
     

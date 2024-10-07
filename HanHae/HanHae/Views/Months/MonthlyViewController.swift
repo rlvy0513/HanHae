@@ -47,7 +47,7 @@ class MonthlyViewController: HHBaseViewController {
         navigationItem.title = "\(viewModel.currentMonth.month)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
-            .foregroundColor: UIColor.hhBlack
+            .foregroundColor: UIColor.hhText
         ]
         
         let yearsButton = createYearsButton()

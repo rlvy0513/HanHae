@@ -74,8 +74,8 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         NSLayoutConstraint.activate([
             completionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             completionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            completionLabel.heightAnchor.constraint(equalToConstant: 50)
+            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            completionLabel.heightAnchor.constraint(equalToConstant: 33)
         ])
     }
     
@@ -140,7 +140,7 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateCompletionLabel() {
         let percentage = Int(viewModel.completionPercentage())
-        let fullText = "목표량 \(percentage)% 달성"
+        let fullText = "목표 \(percentage)% 달성"
         
         let attributedText = NSMutableAttributedString(string: fullText)
         let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
@@ -234,7 +234,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
                 self.updateCompletionLabel()
                 self.updateTableViewContentHeight()
                 
-                // 메뉴 상태 업데이트
                 if let parentVC = self.delegate as? MonthlyViewController {
                     parentVC.updateSettingButton()
                 }
