@@ -10,6 +10,7 @@ import UIKit
 protocol TodoListEditingDelegate: AnyObject {
     func todoListEditingDidBegin()
     func todoListEditingDidEnd()
+    func scrollToTop()
 }
 
 class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
@@ -168,17 +169,15 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     public func didTapDeleteAllButton() {
-        showDeleteConfirmationAlert()
-    }
-    
-    private func showDeleteConfirmationAlert() {
         let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
         
         let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
             self?.viewModel.removeAllTodos()
+            
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
                 self?.updateCompletionLabel()
+                self?.delegate?.scrollToTop()
             }
         }
         
@@ -252,3 +251,4 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         tableView.setEditing(false, animated: true)
     }
 }
+

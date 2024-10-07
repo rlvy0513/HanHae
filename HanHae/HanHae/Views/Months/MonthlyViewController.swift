@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, MonthlyMottoDelegate, TodoListEditingDelegate {
+class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate {
     
     private var scrollView: UIScrollView!
     private var contentView: UIView!
@@ -20,7 +20,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         super.viewDidLoad()
         
         viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
-            
+        
         setupNavigationBar()
         setupScrollView()
         setupSubViewControllers()
@@ -70,8 +70,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         return button
     }
     
-    @objc
-    private func popMonthlyViewController() {
+    @objc private func popMonthlyViewController() {
         navigationController?.popViewController(animated: true)
     }
     
@@ -217,7 +216,7 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
     
     @objc private func didTapAddTodoListButton() {
         todoListVC.didTapAddTodoListButton()
-
+        
         DispatchQueue.main.async {
             self.todoListVC.view.layoutIfNeeded()
             self.updateScrollViewContentSize()
@@ -227,11 +226,25 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
             }
         }
     }
+    
+    @objc private func didTapDeleteAllButton() {
+        todoListVC.didTapDeleteAllButton()
+        
+        DispatchQueue.main.async {
+            self.todoListVC.view.layoutIfNeeded()
+            self.updateScrollViewContentSize()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.scrollToTop()
+            }
+        }
+    }
+    
     private func updateScrollViewContentSize() {
         let mottoHeight = mottoVC.view.frame.height
         let todoHeight = todoListVC.view.frame.height
         let totalHeight = mottoHeight + todoHeight + 20
-
+        
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: totalHeight)
         scrollView.layoutIfNeeded()
     }
@@ -248,6 +261,46 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
         return doneButton
     }
     
+    private func scrollToBottom() {
+        let completionLabelHeight = todoListVC.completionLabel.frame.height
+        
+        let bottomOffset = CGPoint(
+            x: 0,
+            y: scrollView.contentSize.height - scrollView.bounds.size.height + completionLabelHeight
+        )
+        
+        if bottomOffset.y > 0 {
+            scrollView.setContentOffset(bottomOffset, animated: true)
+        }
+    }
+    
+    @objc private func endTodoEditing() {
+        view.endEditing(true)
+        todoListVC.finishEditing()
+    }
+}
+
+extension MonthlyViewController: TodoListEditingDelegate {
+    func todoListEditingDidBegin() {
+        let doneButton = createDoneButton(selector: #selector(endTodoEditing))
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func todoListEditingDidEnd() {
+        setupNavigationBar()
+    }
+    
+    func scrollToTop() {
+        let extraOffset: CGFloat = 10
+        let topOffset = CGPoint(x: 0, y: -scrollView.adjustedContentInset.top - extraOffset)
+        
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+            self.scrollView.setContentOffset(topOffset, animated: false)
+        }, completion: nil)
+    }
+}
+
+extension MonthlyViewController: MonthlyMottoDelegate {
     func mottoEditingDidBegin() {
         let doneButton = createDoneButton(selector: #selector(endMottoEditing))
         navigationItem.rightBarButtonItem = doneButton
@@ -259,32 +312,5 @@ class MonthlyViewController: HHBaseViewController, UIScrollViewDelegate, Monthly
     
     @objc private func endMottoEditing() {
         view.endEditing(true)
-    }
-    
-    func todoListEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endTodoEditing))
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    func todoListEditingDidEnd() {
-        setupNavigationBar()
-    }
-    
-    @objc private func endTodoEditing() {
-        view.endEditing(true)
-        todoListVC.finishEditing()
-    }
-    
-    private func scrollToBottom() {
-        let completionLabelHeight = todoListVC.completionLabel.frame.height
-
-        let bottomOffset = CGPoint(
-            x: 0,
-            y: scrollView.contentSize.height - scrollView.bounds.size.height + completionLabelHeight
-        )
-
-        if bottomOffset.y > 0 {
-            scrollView.setContentOffset(bottomOffset, animated: true)
-        }
     }
 }
