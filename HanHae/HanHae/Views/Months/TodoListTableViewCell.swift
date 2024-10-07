@@ -98,6 +98,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         let noteText = todo.note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         noteTextView.text = noteText.isEmpty ? "노트 추가하기" : noteText
         noteTextView.textColor = .hhLightGray
+        noteTextView.tintColor = .hhAccent
         noteTextView.font = .hhCaption1
         noteTextView.isScrollEnabled = false
         noteTextView.textContainer.lineBreakMode = .byWordWrapping

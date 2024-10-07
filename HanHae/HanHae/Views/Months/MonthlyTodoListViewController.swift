@@ -24,6 +24,15 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     var viewModel: MonthlyTodoListViewModel!
     var onContentHeightUpdated: ((CGFloat) -> Void)?
     
+    init(viewModel: MonthlyTodoListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -178,6 +187,13 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
                 self?.tableView.reloadData()
                 self?.updateCompletionLabel()
                 self?.delegate?.scrollToTop()
+                
+                if let parentVC = self?.delegate as? MonthlyViewController {
+                    parentVC.updateSettingButton()
+                }
+                
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
             }
         }
         
@@ -213,9 +229,15 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         if editingStyle == .delete {
             viewModel.removeTodo(at: indexPath.row)
             tableView.reloadData()
+
             DispatchQueue.main.async {
                 self.updateCompletionLabel()
                 self.updateTableViewContentHeight()
+                
+                // 메뉴 상태 업데이트
+                if let parentVC = self.delegate as? MonthlyViewController {
+                    parentVC.updateSettingButton()
+                }
             }
         }
     }
