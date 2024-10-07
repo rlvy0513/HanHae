@@ -65,6 +65,7 @@ final class SettingsViewModel {
     private let userDefaults = UserDefaults.standard
     private let themeKey = "selectedTheme"
     private let languageKey = "selectedLanguage"
+    private let reminderKey = "isReminderOn"
     
     var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
         get {
@@ -84,7 +85,19 @@ final class SettingsViewModel {
         }
     }
     
+    var isReminderOn: Bool {
+        get {
+            return userDefaults.object(forKey: reminderKey) != nil ? userDefaults.bool(forKey: reminderKey) : true
+        }
+        set {
+            userDefaults.set(newValue, forKey: reminderKey)
+        }
+    }
+    
     // MARK: - input
+    func handleReminderSwitchToggled(_ sender: UISwitch) {
+        isReminderOn = sender.isOn
+    }
     
     // MARK: - output
     func getOptionImage(for option: SettingOption) -> UIImage? {

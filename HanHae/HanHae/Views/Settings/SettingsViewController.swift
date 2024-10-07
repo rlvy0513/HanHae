@@ -12,9 +12,15 @@ final class SettingsViewController: SettingsBaseViewController {
     
     private let viewModel = SettingsViewModel()
     
-    private let remindAlarmSwitch: UISwitch = {
+    private lazy var remindAlarmSwitch: UISwitch = {
         let alarmSwitch = UISwitch()
         alarmSwitch.onTintColor = .hhAccent
+        alarmSwitch.isOn = viewModel.isReminderOn
+        alarmSwitch.addTarget(
+            self,
+            action: #selector(reminderSwitchToggled),
+            for: .valueChanged
+        )
         return alarmSwitch
     }()
     
@@ -70,6 +76,12 @@ final class SettingsViewController: SettingsBaseViewController {
             present(alert, animated: true, completion: nil)
         }
     }
+    
+    @objc
+    private func reminderSwitchToggled(_ sender: UISwitch) {
+        viewModel.handleReminderSwitchToggled(sender)
+    }
+    
 }
 
 
