@@ -74,7 +74,7 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         NSLayoutConstraint.activate([
             completionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             completionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -29),
             completionLabel.heightAnchor.constraint(equalToConstant: 33)
         ])
     }

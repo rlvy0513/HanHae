@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 final class SettingsViewModel {
     
@@ -61,10 +62,42 @@ final class SettingsViewModel {
     
     var currentSetting: SettingOption?
     
-    var selectedTheme: Int = 0         // 0: 시스템, 1: 라이트, 2: 다크
-    var selectedLanguage: Int = 0      // 0: 한국어, 1: 영어
+    private let userDefaults = UserDefaults.standard
+    private let themeKey = "selectedTheme"
+    private let languageKey = "selectedLanguage"
+    private let reminderKey = "isReminderOn"
+    
+    var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
+        get {
+            return userDefaults.integer(forKey: themeKey)
+        }
+        set {
+            userDefaults.setValue(newValue, forKey: themeKey)
+        }
+    }
+    
+    var selectedLanguage: Int? {          // 0: 한국어, 1: 영어
+        get {
+            return userDefaults.integer(forKey: languageKey)
+        }
+        set {
+            userDefaults.setValue(newValue, forKey: languageKey)
+        }
+    }
+    
+    var isReminderOn: Bool {
+        get {
+            return userDefaults.object(forKey: reminderKey) != nil ? userDefaults.bool(forKey: reminderKey) : true
+        }
+        set {
+            userDefaults.set(newValue, forKey: reminderKey)
+        }
+    }
     
     // MARK: - input
+    func handleReminderSwitchToggled(_ sender: UISwitch) {
+        isReminderOn = sender.isOn
+    }
     
     // MARK: - output
     func getOptionImage(for option: SettingOption) -> UIImage? {
@@ -115,26 +148,25 @@ final class SettingsViewModel {
         }
     }
     
-    // MARK: - logic
+    // MARK: - logic    
     func handleSelection(
         of option: SettingOption,
-        navigationController: UINavigationController?
+        viewController: UIViewController
     ) {
         switch option {
         case .theme, .language:
             self.currentSetting = option
             
             let detailVC = SettingDetailViewController(viewModel: self)
-            navigationController?.pushViewController(detailVC, animated: true)
+            viewController.navigationController?.pushViewController(detailVC, animated: true)
         case .reminder:
-            // 알림 관련 설정은 Switch로 처리되어 별도 동작 없음
             break
         case .feedback:
-            // 피드백 화면으로 이동하는 로직 추가
-            print("Feedback selected")
+            guard let settingsVC = viewController as? SettingsViewController else { return }
+            settingsVC.presentFeedbackEmail()
         case .rating:
-            // 앱 스토어 리뷰 페이지로 이동하는 로직 추가
-            print("Rating selected")
+            guard let scene = viewController.view.window?.windowScene else { return }
+            SKStoreReviewController.requestReview(in: scene)
         }
     }
     
@@ -144,17 +176,7 @@ final class SettingsViewModel {
         switch currentSetting {
         case .theme:
             selectedTheme = detailOptionIndexOfRow
-            
-            switch detailOptionIndexOfRow {
-            case 0:
-                print("시스템")
-            case 1:
-                print("라이트")
-            case 2:
-                print("다크")
-            default:
-                break
-            }
+            applyTheme(detailOptionIndexOfRow)
         case .language:
             selectedLanguage = detailOptionIndexOfRow
             
@@ -182,6 +204,49 @@ final class SettingsViewModel {
         )?.withTintColor(.hhAccent, renderingMode: .alwaysOriginal)
         
         return checkmarkImage
+    }
+    
+    private func applyTheme(_ themeIndex: Int?) {
+        guard let themeIndex else { return }
+        
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+        
+        windows.forEach { window in
+            UIView.transition(
+                with: window,
+                duration: 0.4,
+                options: [.transitionCrossDissolve], animations: {
+                    switch themeIndex {
+                    case 0:
+                        window.overrideUserInterfaceStyle = .unspecified
+                    case 1:
+                        window.overrideUserInterfaceStyle = .light
+                    case 2:
+                        window.overrideUserInterfaceStyle = .dark
+                    default:
+                        window.overrideUserInterfaceStyle = .unspecified
+                    }
+                },
+                completion: nil
+            )
+        }
+    }
+    
+    private func applyLanguage(_ languageIndex: Int?) {
+        // TODO: - 기능 구현 필요
+        // guard let languageIndex else { return }
+    }
+    
+    func loadSavedTheme() {
+        let savedThemeIndex = userDefaults.integer(forKey: themeKey)
+        applyTheme(savedThemeIndex)
+    }
+    
+    func loadSavedLanguage() {
+        let savedLanguageIndex = userDefaults.integer(forKey: languageKey)
+        applyLanguage(savedLanguageIndex)
     }
     
 }

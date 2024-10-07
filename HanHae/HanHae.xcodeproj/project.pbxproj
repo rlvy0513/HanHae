@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42056A502CB35A2A00BC3F87 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42056A4F2CB35A2300BC3F87 /* DeviceInfo.swift */; };
 		422010842CA68EAE00721175 /* TestMonthlyTDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */; };
 		4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223B9652CA02CA600BD9708 /* YearsViewModel.swift */; };
 		4231E7592CB17E11006EFD99 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		42056A4F2CB35A2300BC3F87 /* DeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
 		422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMonthlyTDLViewModel.swift; sourceTree = "<group>"; };
 		4223B9652CA02CA600BD9708 /* YearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewModel.swift; sourceTree = "<group>"; };
 		4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
@@ -85,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42056A4E2CB35A1900BC3F87 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				42056A4F2CB35A2300BC3F87 /* DeviceInfo.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		421FA1382C930C3C00207006 /* Months */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +178,7 @@
 		427C4EDF2C91C54500DE7844 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				42056A4E2CB35A1900BC3F87 /* Helpers */,
 				427C4EE02C91C56100DE7844 /* Extensions */,
 			);
 			path = Utilities;
@@ -339,6 +350,7 @@
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,
 				42FBAC1F2C92993A002F5A4D /* SampleModel.swift in Sources */,
 				D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */,
+				42056A502CB35A2A00BC3F87 /* DeviceInfo.swift in Sources */,
 				42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */,
 				42FBAC232C929AC5002F5A4D /* HHBaseViewController.swift in Sources */,
 				42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */,
