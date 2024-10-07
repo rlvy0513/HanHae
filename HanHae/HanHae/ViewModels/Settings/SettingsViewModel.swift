@@ -134,25 +134,23 @@ final class SettingsViewModel {
         }
     }
     
-    // MARK: - logic
+    // MARK: - logic    
     func handleSelection(
         of option: SettingOption,
-        navigationController: UINavigationController?
+        viewController: UIViewController
     ) {
         switch option {
         case .theme, .language:
             self.currentSetting = option
             
             let detailVC = SettingDetailViewController(viewModel: self)
-            navigationController?.pushViewController(detailVC, animated: true)
+            viewController.navigationController?.pushViewController(detailVC, animated: true)
         case .reminder:
-            // 알림 관련 설정은 Switch로 처리되어 별도 동작 없음
             break
         case .feedback:
-            // 피드백 화면으로 이동하는 로직 추가
-            print("Feedback selected")
+            guard let settingsVC = viewController as? SettingsViewController else { return }
+            settingsVC.presentFeedbackEmail()
         case .rating:
-            // 앱 스토어 리뷰 페이지로 이동하는 로직 추가
             print("Rating selected")
         }
     }
