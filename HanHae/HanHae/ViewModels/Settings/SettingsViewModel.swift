@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 final class SettingsViewModel {
     
@@ -151,7 +152,8 @@ final class SettingsViewModel {
             guard let settingsVC = viewController as? SettingsViewController else { return }
             settingsVC.presentFeedbackEmail()
         case .rating:
-            print("Rating selected")
+            guard let scene = viewController.view.window?.windowScene else { return }
+            SKStoreReviewController.requestReview(in: scene)
         }
     }
     
