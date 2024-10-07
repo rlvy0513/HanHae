@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol MonthlyMottoDelegate: AnyObject {
+    func mottoEditingDidBegin()
+    func mottoEditingDidEnd()
+}
+
 class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     
-    private var model: HHMonth
     private var viewModel: MonthlyMottoViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
     
+    weak var delegate: MonthlyMottoDelegate?
+
     private let monthlyMottoTextView: UITextView = {
         let textView = UITextView()
         textView.font = .hhBody
@@ -26,11 +32,11 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         return textView
     }()
     
-    private let monthlyMottoFooterLabel: UILabel = {
+    private lazy var monthlyMottoFooterLabel: UILabel = {
         let label = UILabel()
-        label.text = "?월의 나에게"
+        label.text = "\(viewModel.currentMonth.month)월의 나에게"
         label.font = .hhCaption1
-        label.textColor = .hhLightGray // 잘 안보임
+        label.textColor = .hhLightGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -61,15 +67,18 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         view.backgroundColor = .hhCharacter
         view.layer.cornerRadius = 10
         view.alpha = 0.5
-        view.clipsToBounds = true
+        view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.shadowColor = UIColor.hhShadow.cgColor
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        view.layer.shadowOpacity = 1
+        view.layer.masksToBounds = false
         return view
     }()
     
-    init(model: HHMonth) {
-        self.model = model
+    init(viewModel: MonthlyMottoViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        viewModel = MonthlyMottoViewModel(model: model)
     }
     
     required init?(coder: NSCoder) {
@@ -110,16 +119,16 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
             monthlyBox.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             monthlyBox.heightAnchor.constraint(greaterThanOrEqualToConstant: 165),
             
-            openingQuoteLabel.topAnchor.constraint(equalTo: monthlyBox.topAnchor, constant: 0),
+            openingQuoteLabel.topAnchor.constraint(equalTo: monthlyBox.topAnchor, constant: 5),
             openingQuoteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             monthlyMottoTextView.leadingAnchor.constraint(equalTo: monthlyBox.leadingAnchor, constant: 10),
             monthlyMottoTextView.trailingAnchor.constraint(equalTo: monthlyBox.trailingAnchor, constant: -10),
             
-            closingQuoteLabel.topAnchor.constraint(equalTo: monthlyMottoFooterLabel.bottomAnchor, constant: 0),
+            closingQuoteLabel.topAnchor.constraint(equalTo: monthlyMottoFooterLabel.bottomAnchor, constant: -3),
             closingQuoteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            monthlyMottoFooterLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 125),
+            monthlyMottoFooterLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             monthlyMottoFooterLabel.leadingAnchor.constraint(equalTo: monthlyBox.leadingAnchor, constant: 10),
             monthlyMottoFooterLabel.trailingAnchor.constraint(equalTo: monthlyBox.trailingAnchor, constant: -10)
         ])
@@ -129,8 +138,8 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     }
     
     private func updateMottoTextView(for text: String) {
-        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == "?월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.\n" {
-            monthlyMottoTextView.text = "?월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.\n"
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == viewModel.defaultMottoText {
+            monthlyMottoTextView.text = viewModel.defaultMottoText
             monthlyMottoTextView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
@@ -140,48 +149,54 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     }
     
     private func updateTextViewPosition() {
-        let isDefaultText = monthlyMottoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-        monthlyMottoTextView.text == "?월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.\n"
-        mottoTextViewTopConstraint.isActive = false
-        
-        if isDefaultText {
-            mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40)
-            monthlyMottoTextView.textColor = .hhLightGray
-        } else {
-            mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
-            monthlyMottoTextView.textColor = .hhText
+            let isDefaultText = monthlyMottoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || monthlyMottoTextView.text == viewModel.defaultMottoText
+            mottoTextViewTopConstraint.isActive = false
+            
+            if isDefaultText {
+                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40)
+                monthlyMottoTextView.textColor = .hhLightGray
+            } else {
+                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
+                monthlyMottoTextView.textColor = .hhText
+            }
+            
+            mottoTextViewTopConstraint.isActive = true
+            view.layoutIfNeeded()
         }
         
-        mottoTextViewTopConstraint.isActive = true
-        view.layoutIfNeeded()
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.tag == 1, textView.text == "?월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.\n" {
-            textView.text = ""
-            textView.textColor = .hhText
-            showFooterAndQuoteLabels()
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            delegate?.mottoEditingDidBegin()
+            
+            if textView.tag == 1, textView.text == viewModel.defaultMottoText {
+                textView.text = ""
+                textView.textColor = .hhText
+                showFooterAndQuoteLabels()
+            }
         }
-    }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.tag == 1 && textView.text.isEmpty {
-            textView.text = "?월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.\n"
-            textView.textColor = .hhText
+        delegate?.mottoEditingDidEnd()
+        
+        let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if textView.tag == 1 && trimmedText.isEmpty {
+            textView.text = viewModel.defaultMottoText
+            textView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
             viewModel.updateMotto(textView.text)
+            textView.textColor = .hhText
+            showFooterAndQuoteLabels()
         }
+        
         updateTextViewPosition()
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textView.tag == 1 {
             let maxNumberOfLines = 3
-            
             let size = CGSize(width: textView.frame.width, height: .infinity)
             let textViewSize = textView.sizeThatFits(size)
-            
             let lineHeight = textView.font?.lineHeight ?? 0
             let numberOfLines = Int(textViewSize.height / lineHeight)
             
@@ -195,8 +210,11 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
                     constraint.constant = textViewSize.height
                 }
             }
+            textView.textColor = .hhText
+            showFooterAndQuoteLabels()
+            
+            viewModel.updateMotto(textView.text)
         }
-        viewModel.updateMotto(textView.text)
     }
     
     private func showFooterAndQuoteLabels() {

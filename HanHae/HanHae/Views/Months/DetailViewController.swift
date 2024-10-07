@@ -135,6 +135,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             noteTextView.text = todo?.note ?? "노트 추가하기"
             noteTextView.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             noteTextView.textColor = .hhLightGray
+            noteTextView.tintColor = .hhAccent
             noteTextView.delegate = self
             noteTextView.backgroundColor = .clear
             noteTextView.isScrollEnabled = false

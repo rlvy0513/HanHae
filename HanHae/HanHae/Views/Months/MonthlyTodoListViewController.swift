@@ -7,16 +7,31 @@
 
 import UIKit
 
+protocol TodoListEditingDelegate: AnyObject {
+    func todoListEditingDidBegin()
+    func todoListEditingDidEnd()
+    func scrollToTop()
+}
+
 class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     private var tableView: UITableView!
     private var emptyStateImageView: UIImageView!
     private var emptyStateLabel: UILabel!
-    private var completionLabel: UILabel!
     private var testButtonStackView: UIStackView!
-    
+    var completionLabel: UILabel!
+    weak var delegate: TodoListEditingDelegate?
     var viewModel: MonthlyTodoListViewModel!
     var onContentHeightUpdated: ((CGFloat) -> Void)?
+    
+    init(viewModel: MonthlyTodoListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,8 +74,8 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         NSLayoutConstraint.activate([
             completionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             completionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            completionLabel.heightAnchor.constraint(equalToConstant: 50)
+            completionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            completionLabel.heightAnchor.constraint(equalToConstant: 33)
         ])
     }
     
@@ -125,7 +140,7 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateCompletionLabel() {
         let percentage = Int(viewModel.completionPercentage())
-        let fullText = "목표량 \(percentage)% 달성"
+        let fullText = "목표 \(percentage)% 달성"
         
         let attributedText = NSMutableAttributedString(string: fullText)
         let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
@@ -155,7 +170,6 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         viewModel.addTodo()
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.scrollToBottom()
         }
     }
     
@@ -164,17 +178,22 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     public func didTapDeleteAllButton() {
-        showDeleteConfirmationAlert()
-    }
-    
-    private func showDeleteConfirmationAlert() {
         let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
         
         let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
             self?.viewModel.removeAllTodos()
+            
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
                 self?.updateCompletionLabel()
+                self?.delegate?.scrollToTop()
+                
+                if let parentVC = self?.delegate as? MonthlyViewController {
+                    parentVC.updateSettingButton()
+                }
+                
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
             }
         }
         
@@ -210,23 +229,20 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
         if editingStyle == .delete {
             viewModel.removeTodo(at: indexPath.row)
             tableView.reloadData()
+
             DispatchQueue.main.async {
                 self.updateCompletionLabel()
                 self.updateTableViewContentHeight()
+                
+                if let parentVC = self.delegate as? MonthlyViewController {
+                    parentVC.updateSettingButton()
+                }
             }
         }
     }
     
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
         viewModel.moveTodo(from: fromIndexPath.row, to: to.row)
-    }
-    
-    private func scrollToBottom() {
-        let lastRow = self.viewModel.todoList.count - 1
-        if lastRow >= 0 {
-            let indexPath = IndexPath(row: lastRow, section: 0)
-            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        }
     }
     
     func saveText(at index: Int, text: String) {
@@ -243,4 +259,17 @@ class MonthlyTodoListViewController: UIViewController, UITableViewDelegate, UITa
     func saveCompletionStatus(at index: Int, isCompleted: Bool) {
         viewModel.updateCompletionStatus(at: index, isCompleted: isCompleted)
     }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        delegate?.todoListEditingDidBegin()
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        delegate?.todoListEditingDidEnd()
+    }
+    
+    func finishEditing() {
+        tableView.setEditing(false, animated: true)
+    }
 }
+
