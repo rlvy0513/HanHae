@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
+class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     weak var delegate: MonthlyTodoListViewController?
     var todo: ToDo?
     var index: Int?
@@ -25,8 +25,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     private func setupModal() {
-        view.backgroundColor = .hhModalSheet
-        
         headerView = UIView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
@@ -76,13 +74,13 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DetailCell")
-        tableView.backgroundColor = .hhModalSheet
+        tableView.backgroundColor = .clear
+        tableView.isScrollEnabled = false
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -287,8 +285,8 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         animation.duration = 0.05
         animation.repeatCount = 4
         animation.autoreverses = true
-        animation.fromValue = NSValue(cgPoint: CGPoint(x: textView.center.x - 10, y: textView.center.y))
-        animation.toValue = NSValue(cgPoint: CGPoint(x: textView.center.x + 10, y: textView.center.y))
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: textView.center.x - 8, y: textView.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: textView.center.x + 8, y: textView.center.y))
         textView.layer.add(animation, forKey: "position")
     }
 }
