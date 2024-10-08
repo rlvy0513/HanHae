@@ -75,7 +75,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DetailCell")
-        tableView.separatorStyle = .none
         tableView.backgroundColor = .hhModalSheet
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
@@ -117,17 +116,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
                 titleLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
                 titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
-            ])
-            
-            let separator = UIView()
-            separator.backgroundColor = .hhDevider
-            separator.translatesAutoresizingMaskIntoConstraints = false
-            cell.contentView.addSubview(separator)
-            NSLayoutConstraint.activate([
-                separator.heightAnchor.constraint(equalToConstant: 1),
-                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
-                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
-                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
             ])
             
         case (0, 1):
