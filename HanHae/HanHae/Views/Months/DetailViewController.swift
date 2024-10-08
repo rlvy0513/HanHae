@@ -259,6 +259,14 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @objc private func doneTapped() {
+        let isTodoTextEmpty = toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        if isTodoTextEmpty {
+            shakeTextView(toDoListTextView)
+            toDoListTextView.becomeFirstResponder()
+            return
+        }
+        
         if let updatedNote = noteTextView.text {
             NotificationCenter.default.post(name: NSNotification.Name("NoteUpdated"), object: nil, userInfo: ["updatedNote": updatedNote])
         }
@@ -272,5 +280,15 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             delegate?.saveText(at: index, text: toDoListTextView.text)
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func shakeTextView(_ textView: UITextView) {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.05
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: textView.center.x - 10, y: textView.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: textView.center.x + 10, y: textView.center.y))
+        textView.layer.add(animation, forKey: "position")
     }
 }
