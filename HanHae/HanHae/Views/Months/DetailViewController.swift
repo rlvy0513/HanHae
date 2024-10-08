@@ -14,6 +14,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var start: Date?
     var completion: Date?
     private var tableView: UITableView!
+    private var toDoListTextView: UITextView!
     private var noteTextView: UITextView!
     private var headerView: UIView!
     
@@ -100,22 +101,25 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath)
         cell.selectionStyle = .none
         cell.backgroundColor = .hhModalCell
-        cell.textLabel?.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
-        cell.detailTextLabel?.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
         
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
-            let titleLabel = UILabel()
-            titleLabel.text = todo?.title ?? "목표가 아직 없습니다!"
-            titleLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
-            titleLabel.numberOfLines = 0
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            cell.contentView.addSubview(titleLabel)
+            toDoListTextView = UITextView()
+            toDoListTextView.text = todo?.title ?? "목표가 아직 없습니다!"
+            toDoListTextView.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
+            toDoListTextView.textColor = .hhBlack
+            toDoListTextView.tintColor = .hhAccent
+            toDoListTextView.backgroundColor = .clear
+            toDoListTextView.isScrollEnabled = false
+            toDoListTextView.delegate = self
+            toDoListTextView.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(toDoListTextView)
+            
             NSLayoutConstraint.activate([
-                titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
-                titleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
-                titleLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
-                titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
+                toDoListTextView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 5),
+                toDoListTextView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                toDoListTextView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+                toDoListTextView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -5)
             ])
             
         case (0, 1):
@@ -129,16 +133,15 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             noteTextView.isScrollEnabled = false
             noteTextView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(noteTextView)
+            
             NSLayoutConstraint.activate([
                 noteTextView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 0),
-                noteTextView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 15),
+                noteTextView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
                 noteTextView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
-                noteTextView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
+                noteTextView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -5)
             ])
             
         case (1, 0):
-            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-
             let startDateImage = UIImageView()
             startDateImage.image = UIImage(systemName: "flag")
             startDateImage.tintColor = .hhAccent
@@ -177,8 +180,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             ])
 
         case (1, 1):
-            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-
             let completionDateImage = UIImageView()
             completionDateImage.image = UIImage(systemName: "flag.checkered")
             completionDateImage.tintColor = .hhAccent
@@ -218,7 +219,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         default:
             break
         }
-        
         return cell
     }
     
@@ -235,9 +235,15 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            textView.text = "노트 추가하기"
+            if textView == noteTextView {
+                textView.text = "노트 추가하기"
+            }
         } else {
-            todo?.note = textView.text
+            if textView == noteTextView {
+                todo?.note = textView.text
+            } else if textView == toDoListTextView {
+                todo?.title = textView.text
+            }
         }
     }
     
@@ -255,10 +261,15 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc private func doneTapped() {
         if let updatedNote = noteTextView.text {
             NotificationCenter.default.post(name: NSNotification.Name("NoteUpdated"), object: nil, userInfo: ["updatedNote": updatedNote])
-            
-            if let index = index {
-                delegate?.saveNoteText(at: index, noteText: updatedNote)
-            }
+        }
+        
+        if let updatedTitle = toDoListTextView.text {
+            NotificationCenter.default.post(name: NSNotification.Name("TitleUpdated"), object: nil, userInfo: ["updatedTitle": updatedTitle])
+        }
+
+        if let index = index {
+            delegate?.saveNoteText(at: index, noteText: noteTextView.text)
+            delegate?.saveText(at: index, text: toDoListTextView.text)
         }
         dismiss(animated: true, completion: nil)
     }
