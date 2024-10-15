@@ -9,83 +9,94 @@ import Foundation
 
 class MonthlyToDoListViewModel {
     
-    private let todoListKey = "savedTodoList"
+    private let toDoListKey = "savedTodoList"
 
-    private(set) var todoList: [ToDo] = [] {
+    private(set) var toDoList: [ToDo] = [] {
         didSet {
-            saveTodoList()
-            onTodoListUpdated?(todoList)
+            saveToDoList()
+            onToDoListUpdated?(toDoList)
         }
     }
     
     var isEmpty: Bool {
-        return todoList.isEmpty
+        return toDoList.isEmpty
     }
     
-    var onTodoListUpdated: (([ToDo]) -> Void)?
+    var onToDoListUpdated: (([ToDo]) -> Void)?
 
     init() {
-        loadTodoList()
+        loadToDoList()
     }
     
+    private var isEditingMode = false
+    
     // 목표 추가
-    func addTodo() {
-        todoList.append(ToDo(title: "목표를 입력하세요.", note: nil))
+    func addToDo() {
+        toDoList.append(ToDo(title: "목표를 입력하세요.", note: nil))
     }
     
     // 목표 순서
-    func moveTodo(from sourceIndex: Int, to destinationIndex: Int) {
-        guard sourceIndex != destinationIndex else { return }
-        let movedTodo = todoList.remove(at: sourceIndex)
-        todoList.insert(movedTodo, at: destinationIndex)
+    func moveToDo(from oldIndex: Int, to newIndex: Int) {
+        guard oldIndex >= 0 && oldIndex < toDoList.count,
+                newIndex >= 0 && newIndex < toDoList.count else { return }
+        let movedToDo = toDoList.remove(at: oldIndex)
+        toDoList.insert(movedToDo, at: newIndex)
     }
     
     // 목표 삭제
-    func removeTodo(at index: Int) {
-        guard index >= 0 && index < todoList.count else {
-            print("Index out of bounds")
-            return
-        }
-        todoList.remove(at: index)
+    func removeToDo(at index: Int) {
+        guard index >= 0 && index < toDoList.count else { return }
+        toDoList.remove(at: index)
+    }
+    
+    // 전체삭제
+    func removeAllToDoList() {
+        toDoList.removeAll()
     }
     
     // 목표 업데이트
-    func updateTodoText(at index: Int, text: String) {
-        guard index >= 0 && index < todoList.count else { return }
-        todoList[index].title = text
+    func updateToDoText(at index: Int, text: String) {
+        guard index >= 0 && index < toDoList.count else { return }
+        toDoList[index].title = text
     }
     
     // 메모 변경
     func updateNoteText(at index: Int, note: String) {
-        guard index >= 0 && index < todoList.count else { return }
-        todoList[index].note = note.isEmpty ? nil : note
+        guard index >= 0 && index < toDoList.count else { return }
+        toDoList[index].note = note.isEmpty ? nil : note
     }
 
     // 완료 유무
     func updateCompletionStatus(at index: Int, isCompleted: Bool) {
-        todoList[index].isCompleted = isCompleted
-        todoList[index].completionDate = isCompleted ? Date() : nil
-        saveTodoList()
-    }
-    
-    // 전체삭제
-    func removeAllTodos() {
-        todoList.removeAll()
+        guard index >= 0 && index < toDoList.count else { return }
+        toDoList[index].isCompleted = isCompleted
+        toDoList[index].completionDate = isCompleted ? Date() : nil
+        saveToDoList()
     }
 
-    private func saveTodoList() {
+    // 편집 모드 토글 메서드
+    func didTapEditListButton() {
+        isEditingMode.toggle()
+    }
+
+    // 편집 모드 종료 메서드
+    func finishEditing() {
+        isEditingMode = false
+    }
+    
+    private func saveToDoList() {
         do {
-            let data = try JSONEncoder().encode(todoList)
-            UserDefaults.standard.set(data, forKey: todoListKey)
+            let data = try JSONEncoder().encode(toDoList)
+            UserDefaults.standard.set(data, forKey: toDoListKey)
         } catch {
             print("저장실패: \(error.localizedDescription)")
         }
     }
 
-    private func loadTodoList() {
-        if let data = UserDefaults.standard.data(forKey: todoListKey) {
+    private func loadToDoList() {
+        if let data = UserDefaults.standard.data(forKey: toDoListKey) {
             do {
-                todoList = try JSONDecoder().decode([ToDo].self, from: data)
+                toDoList = try JSONDecoder().decode([ToDo].self, from: data)
             } catch {
                 print("불러오기실패: \(error.localizedDescription)")
             }
@@ -93,8 +104,8 @@ class MonthlyToDoListViewModel {
     }
     
     func completionPercentage() -> Double {
-        let completedTodos = todoList.filter { $0.isCompleted }
-        guard !todoList.isEmpty else { return 0.0 }
-        return (Double(completedTodos.count) / Double(todoList.count)) * 100
+        guard !toDoList.isEmpty else { return 0.0 }
+        let completedCount = toDoList.count { $0.isCompleted }
+        return (Double(completedCount) / Double(toDoList.count)) * 100
     }
 }

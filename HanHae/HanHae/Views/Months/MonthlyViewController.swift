@@ -24,24 +24,21 @@ class MonthlyViewController: HHBaseViewController {
         super.viewDidLoad()
         
         mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+        toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
-        setupSubViewControllers()
+
         setupToolbar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         DispatchQueue.main.async {
             self.updateSettingButton()
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
+    // MARK: 네비게이션 세팅
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -70,22 +67,81 @@ class MonthlyViewController: HHBaseViewController {
         return button
     }
     
-    private func setupSubViewControllers() {
-        mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
-        mottoVC.delegate = self
-        addChild(mottoVC)
-        mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
-        mottoVC.didMove(toParent: self)
-
+    @objc private func didTapDeleteAllButton() {
+        toDoListViewModel.removeAllToDoList()
+        
         DispatchQueue.main.async {
             self.updateSettingButton()
         }
-        
-        NSLayoutConstraint.activate([
-            mottoVC.view.heightAnchor.constraint(equalToConstant: 250),
-        ])
     }
     
+    func updateSettingButton() {
+        guard let viewModel = toDoListViewModel else { return }
+
+        let hasToDoList = !viewModel.toDoList.isEmpty
+        
+        let settingButton = UIButton(type: .system)
+        settingButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+        settingButton.tintColor = .hhAccent
+        settingButton.showsMenuAsPrimaryAction = true
+        settingButton.menu = createMenu(hasTodoList: hasToDoList)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
+    }
+
+    private func createMenu(hasTodoList: Bool) -> UIMenu {
+        let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
+            self?.enterEditingMode()
+        })
+        editAction.attributes = hasTodoList ? [] : [.disabled]
+
+        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
+            // MARK: 설정 연결
+        })
+        
+        let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
+            self?.didTapDeleteAllButton()
+        })
+        deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
+        
+        let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
+        
+        return UIMenu(title: "", children: [divider, deleteAction])
+    }
+    
+    @objc private func popMonthlyViewController() {
+        navigationController?.popViewController(animated: true)
+        print("2024 눌림")
+    }
+
+    private func enterEditingMode() {
+        isEditingMode = true
+        toDoListViewModel.didTapEditListButton()
+
+        let doneButton = createDoneButton(selector: #selector(exitEditingMode))
+
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    @objc private func exitEditingMode() {
+        isEditingMode = false
+        toDoListViewModel.didTapEditListButton()
+        updateSettingButton()
+    }
+
+    private func createDoneButton(selector: Selector) -> UIBarButtonItem {
+        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
+        doneButton.tintColor = .hhAccent
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.hhHeadLine,
+            .foregroundColor: UIColor.hhAccent
+        ]
+        doneButton.setTitleTextAttributes(attributes, for: .normal)
+        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
+        return doneButton
+    }
+    
+    // MARK: 툴바 세팅
     private func setupToolbar() {
         let addTodoListButton = createAddTodoListButton()
         
@@ -123,99 +179,21 @@ class MonthlyViewController: HHBaseViewController {
 //        todoListVC.didTapAddTodoListButton()
         
     }
-    
-    @objc private func didTapDeleteAllButton() {
-//        todoListVC.didTapDeleteAllButton()
-        
-        DispatchQueue.main.async {
-            self.updateSettingButton()
-        }
-    }
-    
-    @objc private func popMonthlyViewController() {
-        navigationController?.popViewController(animated: true)
-    }
-
-    func updateSettingButton() {
-        
-//        let hasTodoList = !viewModel.todoList.isEmpty
-        
-        let settingButton = UIButton(type: .system)
-        settingButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
-        settingButton.tintColor = .hhAccent
-        settingButton.showsMenuAsPrimaryAction = true
-//        settingButton.menu = createMenu(hasTodoList: hasTodoList)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
-    }
-
-    private func createMenu(hasTodoList: Bool) -> UIMenu {
-        let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
-            self?.enterEditingMode()
-        })
-        editAction.attributes = hasTodoList ? [] : [.disabled]
-
-        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
-            // MARK: 설정 연결
-        })
-        
-        let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
-//            self?.todoListVC.didTapDeleteAllButton()
-        })
-        deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
-        
-        let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
-        
-        return UIMenu(title: "", children: [divider, deleteAction])
-    }
-    
-    private func enterEditingMode() {
-        isEditingMode = true
-        
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(exitEditingMode))
-        
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhHeadLine,
-            .foregroundColor: UIColor.hhAccent
-        ]
-        doneButton.setTitleTextAttributes(attributes, for: .normal)
-        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
-        
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    @objc private func exitEditingMode() {
-        isEditingMode = false
-//        todoListVC.didTapEditListButton()
-        updateSettingButton()
-    }
-    
-    @objc private func endTodoEditing() {
-        view.endEditing(true)
-//        todoListVC.finishEditing()
-    }
-
-    private func createDoneButton(selector: Selector) -> UIBarButtonItem {
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
-        doneButton.tintColor = .hhAccent
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhHeadLine,
-            .foregroundColor: UIColor.hhAccent
-        ]
-        doneButton.setTitleTextAttributes(attributes, for: .normal)
-        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
-        return doneButton
-    }
 }
 
 extension MonthlyViewController: TodoListEditingDelegate {
     func todoListEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endTodoEditing))
+        let doneButton = createDoneButton(selector: #selector(endToDoEditing))
         navigationItem.rightBarButtonItem = doneButton
     }
     
     func todoListEditingDidEnd() {
         setupNavigationBar()
+    }
+    
+    @objc private func endToDoEditing() {
+        view.endEditing(true)
+        toDoListViewModel.finishEditing()
     }
 }
 

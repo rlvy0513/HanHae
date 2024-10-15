@@ -5,7 +5,6 @@
 //  Created by 기 표 on 10/2/24.
 //
 
-
 import UIKit
 
 class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
@@ -18,7 +17,6 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     weak var delegate: MonthlyViewController?
     var viewModel: MonthlyToDoListViewModel!
     var index: Int!
-    var isCompleted: Bool = false
     private var todoListTextViewTrailingConstraint: NSLayoutConstraint!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -50,7 +48,6 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     func configure(todo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyToDoListViewModel) {
         self.index = index
         self.delegate = delegate
-        self.isCompleted = todo.isCompleted
         self.viewModel = viewModel
         
         selectionStyle = .none
@@ -64,16 +61,22 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     private func setupCheckBoxImageView(todo: ToDo) {
-        let checkBoxImage = isCompleted ? "checkmark.square.fill" : "square"
-        checkBoxImageView = UIImageView(image: UIImage(systemName: checkBoxImage))
+        checkBoxImageView = UIImageView()
         checkBoxImageView.translatesAutoresizingMaskIntoConstraints = false
         checkBoxImageView.isUserInteractionEnabled = true
         checkBoxImageView.contentMode = .scaleAspectFit
         checkBoxImageView.tintColor = .hhAccent
         
+        updateCheckBoxImage(todo: todo)
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toggleCheckBox))
         checkBoxImageView.addGestureRecognizer(tapGesture)
         contentView.addSubview(checkBoxImageView)
+    }
+
+    private func updateCheckBoxImage(todo: ToDo) {
+        let checkBoxImage = todo.isCompleted ? "checkmark.square.fill" : "square"
+        checkBoxImageView.image = UIImage(systemName: checkBoxImage)
     }
 
     private func setupTodoListTextView(todo: ToDo) {
@@ -123,7 +126,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private func setupDetailButton() {
         detailButton = UIButton(type: .custom)
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .large)
-        let largeImage = UIImage(systemName: "exclamationmark.circle", withConfiguration: largeConfig)
+        let largeImage = UIImage(systemName: "info.circle", withConfiguration: largeConfig)
         detailButton.setImage(largeImage, for: .normal)
         detailButton.addTarget(self, action: #selector(detailButtonTapped), for: .touchUpInside)
         detailButton.translatesAutoresizingMaskIntoConstraints = false
@@ -135,6 +138,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
 
     private func setupConstraints() {
         todoListTextViewTrailingConstraint = todoListTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        
         NSLayoutConstraint.activate([
             checkBoxImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             checkBoxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -161,6 +165,13 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             detailButton.widthAnchor.constraint(equalToConstant: 24),
             detailButton.heightAnchor.constraint(equalToConstant: 24)
         ])
+    }
+
+    @objc private func updateNoteText(_ notification: Notification) {
+        if let userInfo = notification.userInfo, let updatedNote = userInfo["updatedNote"] as? String {
+            self.noteTextView.text = updatedNote
+            self.noteTextView.textColor = .hhLightGray
+        }
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -191,7 +202,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 textView.text = "목표를 입력하세요."
                 textView.textColor = .hhLightGray
             } else {
-                viewModel.updateTodoText(at: index, text: textView.text)
+                viewModel.updateToDoText(at: index, text: textView.text)
             }
             detailButton.isHidden = true
             todoListTextViewTrailingConstraint.constant = -20
@@ -219,30 +230,32 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     @objc private func toggleCheckBox() {
-        if isCompleted {
-            let alertController = UIAlertController(
-                title: "목표 상태 변경하기",
-                message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
-                preferredStyle: .alert
-            )
+        if index >= 0 && index < viewModel.toDoList.count {
+            let todo = viewModel.toDoList[index]
             
-            let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
-            alertController.addAction(cancelAction)
-            
-            let confirmAction = UIAlertAction(title: "변경하기", style: .default) { _ in
-                self.isCompleted = false
-                self.checkBoxImageView.image = UIImage(systemName: "square")
-                self.viewModel.updateCompletionStatus(at: self.index, isCompleted: false)
-//                self.delegate?.saveCompletionStatus(at: self.index, isCompleted: self.isCompleted)
+            if todo.isCompleted {
+                let alertController = UIAlertController(
+                    title: "목표 상태 변경하기",
+                    message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
+                    preferredStyle: .alert
+                )
+                
+                let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                
+                let confirmAction = UIAlertAction(title: "변경하기", style: .default) { _ in
+                    self.viewModel.updateCompletionStatus(at: self.index, isCompleted: false)
+//                    self.delegate?.saveCompletionStatus(at: self.index, isCompleted: false)
+                    self.updateCheckBoxImage(todo: todo)
+                }
+                alertController.addAction(confirmAction)
+                
+                delegate?.present(alertController, animated: true, completion: nil)
+            } else {
+                viewModel.updateCompletionStatus(at: index, isCompleted: true)
+//                delegate?.saveCompletionStatus(at: index, isCompleted: true)
+                updateCheckBoxImage(todo: todo)
             }
-            alertController.addAction(confirmAction)
-            
-            delegate?.present(alertController, animated: true, completion: nil)
-        } else {
-            isCompleted = true
-            checkBoxImageView.image = UIImage(systemName: "checkmark.square.fill")
-            viewModel.updateCompletionStatus(at: index, isCompleted: true)
-//            delegate?.saveCompletionStatus(at: index, isCompleted: isCompleted)
         }
     }
 
@@ -253,7 +266,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         if noteTextView.isFirstResponder {
             noteTextView.resignFirstResponder()
         }
-//        delegate?.showModalForTodoList(at: index)
+        delegate?.showModalForTodoList(at: index)
     }
 
     private func findTableView() -> UITableView? {
@@ -266,32 +279,18 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         }
         return nil
     }
-
-    private func formattedDate(_ date: Date?) -> String {
-        guard let date = date else { return "날짜 없음" }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-        return dateFormatter.string(from: date)
-    }
-
-    @objc private func updateNoteText(_ notification: Notification) {
-        if let userInfo = notification.userInfo, let updatedNote = userInfo["updatedNote"] as? String {
-            self.noteTextView.text = updatedNote
-            self.noteTextView.textColor = .hhLightGray
-        }
-    }
 }
 
 extension MonthlyViewController {
     func showModalForTodoList(at index: Int) {
-//        let todo = viewModel.todoList[index]
-//        let startDate = todo.startDate
-//        let completionDate = todo.completionDate
+        let todo = toDoListViewModel.toDoList[index]
+        let startDate = todo.startDate
+        let completionDate = todo.completionDate
         let detailVC = DetailViewController()
-//        detailVC.todo = todo
+        detailVC.todo = todo
         detailVC.index = index
-//        detailVC.start = startDate
-//        detailVC.completion = completionDate
+        detailVC.start = startDate
+        detailVC.completion = completionDate
         detailVC.viewModel = toDoListViewModel
 
         detailVC.modalPresentationStyle = .pageSheet
@@ -311,6 +310,4 @@ extension MonthlyViewController {
     @objc private func endEditing() {
         view.endEditing(true)
     }
-    
 }
-

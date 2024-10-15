@@ -275,7 +275,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
 
         if let index = index {
             viewModel?.updateNoteText(at: index, note: noteTextView.text)
-            viewModel?.updateTodoText(at: index, text: toDoListTextView.text)
+            viewModel?.updateToDoText(at: index, text: toDoListTextView.text)
         }
         dismiss(animated: true, completion: nil)
     }
