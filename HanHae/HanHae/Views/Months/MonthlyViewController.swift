@@ -62,7 +62,7 @@ class MonthlyViewController: HHBaseViewController {
         let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
-        button.addTarget(self, action: #selector(popMonthlyViewController), for: .touchUpInside)
+        button.addTarget(self, action: #selector(goToYearsViewController), for: .touchUpInside)
         button.contentVerticalAlignment = .bottom
         return button
     }
@@ -109,7 +109,7 @@ class MonthlyViewController: HHBaseViewController {
         return UIMenu(title: "", children: [divider, deleteAction])
     }
     
-    @objc private func popMonthlyViewController() {
+    @objc private func goToYearsViewController() {
         navigationController?.popViewController(animated: true)
         print("2024 눌림")
     }
