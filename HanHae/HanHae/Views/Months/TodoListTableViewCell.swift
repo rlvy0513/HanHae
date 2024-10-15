@@ -15,7 +15,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private var noteTextView: UITextView!
     private var dividerView: UIView!
     private var detailButton: UIButton!
-    weak var delegate: MonthlyTodoListViewController?
+    weak var delegate: MonthlyViewController?
     var viewModel: MonthlyTodoListViewModel!
     var index: Int!
     var isCompleted: Bool = false
@@ -47,7 +47,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: NSNotification.Name("NoteUpdated"), object: nil)
     }
     
-    func configure(todo: ToDo, index: Int, delegate: MonthlyTodoListViewController, viewModel: MonthlyTodoListViewModel) {
+    func configure(todo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyTodoListViewModel) {
         self.index = index
         self.delegate = delegate
         self.isCompleted = todo.isCompleted
@@ -182,7 +182,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = false
             noteTextView.becomeFirstResponder()
         }
-        delegate?.textViewDidBeginEditing(textView)
+//        delegate?.textViewDidBeginEditing(textView)
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -208,7 +208,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
             noteTextView.isHidden = false
         }
-        delegate?.textViewDidEndEditing(textView)
+//        delegate?.textViewDidEndEditing(textView)
     }
 
     func textViewDidChange(_ textView: UITextView) {
@@ -233,7 +233,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 self.isCompleted = false
                 self.checkBoxImageView.image = UIImage(systemName: "square")
                 self.viewModel.updateCompletionStatus(at: self.index, isCompleted: false)
-                self.delegate?.saveCompletionStatus(at: self.index, isCompleted: self.isCompleted)
+//                self.delegate?.saveCompletionStatus(at: self.index, isCompleted: self.isCompleted)
             }
             alertController.addAction(confirmAction)
             
@@ -242,7 +242,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             isCompleted = true
             checkBoxImageView.image = UIImage(systemName: "checkmark.square.fill")
             viewModel.updateCompletionStatus(at: index, isCompleted: true)
-            delegate?.saveCompletionStatus(at: index, isCompleted: isCompleted)
+//            delegate?.saveCompletionStatus(at: index, isCompleted: isCompleted)
         }
     }
 
@@ -253,7 +253,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         if noteTextView.isFirstResponder {
             noteTextView.resignFirstResponder()
         }
-        delegate?.showModalForTodoList(at: index)
+//        delegate?.showModalForTodoList(at: index)
     }
 
     private func findTableView() -> UITableView? {
@@ -282,16 +282,16 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 }
 
-extension MonthlyTodoListViewController {
+extension MonthlyViewController {
     func showModalForTodoList(at index: Int) {
-        let todo = viewModel.todoList[index]
-        let startDate = todo.startDate
-        let completionDate = todo.completionDate
+//        let todo = viewModel.todoList[index]
+//        let startDate = todo.startDate
+//        let completionDate = todo.completionDate
         let detailVC = DetailViewController()
-        detailVC.todo = todo
+//        detailVC.todo = todo
         detailVC.index = index
-        detailVC.start = startDate
-        detailVC.completion = completionDate
+//        detailVC.start = startDate
+//        detailVC.completion = completionDate
         detailVC.delegate = self
 
         detailVC.modalPresentationStyle = .pageSheet

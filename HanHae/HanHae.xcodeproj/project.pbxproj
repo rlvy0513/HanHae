@@ -33,7 +33,6 @@
 		42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */; };
 		D787E0722CAC9ABA006010F4 /* MonthlyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0712CAC9A7E006010F4 /* MonthlyViewController.swift */; };
 		D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */; };
-		D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0752CAC9ADA006010F4 /* MonthlyTodoListViewController.swift */; };
 		D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0772CAC9AE9006010F4 /* TodoListTableViewCell.swift */; };
 		D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0792CAC9AFF006010F4 /* DetailViewController.swift */; };
 		D787E07C2CACA52B006010F4 /* MonthlyMottoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */; };
@@ -69,7 +68,6 @@
 		42FD5ADC2C9C6DB100B1AF81 /* YearsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 		D787E0712CAC9A7E006010F4 /* MonthlyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyViewController.swift; sourceTree = "<group>"; };
 		D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewController.swift; sourceTree = "<group>"; };
-		D787E0752CAC9ADA006010F4 /* MonthlyTodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyTodoListViewController.swift; sourceTree = "<group>"; };
 		D787E0772CAC9AE9006010F4 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 		D787E0792CAC9AFF006010F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewModel.swift; sourceTree = "<group>"; };
@@ -100,7 +98,6 @@
 			children = (
 				D787E0712CAC9A7E006010F4 /* MonthlyViewController.swift */,
 				D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */,
-				D787E0752CAC9ADA006010F4 /* MonthlyTodoListViewController.swift */,
 				D787E0772CAC9AE9006010F4 /* TodoListTableViewCell.swift */,
 				D787E0792CAC9AFF006010F4 /* DetailViewController.swift */,
 			);
@@ -344,7 +341,6 @@
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,
 				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
-				D787E0762CAC9AE2006010F4 /* MonthlyTodoListViewController.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */,
 				42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */,
 				D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */,

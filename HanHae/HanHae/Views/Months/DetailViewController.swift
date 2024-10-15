@@ -8,7 +8,7 @@
 import UIKit
 
 class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
-    weak var delegate: MonthlyTodoListViewController?
+    weak var delegate: MonthlyViewController?
     var todo: ToDo?
     var index: Int?
     var start: Date?
@@ -274,8 +274,8 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         }
 
         if let index = index {
-            delegate?.saveNoteText(at: index, noteText: noteTextView.text)
-            delegate?.saveText(at: index, text: toDoListTextView.text)
+//            delegate?.saveNoteText(at: index, noteText: noteTextView.text)
+//            delegate?.saveText(at: index, text: toDoListTextView.text)
         }
         dismiss(animated: true, completion: nil)
     }
