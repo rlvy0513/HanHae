@@ -36,7 +36,7 @@
 		D787E0782CAC9AEF006010F4 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0772CAC9AE9006010F4 /* TodoListTableViewCell.swift */; };
 		D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0792CAC9AFF006010F4 /* DetailViewController.swift */; };
 		D787E07C2CACA52B006010F4 /* MonthlyMottoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */; };
-		D787E07E2CACA729006010F4 /* MonthlyTodoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */; };
+		D787E07E2CACA729006010F4 /* MonthlyToDoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E07D2CACA71E006010F4 /* MonthlyToDoListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,7 +71,7 @@
 		D787E0772CAC9AE9006010F4 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 		D787E0792CAC9AFF006010F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewModel.swift; sourceTree = "<group>"; };
-		D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyTodoListViewModel.swift; sourceTree = "<group>"; };
+		D787E07D2CACA71E006010F4 /* MonthlyToDoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyToDoListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,7 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				D787E07B2CACA51B006010F4 /* MonthlyMottoViewModel.swift */,
-				D787E07D2CACA71E006010F4 /* MonthlyTodoListViewModel.swift */,
+				D787E07D2CACA71E006010F4 /* MonthlyToDoListViewModel.swift */,
 				422010832CA68E9200721175 /* TestMonthlyTDLViewModel.swift */,
 			);
 			path = Months;
@@ -335,7 +335,7 @@
 				D787E07C2CACA52B006010F4 /* MonthlyMottoViewModel.swift in Sources */,
 				D787E0722CAC9ABA006010F4 /* MonthlyViewController.swift in Sources */,
 				42EB0BFB2CB284DF00E38A49 /* SettingsBaseViewController.swift in Sources */,
-				D787E07E2CACA729006010F4 /* MonthlyTodoListViewModel.swift in Sources */,
+				D787E07E2CACA729006010F4 /* MonthlyToDoListViewModel.swift in Sources */,
 				427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */,
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,

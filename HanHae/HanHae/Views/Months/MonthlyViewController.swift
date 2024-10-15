@@ -14,19 +14,18 @@ protocol TodoListEditingDelegate: AnyObject {
 
 class MonthlyViewController: HHBaseViewController {
     
-    private var scrollView: UIScrollView!
-    private var contentView: UIView!
     private var mottoVC: MonthlyMottoViewController!
-    private var viewModel: MonthlyMottoViewModel!
+    private var mottoViewModel: MonthlyMottoViewModel!
+    var toDoListViewModel: MonthlyToDoListViewModel!
+    
     private var isEditingMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+        mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
         
         setupNavigationBar()
-        setupScrollView()
         setupSubViewControllers()
         setupToolbar()
     }
@@ -46,7 +45,7 @@ class MonthlyViewController: HHBaseViewController {
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(viewModel.currentMonth.month)월"
+        navigationItem.title = "\(mottoViewModel.currentMonth.month)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhText
@@ -72,10 +71,9 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     private func setupSubViewControllers() {
-        mottoVC = MonthlyMottoViewController(viewModel: viewModel)
+        mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
         mottoVC.delegate = self
         addChild(mottoVC)
-        contentView.addSubview(mottoVC.view)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
         mottoVC.didMove(toParent: self)
 
@@ -84,9 +82,6 @@ class MonthlyViewController: HHBaseViewController {
         }
         
         NSLayoutConstraint.activate([
-            mottoVC.view.topAnchor.constraint(equalTo: contentView.topAnchor),
-            mottoVC.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mottoVC.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             mottoVC.view.heightAnchor.constraint(equalToConstant: 250),
         ])
     }
@@ -236,32 +231,5 @@ extension MonthlyViewController: MonthlyMottoDelegate {
     
     @objc private func endMottoEditing() {
         view.endEditing(true)
-    }
-}
-
-extension MonthlyViewController: UIScrollViewDelegate {
-    func setupScrollView() {
-        scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.delegate = self
-        
-        contentView = UIView()
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-        ])
     }
 }

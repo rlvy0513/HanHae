@@ -16,7 +16,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private var dividerView: UIView!
     private var detailButton: UIButton!
     weak var delegate: MonthlyViewController?
-    var viewModel: MonthlyTodoListViewModel!
+    var viewModel: MonthlyToDoListViewModel!
     var index: Int!
     var isCompleted: Bool = false
     private var todoListTextViewTrailingConstraint: NSLayoutConstraint!
@@ -47,7 +47,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: NSNotification.Name("NoteUpdated"), object: nil)
     }
     
-    func configure(todo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyTodoListViewModel) {
+    func configure(todo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyToDoListViewModel) {
         self.index = index
         self.delegate = delegate
         self.isCompleted = todo.isCompleted
@@ -292,7 +292,7 @@ extension MonthlyViewController {
         detailVC.index = index
 //        detailVC.start = startDate
 //        detailVC.completion = completionDate
-        detailVC.delegate = self
+        detailVC.viewModel = toDoListViewModel
 
         detailVC.modalPresentationStyle = .pageSheet
         present(detailVC, animated: true, completion: nil)

@@ -12,7 +12,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     var index: Int?
     var start: Date?
     var completion: Date?
-    var viewModel: MonthlyTodoListViewModel!
+    var viewModel: MonthlyToDoListViewModel!
     private var tableView: UITableView!
     private var toDoListTextView: UITextView!
     private var noteTextView: UITextView!

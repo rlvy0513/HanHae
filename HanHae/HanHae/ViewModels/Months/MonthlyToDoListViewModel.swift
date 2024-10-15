@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MonthlyTodoListViewModel {
+class MonthlyToDoListViewModel {
     
     private let todoListKey = "savedTodoList"
 
