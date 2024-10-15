@@ -16,6 +16,7 @@ class MonthlyViewController: HHBaseViewController {
     private var tableView: UITableView!
     private var emptyStateImageView: UIImageView!
     private var emptyStateLabel: UILabel!
+    private var completionLabel: UILabel!
     private var isEditingMode = false
     
     override func viewDidLoad() {
@@ -28,7 +29,9 @@ class MonthlyViewController: HHBaseViewController {
         setupTableView()
         setupToolbar()
         setupEmptyStateView()
-        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty) //
+        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+        updateCompletionLabel()
+        
         bindViewModel()
     }
     
@@ -43,6 +46,7 @@ class MonthlyViewController: HHBaseViewController {
         toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
             self?.updateEmptyStateView(isEmpty: toDoList.isEmpty)
             self?.tableView.reloadData()
+            self?.updateCompletionLabel()
         }
     }
     
@@ -86,6 +90,7 @@ class MonthlyViewController: HHBaseViewController {
         DispatchQueue.main.async {
             self.updateSettingButton()
             self.tableView.layoutIfNeeded()
+            
         }
     }
     
@@ -125,8 +130,9 @@ class MonthlyViewController: HHBaseViewController {
 
     private func enterEditingMode() {
         isEditingMode = true
+        tableView.setEditing(true, animated: true)
         toDoListViewModel.didTapEditListButton()
-
+        
         let doneButton = createDoneButton(selector: #selector(exitEditingMode))
 
         navigationItem.rightBarButtonItem = doneButton
@@ -134,6 +140,7 @@ class MonthlyViewController: HHBaseViewController {
     
     @objc private func exitEditingMode() {
         isEditingMode = false
+        tableView.setEditing(false, animated: true)
         toDoListViewModel.didTapEditListButton()
         updateSettingButton()
     }
@@ -148,6 +155,47 @@ class MonthlyViewController: HHBaseViewController {
         doneButton.setTitleTextAttributes(attributes, for: .normal)
         doneButton.setTitleTextAttributes(attributes, for: .highlighted)
         return doneButton
+    }
+    
+    // MARK: 목표량 관련 메서드
+    private func setupCompletionFooterView() {
+        completionLabel = UILabel()
+        completionLabel.translatesAutoresizingMaskIntoConstraints = false
+        completionLabel.font = UIFont.hhTitle
+        completionLabel.textColor = .hhLightGray
+        completionLabel.textAlignment = .right
+
+        let footerView = UIView()
+        footerView.addSubview(completionLabel)
+
+        NSLayoutConstraint.activate([
+            completionLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
+            completionLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
+            completionLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: 45),
+            completionLabel.heightAnchor.constraint(equalToConstant: 33)
+        ])
+
+        tableView.tableFooterView = footerView
+    }
+
+    private func updateCompletionLabel() {
+        let percentage = Int(toDoListViewModel.completionPercentage())
+        let fullText = "목표 \(percentage)% 달성"
+        
+        let attributedText = NSMutableAttributedString(string: fullText)
+        let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
+        attributedText.addAttributes([
+            .foregroundColor: UIColor.hhAccent,
+            .font: UIFont.hhLargeTitle
+        ], range: percentageRange)
+        
+        let defaultRange = (fullText as NSString).range(of: "목표량 달성")
+        attributedText.addAttributes([
+            .foregroundColor: UIColor.hhLightGray,
+            .font: UIFont.hhTitle
+        ], range: defaultRange)
+        
+        completionLabel.attributedText = attributedText
     }
     
     // MARK: 엠티뷰 관련 메서드
@@ -184,6 +232,7 @@ class MonthlyViewController: HHBaseViewController {
         emptyStateImageView.isHidden = !isEmpty
         emptyStateLabel.isHidden = !isEmpty
         tableView.isHidden = false
+        completionLabel.isHidden = isEmpty
     }
     
     // MARK: 툴바 세팅
@@ -222,21 +271,26 @@ class MonthlyViewController: HHBaseViewController {
     
     @objc private func didTapAddTodoListButton() {
         toDoListViewModel.addToDo()
+        tableView.reloadData()
+        tableView.layoutIfNeeded()
+        updateCompletionLabel()
+        updateEmptyStateView(isEmpty: toDoListViewModel.toDoList.isEmpty)
+        updateSettingButton()
     }
     
     // MARK: 텍스트뷰 완료 메서드
     func showDoneButton(_ textView: UITextView) {
         let doneButton = createDoneButton(selector: #selector(endEditing))
-
         navigationItem.rightBarButtonItem = doneButton
     }
     
     func hideDoneButton() {
-        navigationItem.rightBarButtonItem = nil
+        setupNavigationBar()
     }
     
     @objc private func endEditing() {
         view.endEditing(true)
+        toDoListViewModel.finishEditing()
     }
 }
 
@@ -263,7 +317,8 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
 
         view.addSubview(tableView)
         tableView.tableHeaderView = headerView
-
+        setupCompletionFooterView()
+        
         NSLayoutConstraint.activate([
             mottoVC.view.topAnchor.constraint(equalTo: headerView.topAnchor),
             mottoVC.view.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
