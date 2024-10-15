@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol TodoListEditingDelegate: AnyObject {
-    func todoListEditingDidBegin()
-    func todoListEditingDidEnd()
-}
-
 class MonthlyViewController: HHBaseViewController {
     
     private var mottoVC: MonthlyMottoViewController!
@@ -176,38 +171,22 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     @objc private func didTapAddTodoListButton() {
-//        todoListVC.didTapAddTodoListButton()
-        
+        toDoListViewModel.addToDo()
     }
-}
+    
+    // MARK: 텍스트뷰 완료 메서드
+    func showDoneButton(_ textView: UITextView) {
+        let doneButton = createDoneButton(selector: #selector(endEditing))
 
-extension MonthlyViewController: TodoListEditingDelegate {
-    func todoListEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endToDoEditing))
         navigationItem.rightBarButtonItem = doneButton
     }
     
-    func todoListEditingDidEnd() {
-        setupNavigationBar()
+    func hideDoneButton() {
+        navigationItem.rightBarButtonItem = nil
     }
     
-    @objc private func endToDoEditing() {
+    @objc private func endEditing() {
         view.endEditing(true)
-        toDoListViewModel.finishEditing()
     }
-}
 
-extension MonthlyViewController: MonthlyMottoDelegate {
-    func mottoEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endMottoEditing))
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    func mottoEditingDidEnd() {
-        setupNavigationBar()
-    }
-    
-    @objc private func endMottoEditing() {
-        view.endEditing(true)
-    }
 }

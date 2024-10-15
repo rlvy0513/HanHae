@@ -7,17 +7,10 @@
 
 import UIKit
 
-protocol MonthlyMottoDelegate: AnyObject {
-    func mottoEditingDidBegin()
-    func mottoEditingDidEnd()
-}
-
 class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     
     private var viewModel: MonthlyMottoViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
-    
-    weak var delegate: MonthlyMottoDelegate?
 
     private let monthlyMottoTextView: UITextView = {
         let textView = UITextView()
@@ -165,9 +158,7 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         }
         
         func textViewDidBeginEditing(_ textView: UITextView) {
-            delegate?.mottoEditingDidBegin()
-            
-            if textView.tag == 1, textView.text == viewModel.defaultMottoText {
+            if textView.text == viewModel.defaultMottoText {
                 textView.text = ""
                 textView.textColor = .hhText
                 showFooterAndQuoteLabels()
@@ -175,11 +166,9 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        delegate?.mottoEditingDidEnd()
-        
         let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if textView.tag == 1 && trimmedText.isEmpty {
+        if trimmedText.isEmpty {
             textView.text = viewModel.defaultMottoText
             textView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()

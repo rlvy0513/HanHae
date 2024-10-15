@@ -193,7 +193,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = false
             noteTextView.becomeFirstResponder()
         }
-//        delegate?.textViewDidBeginEditing(textView)
+        delegate?.showDoneButton(textView)
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -219,7 +219,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
             noteTextView.isHidden = false
         }
-//        delegate?.textViewDidEndEditing(textView)
+        delegate?.hideDoneButton()
     }
 
     func textViewDidChange(_ textView: UITextView) {
@@ -245,7 +245,6 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 
                 let confirmAction = UIAlertAction(title: "변경하기", style: .default) { _ in
                     self.viewModel.updateCompletionStatus(at: self.index, isCompleted: false)
-//                    self.delegate?.saveCompletionStatus(at: self.index, isCompleted: false)
                     self.updateCheckBoxImage(todo: todo)
                 }
                 alertController.addAction(confirmAction)
@@ -253,7 +252,6 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 delegate?.present(alertController, animated: true, completion: nil)
             } else {
                 viewModel.updateCompletionStatus(at: index, isCompleted: true)
-//                delegate?.saveCompletionStatus(at: index, isCompleted: true)
                 updateCheckBoxImage(todo: todo)
             }
         }
@@ -292,22 +290,8 @@ extension MonthlyViewController {
         detailVC.start = startDate
         detailVC.completion = completionDate
         detailVC.viewModel = toDoListViewModel
-
+        
         detailVC.modalPresentationStyle = .pageSheet
         present(detailVC, animated: true, completion: nil)
-    }
-    
-    func showDoneButton(for textView: UITextView) {
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(endEditing))
-        doneButton.tintColor = .hhAccent
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    func hideDoneButton() {
-        navigationItem.rightBarButtonItem = nil
-    }
-    
-    @objc private func endEditing() {
-        view.endEditing(true)
     }
 }
