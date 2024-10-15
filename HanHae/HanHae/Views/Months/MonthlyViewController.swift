@@ -14,6 +14,8 @@ class MonthlyViewController: HHBaseViewController {
     var toDoListViewModel: MonthlyToDoListViewModel!
     
     private var tableView: UITableView!
+    private var emptyStateImageView: UIImageView!
+    private var emptyStateLabel: UILabel!
     private var isEditingMode = false
     
     override func viewDidLoad() {
@@ -25,7 +27,8 @@ class MonthlyViewController: HHBaseViewController {
         setupNavigationBar()
         setupTableView()
         setupToolbar()
-        
+        setupEmptyStateView()
+        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty) //
         bindViewModel()
     }
     
@@ -38,6 +41,7 @@ class MonthlyViewController: HHBaseViewController {
     
     private func bindViewModel() {
         toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
+            self?.updateEmptyStateView(isEmpty: toDoList.isEmpty)
             self?.tableView.reloadData()
         }
     }
@@ -144,6 +148,42 @@ class MonthlyViewController: HHBaseViewController {
         doneButton.setTitleTextAttributes(attributes, for: .normal)
         doneButton.setTitleTextAttributes(attributes, for: .highlighted)
         return doneButton
+    }
+    
+    // MARK: 엠티뷰 관련 메서드
+    private func setupEmptyStateView() {
+        emptyStateImageView = UIImageView()
+        emptyStateImageView.image = UIImage(systemName: "swift")
+        emptyStateImageView.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateImageView.contentMode = .scaleAspectFit
+        emptyStateImageView.tintColor = .hhAccent
+
+        emptyStateLabel = UILabel()
+        emptyStateLabel.text = "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!"
+        emptyStateLabel.numberOfLines = 2
+        emptyStateLabel.font = .hhTitle
+        emptyStateLabel.textColor = .hhLightGray
+        emptyStateLabel.textAlignment = .center
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(emptyStateImageView)
+        view.addSubview(emptyStateLabel)
+
+        NSLayoutConstraint.activate([
+            emptyStateImageView.topAnchor.constraint(equalTo: tableView.tableHeaderView!.topAnchor, constant: 250),
+            emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateImageView.widthAnchor.constraint(equalToConstant: 100),
+            emptyStateImageView.heightAnchor.constraint(equalToConstant: 100),
+
+            emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: 20),
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+
+    private func updateEmptyStateView(isEmpty: Bool) {
+        emptyStateImageView.isHidden = !isEmpty
+        emptyStateLabel.isHidden = !isEmpty
+        tableView.isHidden = false
     }
     
     // MARK: 툴바 세팅
