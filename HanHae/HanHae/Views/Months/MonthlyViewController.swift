@@ -9,10 +9,11 @@ import UIKit
 
 class MonthlyViewController: HHBaseViewController {
     
-    private var mottoVC: MonthlyMottoViewController!
+    private var mottoView: MonthlyMottoViewController!
     private var mottoViewModel: MonthlyMottoViewModel!
     var toDoListViewModel: MonthlyToDoListViewModel!
     
+    private var tableView: UITableView!
     private var isEditingMode = false
     
     override func viewDidLoad() {
@@ -22,14 +23,22 @@ class MonthlyViewController: HHBaseViewController {
         toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
-
+        setupTableView()
         setupToolbar()
+        
+        bindViewModel()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DispatchQueue.main.async {
             self.updateSettingButton()
+        }
+    }
+    
+    private func bindViewModel() {
+        toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
+            self?.tableView.reloadData()
         }
     }
     
@@ -57,16 +66,22 @@ class MonthlyViewController: HHBaseViewController {
         let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
-        button.addTarget(self, action: #selector(goToYearsViewController), for: .touchUpInside)
+        button.addTarget(self, action: #selector(backYearsViewController), for: .touchUpInside)
         button.contentVerticalAlignment = .bottom
         return button
     }
-    
+
+    @objc private func backYearsViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+
     @objc private func didTapDeleteAllButton() {
         toDoListViewModel.removeAllToDoList()
-        
+        tableView.reloadData()
+
         DispatchQueue.main.async {
             self.updateSettingButton()
+            self.tableView.layoutIfNeeded()
         }
     }
     
@@ -102,11 +117,6 @@ class MonthlyViewController: HHBaseViewController {
         let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
         
         return UIMenu(title: "", children: [divider, deleteAction])
-    }
-    
-    @objc private func goToYearsViewController() {
-        navigationController?.popViewController(animated: true)
-        print("2024 눌림")
     }
 
     private func enterEditingMode() {
@@ -188,5 +198,74 @@ class MonthlyViewController: HHBaseViewController {
     @objc private func endEditing() {
         view.endEditing(true)
     }
+}
 
+// MARK: - 테이블뷰
+extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func setupTableView() {
+        tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: "TodoListCell")
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.backgroundColor = .clear
+
+        let mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
+        addChild(mottoVC)
+        mottoVC.didMove(toParent: self)
+        mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200))
+        headerView.addSubview(mottoVC.view)
+
+        view.addSubview(tableView)
+        tableView.tableHeaderView = headerView
+
+        NSLayoutConstraint.activate([
+            mottoVC.view.topAnchor.constraint(equalTo: headerView.topAnchor),
+            mottoVC.view.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            mottoVC.view.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            mottoVC.view.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
+
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return toDoListViewModel.toDoList.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoListCell", for: indexPath) as? TodoListTableViewCell {
+            let todo = toDoListViewModel.toDoList[indexPath.row]
+            cell.configure(todo: todo, index: indexPath.row, delegate: self, viewModel: toDoListViewModel)
+
+            cell.backgroundColor = .clear
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            toDoListViewModel.removeToDo(at: indexPath.row)
+            tableView.reloadData()
+            updateSettingButton()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        toDoListViewModel.moveToDo(from: fromIndexPath.row, to: to.row)
+    }
 }
