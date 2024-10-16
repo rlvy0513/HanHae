@@ -163,6 +163,10 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
                 textView.textColor = .hhText
                 showFooterAndQuoteLabels()
             }
+            
+            if let monthlyView = self.parent as? MonthlyViewController {
+                monthlyView.showDoneButton(textView)
+            }
         }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -179,6 +183,10 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         }
         
         updateTextViewPosition()
+        
+        if let monthlyView = self.parent as? MonthlyViewController {
+              monthlyView.hideDoneButton()
+          }
     }
     
     func textViewDidChange(_ textView: UITextView) {
