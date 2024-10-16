@@ -302,8 +302,9 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: "TodoListCell")
-        tableView.separatorStyle = .none
+        tableView.register(ToDoListTableViewCell.self, forCellReuseIdentifier: "TodoListCell")
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = .init(top: 0, left: 55, bottom: 0, right: 20)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
 
@@ -337,9 +338,9 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoListCell", for: indexPath) as? TodoListTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoListCell", for: indexPath) as? ToDoListTableViewCell {
             let todo = toDoListViewModel.toDoList[indexPath.row]
-            cell.configure(todo: todo, index: indexPath.row, delegate: self, viewModel: toDoListViewModel)
+            cell.configure(toDo: todo, index: indexPath.row, delegate: self, viewModel: toDoListViewModel)
 
             cell.backgroundColor = .clear
             return cell

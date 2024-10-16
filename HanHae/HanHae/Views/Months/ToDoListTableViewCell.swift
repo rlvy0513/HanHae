@@ -7,17 +7,17 @@
 
 import UIKit
 
-class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
+class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     private var checkBoxImageView: UIImageView!
-    private var todoListTextView: UITextView!
+    private var toDoListTextView: UITextView!
     private var noteTextView: UITextView!
-    private var dividerView: UIView!
     private var detailButton: UIButton!
     weak var delegate: MonthlyViewController?
     var viewModel: MonthlyToDoListViewModel!
     var index: Int!
-    private var todoListTextViewTrailingConstraint: NSLayoutConstraint!
+    private var toDoListTextViewTrailingConstraint: NSLayoutConstraint!
+    private var noteTextViewBottomConstraint: NSLayoutConstraint!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,7 +31,7 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        todoListTextView.text = ""
+        toDoListTextView.text = ""
         noteTextView.text = ""
         checkBoxImageView.image = UIImage(systemName: "square")
         detailButton.isHidden = true
@@ -45,60 +45,69 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: NSNotification.Name("NoteUpdated"), object: nil)
     }
     
-    func configure(todo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyToDoListViewModel) {
+    func configure(toDo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyToDoListViewModel) {
         self.index = index
         self.delegate = delegate
         self.viewModel = viewModel
         
         selectionStyle = .none
         
-        setupCheckBoxImageView(todo: todo)
-        setupTodoListTextView(todo: todo)
-        setupNoteTextView(todo: todo)
-        setupDividerView()
+        setupCheckBoxImageView(toDo: toDo)
+        setupTodoListTextView(toDo: toDo)
+        setupNoteTextView(toDo: toDo)
         setupDetailButton()
         setupConstraints()
+        
+        if let note = toDo.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
+            noteTextView.isHidden = false
+            noteTextView.text = note
+//            noteTextViewBottomConstraint.constant = -10
+        } else {
+            noteTextView.text = "노트 추가하기"
+            noteTextView.isHidden = true
+//            noteTextViewBottomConstraint.constant = 15
+        }
     }
 
-    private func setupCheckBoxImageView(todo: ToDo) {
+    private func setupCheckBoxImageView(toDo: ToDo) {
         checkBoxImageView = UIImageView()
         checkBoxImageView.translatesAutoresizingMaskIntoConstraints = false
         checkBoxImageView.isUserInteractionEnabled = true
         checkBoxImageView.contentMode = .scaleAspectFit
         checkBoxImageView.tintColor = .hhAccent
         
-        updateCheckBoxImage(todo: todo)
+        updateCheckBoxImage(toDo: toDo)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toggleCheckBox))
         checkBoxImageView.addGestureRecognizer(tapGesture)
         contentView.addSubview(checkBoxImageView)
     }
 
-    private func updateCheckBoxImage(todo: ToDo) {
-        let checkBoxImage = todo.isCompleted ? "checkmark.square.fill" : "square"
+    private func updateCheckBoxImage(toDo: ToDo) {
+        let checkBoxImage = toDo.isCompleted ? "checkmark.square.fill" : "square"
         checkBoxImageView.image = UIImage(systemName: checkBoxImage)
     }
 
-    private func setupTodoListTextView(todo: ToDo) {
-        todoListTextView = UITextView()
-        todoListTextView.text = todo.title
-        todoListTextView.textColor = todo.title == "목표를 입력하세요." ? .hhLightGray : .hhText
-        todoListTextView.font = .hhBody
-        todoListTextView.isScrollEnabled = false
-        todoListTextView.textContainer.lineBreakMode = .byWordWrapping
-        todoListTextView.translatesAutoresizingMaskIntoConstraints = false
-        todoListTextView.textContainerInset = .zero
-        todoListTextView.textContainer.lineFragmentPadding = 0
-        todoListTextView.delegate = self
-        todoListTextView.tag = index
-        todoListTextView.tintColor = .hhAccent
-        todoListTextView.backgroundColor = .clear
-        contentView.addSubview(todoListTextView)
+    private func setupTodoListTextView(toDo: ToDo) {
+        toDoListTextView = UITextView()
+        toDoListTextView.text = toDo.title
+        toDoListTextView.textColor = toDo.title == "목표를 입력하세요." ? .hhLightGray : .hhText
+        toDoListTextView.font = .hhBody
+        toDoListTextView.isScrollEnabled = false
+        toDoListTextView.textContainer.lineBreakMode = .byWordWrapping
+        toDoListTextView.translatesAutoresizingMaskIntoConstraints = false
+        toDoListTextView.textContainerInset = .zero
+        toDoListTextView.textContainer.lineFragmentPadding = 0
+        toDoListTextView.delegate = self
+        toDoListTextView.tag = index
+        toDoListTextView.tintColor = .hhAccent
+        toDoListTextView.backgroundColor = .clear
+        contentView.addSubview(toDoListTextView)
     }
 
-    private func setupNoteTextView(todo: ToDo) {
+    private func setupNoteTextView(toDo: ToDo) {
         noteTextView = UITextView()
-        let noteText = todo.note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let noteText = toDo.note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         noteTextView.text = noteText.isEmpty ? "노트 추가하기" : noteText
         noteTextView.textColor = .hhLightGray
         noteTextView.tintColor = .hhAccent
@@ -112,15 +121,8 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
         noteTextView.tag = index
         noteTextView.isEditable = true
         noteTextView.backgroundColor = .clear
-        noteTextView.isHidden = false
+        noteTextView.isHidden = true
         contentView.addSubview(noteTextView)
-    }
-
-    private func setupDividerView() {
-        dividerView = UIView()
-        dividerView.backgroundColor = .hhDevider
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(dividerView)
     }
 
     private func setupDetailButton() {
@@ -137,28 +139,24 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     private func setupConstraints() {
-        todoListTextViewTrailingConstraint = todoListTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        toDoListTextViewTrailingConstraint = toDoListTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
         
+        noteTextViewBottomConstraint = noteTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+
         NSLayoutConstraint.activate([
             checkBoxImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             checkBoxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             checkBoxImageView.widthAnchor.constraint(equalToConstant: 24),
             checkBoxImageView.heightAnchor.constraint(equalToConstant: 24),
             
-            todoListTextView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            todoListTextView.leadingAnchor.constraint(equalTo: checkBoxImageView.trailingAnchor, constant: 10),
-            todoListTextViewTrailingConstraint,
+            toDoListTextView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            toDoListTextView.leadingAnchor.constraint(equalTo: checkBoxImageView.trailingAnchor, constant: 10),
+            toDoListTextViewTrailingConstraint,
             
-            noteTextView.topAnchor.constraint(equalTo: todoListTextView.bottomAnchor, constant: 8),
+            noteTextView.topAnchor.constraint(equalTo: toDoListTextView.bottomAnchor, constant: 8),
             noteTextView.leadingAnchor.constraint(equalTo: checkBoxImageView.trailingAnchor, constant: 10),
             noteTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            noteTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
-            
-            dividerView.topAnchor.constraint(equalTo: noteTextView.bottomAnchor, constant: 10),
-            dividerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            dividerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            dividerView.heightAnchor.constraint(equalToConstant: 1),
-            dividerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            noteTextViewBottomConstraint,
             
             detailButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             detailButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -175,13 +173,19 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == todoListTextView {
+        if textView == toDoListTextView {
             if textView.text == "목표를 입력하세요." {
                 textView.text = ""
                 textView.textColor = .hhText
             }
+            
+            if noteTextView.text == "노트 추가하기" {
+                noteTextView.isHidden = false
+                noteTextViewBottomConstraint.constant = -10
+            }
+            
             detailButton.isHidden = false
-            todoListTextViewTrailingConstraint.constant = -50
+            toDoListTextViewTrailingConstraint.constant = -50
             UIView.animate(withDuration: 0.1) {
                 self.contentView.layoutIfNeeded()
             }
@@ -197,15 +201,21 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView == todoListTextView {
+        if textView == toDoListTextView {
             if textView.text.isEmpty {
                 textView.text = "목표를 입력하세요."
                 textView.textColor = .hhLightGray
             } else {
                 viewModel.updateToDoText(at: index, text: textView.text)
             }
+            
+            if noteTextView.text == "노트 추가하기" {
+                noteTextView.isHidden = true
+                noteTextViewBottomConstraint.constant = 15
+            }
+            
             detailButton.isHidden = true
-            todoListTextViewTrailingConstraint.constant = -20
+            toDoListTextViewTrailingConstraint.constant = -20
             UIView.animate(withDuration: 0.1) {
                 self.contentView.layoutIfNeeded()
             }
@@ -213,11 +223,13 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
             if noteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 noteTextView.text = "노트 추가하기"
                 noteTextView.textColor = .hhLightGray
+                noteTextView.isHidden = true
+                noteTextViewBottomConstraint.constant = 15
             } else {
                 viewModel.updateNoteText(at: index, note: noteTextView.text)
                 noteTextView.textColor = .hhBlack
+                noteTextView.isHidden = false
             }
-            noteTextView.isHidden = false
         }
         delegate?.hideDoneButton()
     }
@@ -245,21 +257,21 @@ class TodoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 
                 let confirmAction = UIAlertAction(title: "변경하기", style: .default) { _ in
                     self.viewModel.updateCompletionStatus(at: self.index, isCompleted: false)
-                    self.updateCheckBoxImage(todo: todo)
+                    self.updateCheckBoxImage(toDo: todo)
                 }
                 alertController.addAction(confirmAction)
                 
                 delegate?.present(alertController, animated: true, completion: nil)
             } else {
                 viewModel.updateCompletionStatus(at: index, isCompleted: true)
-                updateCheckBoxImage(todo: todo)
+                updateCheckBoxImage(toDo: todo)
             }
         }
     }
 
     @objc private func detailButtonTapped() {
-        if todoListTextView.isFirstResponder {
-            todoListTextView.resignFirstResponder()
+        if toDoListTextView.isFirstResponder {
+            toDoListTextView.resignFirstResponder()
         }
         if noteTextView.isFirstResponder {
             noteTextView.resignFirstResponder()
