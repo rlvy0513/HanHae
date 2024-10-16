@@ -84,14 +84,27 @@ class MonthlyViewController: HHBaseViewController {
     }
 
     @objc private func didTapDeleteAllButton() {
-        toDoListViewModel.removeAllToDoList()
-        tableView.reloadData()
-
-        DispatchQueue.main.async {
-            self.updateSettingButton()
-            self.tableView.layoutIfNeeded()
+        let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            self?.toDoListViewModel.removeAllToDoList()
             
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+                self?.updateCompletionLabel()
+                self?.updateEmptyStateView(isEmpty: self?.toDoListViewModel.isEmpty ?? true)
+                self?.updateSettingButton()
+                
+                self?.tableView.layoutIfNeeded()
+            }
         }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     func updateSettingButton() {
