@@ -17,6 +17,7 @@ class MonthlyViewController: HHBaseViewController {
     private var emptyStateImageView: UIImageView!
     private var emptyStateLabel: UILabel!
     private var completionLabel: UILabel!
+    private var originalContentInset: UIEdgeInsets = .zero
     private var isEditingMode = false
     
     override func viewDidLoad() {
@@ -27,12 +28,22 @@ class MonthlyViewController: HHBaseViewController {
         
         setupNavigationBar()
         setupTableView()
-        setupToolbar()
         setupEmptyStateView()
         updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
         updateCompletionLabel()
+        setupToolbar()
+        
+        originalContentInset = tableView.contentInset
         
         bindViewModel()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -93,7 +104,7 @@ class MonthlyViewController: HHBaseViewController {
         button.setTitle(" \(Date.todayYear)", for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)
-        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
         button.addTarget(self, action: #selector(backYearsViewController), for: .touchUpInside)
@@ -306,7 +317,17 @@ class MonthlyViewController: HHBaseViewController {
     
     @objc private func didTapAddTodoListButton() {
         toDoListViewModel.addToDo()
+        
+        let newIndexPath = IndexPath(row: toDoListViewModel.toDoList.count - 1, section: 0)
         tableView.reloadData()
+        tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let cell = self.tableView.cellForRow(at: newIndexPath) as? ToDoListTableViewCell {
+                cell.toDoListTextView.becomeFirstResponder()
+            }
+        }
+
         tableView.layoutIfNeeded()
         updateCompletionLabel()
         updateEmptyStateView(isEmpty: toDoListViewModel.toDoList.isEmpty)
@@ -327,6 +348,27 @@ class MonthlyViewController: HHBaseViewController {
         view.endEditing(true)
         toDoListViewModel.finishEditing()
     }
+    
+    // MARK: 키보드 이벤트 핸들러
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            
+            let contentInsets = UIEdgeInsets(top: originalContentInset.top, left: originalContentInset.left, bottom: keyboardHeight, right: originalContentInset.right)
+            tableView.contentInset = contentInsets
+            tableView.scrollIndicatorInsets = contentInsets
+
+            if let activeTextView = UIResponder.currentFirstResponder() as? UITextView {
+                let textViewFrame = activeTextView.convert(activeTextView.bounds, to: tableView)
+                tableView.scrollRectToVisible(textViewFrame, animated: true)
+            }
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        tableView.contentInset = originalContentInset
+        tableView.scrollIndicatorInsets = .zero
+    }
 }
 
 // MARK: - 테이블뷰
@@ -342,6 +384,7 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.separatorInset = .init(top: 0, left: 55, bottom: 0, right: 20)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
+        tableView.contentInset.bottom = 250
 
         let mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
         addChild(mottoVC)
@@ -398,5 +441,20 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
         toDoListViewModel.moveToDo(from: fromIndexPath.row, to: to.row)
+    }
+}
+
+// MARK: - UIResponder 확장
+extension UIResponder {
+    private static weak var _currentFirstResponder: UIResponder?
+
+    static func currentFirstResponder() -> UIResponder? {
+        _currentFirstResponder = nil
+        UIApplication.shared.sendAction(#selector(findFirstResponder(_:)), to: nil, from: nil, for: nil)
+        return _currentFirstResponder
+    }
+
+    @objc fileprivate func findFirstResponder(_ sender: AnyObject) {
+        UIResponder._currentFirstResponder = self
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     private var checkBoxImageView: UIImageView!
-    private var toDoListTextView: UITextView!
+    var toDoListTextView: UITextView!
     private var noteTextView: UITextView!
     private var detailButton: UIButton!
     weak var delegate: MonthlyViewController?
