@@ -57,9 +57,9 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
     
     private let monthlyBox: UIView = {
         let view = UIView()
-        view.backgroundColor = .hhCharacter
+        view.backgroundColor = .hhCard
         view.layer.cornerRadius = 10
-        view.alpha = 0.5
+        view.alpha = 1
         view.clipsToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.shadowColor = UIColor.hhShadow.cgColor
