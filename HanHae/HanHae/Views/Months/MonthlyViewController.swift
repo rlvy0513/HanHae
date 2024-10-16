@@ -42,6 +42,28 @@ class MonthlyViewController: HHBaseViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        view.endEditing(true)
+        
+        let indicesToRemove = toDoListViewModel.toDoList.enumerated().compactMap { index, todo in
+            return todo.title == "목표를 입력하세요." ? index : nil
+        }
+        
+        tableView.beginUpdates()
+        
+        for index in indicesToRemove.reversed() {
+            toDoListViewModel.removeToDo(at: index)
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
+        
+        tableView.endUpdates()
+        
+        updateCompletionLabel()
+        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+    }
+    
     private func bindViewModel() {
         toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
             self?.updateEmptyStateView(isEmpty: toDoList.isEmpty)
