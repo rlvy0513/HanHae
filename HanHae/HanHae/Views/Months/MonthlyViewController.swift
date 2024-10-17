@@ -441,9 +441,19 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            tableView.beginUpdates()
+            
             toDoListViewModel.removeToDo(at: indexPath.row)
-            tableView.reloadData()
+            
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+            
             updateSettingButton()
+            
+            if tableView.isEditing {
+                let doneButton = createDoneButton(selector: #selector(exitEditingMode))
+                navigationItem.rightBarButtonItem = doneButton
+            }
         }
     }
 
