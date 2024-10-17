@@ -54,6 +54,17 @@ class MonthlyViewController: HHBaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = navigationController?.navigationBar {
+            let navigationBarHeight = navigationBar.frame.height
+            let largeTitleHeight = 44.0
+            let yOffset = -(navigationBarHeight - largeTitleHeight)
+            tableView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
