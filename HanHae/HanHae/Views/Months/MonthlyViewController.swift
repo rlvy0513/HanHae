@@ -359,8 +359,16 @@ class MonthlyViewController: HHBaseViewController {
             tableView.scrollIndicatorInsets = contentInsets
 
             if let activeTextView = UIResponder.currentFirstResponder() as? UITextView {
+                var contentOffset = tableView.contentOffset
                 let textViewFrame = activeTextView.convert(activeTextView.bounds, to: tableView)
-                tableView.scrollRectToVisible(textViewFrame, animated: true)
+
+                let visibleRectHeight = tableView.bounds.height - keyboardHeight
+                let offsetY = textViewFrame.maxY - visibleRectHeight
+
+                if offsetY > 0 {
+                    contentOffset.y = offsetY
+                    tableView.setContentOffset(contentOffset, animated: false)
+                }
             }
         }
     }
