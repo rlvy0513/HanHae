@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
+class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     
     private var viewModel: MonthlyMottoViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
@@ -89,13 +89,15 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         let savedMotto = viewModel.loadMotto()
         monthlyMottoTextView.text = savedMotto
         updateMottoTextView(for: savedMotto)
-        updateTextViewPosition()
+        
+        updateTextViewPosition(for: monthlyMottoTextView)
+        view.layoutIfNeeded()
     }
     
     private func bindViewModel() {
         viewModel.onMottoUpdated = { [weak self] newMotto in
             self?.monthlyMottoTextView.text = newMotto
-            self?.updateTextViewPosition()
+            self?.updateTextViewPosition(for: self?.monthlyMottoTextView ?? UITextView())
         }
     }
     
@@ -126,7 +128,7 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
             monthlyMottoFooterLabel.trailingAnchor.constraint(equalTo: monthlyBox.trailingAnchor, constant: -10)
         ])
         
-        mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40)
+        mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 55)
         mottoTextViewTopConstraint.isActive = true
     }
     
@@ -140,34 +142,57 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
             showFooterAndQuoteLabels()
         }
     }
+
+    private func updateTextViewPosition(for textView: UITextView) {
+        DispatchQueue.main.async {
+            let numberOfLines = self.calculateNumberOfLines(for: textView)
+            self.adjustTextViewPosition(for: numberOfLines, isDefaultText: textView.text == self.viewModel.defaultMottoText)
+            self.view.layoutIfNeeded()
+        }
+    }
     
-    private func updateTextViewPosition() {
-            let isDefaultText = monthlyMottoTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || monthlyMottoTextView.text == viewModel.defaultMottoText
-            mottoTextViewTopConstraint.isActive = false
-            
-            if isDefaultText {
-                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40)
-                monthlyMottoTextView.textColor = .hhLightGray
-            } else {
+    private func calculateNumberOfLines(for textView: UITextView) -> Int {
+        let size = CGSize(width: textView.frame.width, height: .infinity)
+        let textViewSize = textView.sizeThatFits(size)
+        let lineHeight = textView.font?.lineHeight ?? 0
+        return Int(textViewSize.height / lineHeight)
+    }
+
+    private func adjustTextViewPosition(for numberOfLines: Int, isDefaultText: Bool) {
+        mottoTextViewTopConstraint.isActive = false
+        
+        if isDefaultText {
+            mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40)
+        } else {
+            switch numberOfLines {
+            case 1:
+                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 55)
+            case 2:
+                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45)
+            case 3:
                 mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
-                monthlyMottoTextView.textColor = .hhText
+            default:
+                mottoTextViewTopConstraint = monthlyMottoTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32)
             }
-            
-            mottoTextViewTopConstraint.isActive = true
-            view.layoutIfNeeded()
         }
         
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            if textView.text == viewModel.defaultMottoText {
-                textView.text = ""
-                textView.textColor = .hhText
-                showFooterAndQuoteLabels()
-            }
-            
-            if let monthlyView = self.parent as? MonthlyViewController {
-                monthlyView.showDoneButton(textView)
-            }
+        mottoTextViewTopConstraint.isActive = true
+    }
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == viewModel.defaultMottoText {
+            textView.text = ""
+            textView.textColor = .hhText
+            showFooterAndQuoteLabels()
         }
+        
+        // 기본 문구일 때도 바로 줄 수에 따른 위치 조정
+        updateTextViewPosition(for: textView)
+        
+        if let monthlyView = self.parent as? MonthlyViewController {
+            monthlyView.showDoneButton(textView)
+        }
+    }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -182,33 +207,30 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
             showFooterAndQuoteLabels()
         }
         
-        updateTextViewPosition()
+        updateTextViewPosition(for: textView)
         
         if let monthlyView = self.parent as? MonthlyViewController {
-              monthlyView.hideDoneButton()
-          }
+            monthlyView.hideDoneButton()
+        }
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textView.tag == 1 {
             let maxNumberOfLines = 3
+            
             let size = CGSize(width: textView.frame.width, height: .infinity)
             let textViewSize = textView.sizeThatFits(size)
             let lineHeight = textView.font?.lineHeight ?? 0
             let numberOfLines = Int(textViewSize.height / lineHeight)
             
             if numberOfLines > maxNumberOfLines {
-                let newText = String(textView.text.dropLast())
-                textView.text = newText
+                textView.text = String(textView.text.dropLast())
             }
             
-            textView.constraints.forEach { constraint in
-                if constraint.firstAttribute == .height {
-                    constraint.constant = textViewSize.height
-                }
+            adjustTextViewPosition(for: numberOfLines, isDefaultText: false)
+            UIView.animate(withDuration: 0.2) {
+                self.view.layoutIfNeeded()
             }
-            textView.textColor = .hhText
-            showFooterAndQuoteLabels()
             
             viewModel.updateMotto(textView.text)
         }
@@ -226,4 +248,3 @@ class MonthlyMottoViewController: UIViewController,UITextViewDelegate {
         closingQuoteLabel.isHidden = true
     }
 }
-
