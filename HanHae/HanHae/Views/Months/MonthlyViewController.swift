@@ -19,6 +19,7 @@ class MonthlyViewController: HHBaseViewController {
     private var completionLabel: UILabel!
     private var originalContentInset: UIEdgeInsets = .zero
     private var isEditingMode = false
+    private var toolbar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -182,6 +183,8 @@ class MonthlyViewController: HHBaseViewController {
         let doneButton = createDoneButton(selector: #selector(exitEditingMode))
 
         navigationItem.rightBarButtonItem = doneButton
+        
+        toolbar.isHidden = true
     }
     
     @objc private func exitEditingMode() {
@@ -189,6 +192,8 @@ class MonthlyViewController: HHBaseViewController {
         tableView.setEditing(false, animated: true)
         toDoListViewModel.didTapEditListButton()
         updateSettingButton()
+        
+        toolbar.isHidden = false
     }
 
     private func createDoneButton(selector: Selector) -> UIBarButtonItem {
@@ -288,7 +293,7 @@ class MonthlyViewController: HHBaseViewController {
         let addTodoListBarButton = UIBarButtonItem(customView: addTodoListButton)
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
-        let toolbar = UIToolbar()
+        toolbar = UIToolbar()
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.items = [addTodoListBarButton, flexSpace]
         toolbar.tintColor = .hhAccent
