@@ -181,7 +181,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             
             if noteTextView.text == "노트 추가하기" {
                 noteTextView.isHidden = false
-                noteTextViewBottomConstraint.constant = -10
+//                noteTextViewBottomConstraint.constant = -10
             }
             
             detailButton.isHidden = false
@@ -202,6 +202,8 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
 
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView == toDoListTextView {
+            textView.text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            
             if textView.text.isEmpty {
                 textView.text = "목표를 입력하세요."
                 textView.textColor = .hhLightGray
@@ -220,17 +222,18 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 self.contentView.layoutIfNeeded()
             }
         } else if textView == noteTextView {
-            if noteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                noteTextView.text = "노트 추가하기"
-                noteTextView.textColor = .hhLightGray
-                noteTextView.isHidden = true
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "노트 추가하기"
+                textView.textColor = .hhLightGray
+                textView.isHidden = true
                 noteTextViewBottomConstraint.constant = 15
             } else {
-                viewModel.updateNoteText(at: index, note: noteTextView.text)
-                noteTextView.textColor = .hhBlack
-                noteTextView.isHidden = false
+                viewModel.updateNoteText(at: index, note: textView.text)
+                textView.textColor = .hhBlack
+                textView.isHidden = false
             }
         }
+        
         delegate?.hideDoneButton()
     }
 
