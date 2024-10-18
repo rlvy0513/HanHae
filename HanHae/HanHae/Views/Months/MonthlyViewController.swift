@@ -9,42 +9,97 @@ import UIKit
 
 class MonthlyViewController: HHBaseViewController {
     
-    private var scrollView: UIScrollView!
-    private var contentView: UIView!
-    private var mottoVC: MonthlyMottoViewController!
-    private var todoListVC: MonthlyTodoListViewController!
-    private var viewModel: MonthlyMottoViewModel!
+    private var mottoView: MonthlyMottoViewController!
+    private var mottoViewModel: MonthlyMottoViewModel!
+    var toDoListViewModel: MonthlyToDoListViewModel!
+    
+    private var tableView: UITableView!
+    private var emptyStateImageView: UIImageView!
+    private var emptyStateLabel: UILabel!
+    private var completionLabel: UILabel!
+    private var originalContentInset: UIEdgeInsets = .zero
     private var isEditingMode = false
+    private var toolbar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+        mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+        toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
-        setupScrollView()
-        setupSubViewControllers()
+        setupTableView()
+        setupEmptyStateView()
+        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+        updateCompletionLabel()
         setupToolbar()
+        
+        originalContentInset = tableView.contentInset
+        
+        bindViewModel()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        updateScrollViewContentSize()
-        
         DispatchQueue.main.async {
             self.updateSettingButton()
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateScrollViewContentSize()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = navigationController?.navigationBar {
+            let navigationBarHeight = navigationBar.frame.height
+            let largeTitleHeight = 44.0
+            let yOffset = -(navigationBarHeight - largeTitleHeight)
+            tableView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+        }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        view.endEditing(true)
+        
+        let indicesToRemove = toDoListViewModel.toDoList.enumerated().compactMap { index, todo in
+            return todo.title == "목표를 입력하세요." ? index : nil
+        }
+        
+        tableView.beginUpdates()
+        
+        for index in indicesToRemove.reversed() {
+            toDoListViewModel.removeToDo(at: index)
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
+        
+        tableView.endUpdates()
+        
+        updateCompletionLabel()
+        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+    }
+    
+    private func bindViewModel() {
+        toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
+            self?.updateEmptyStateView(isEmpty: toDoList.isEmpty)
+            self?.tableView.reloadData()
+            self?.updateCompletionLabel()
+        }
+    }
+    
+    // MARK: 네비게이션 세팅
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(viewModel.currentMonth.month)월"
+        navigationItem.title = "\(mottoViewModel.currentMonth.month)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhText
@@ -61,63 +116,195 @@ class MonthlyViewController: HHBaseViewController {
         button.setTitle(" \(Date.todayYear)", for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)
-        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
         button.setImage(image, for: .normal)
         button.tintColor = .hhAccent
-        button.addTarget(self, action: #selector(popMonthlyViewController), for: .touchUpInside)
+        button.addTarget(self, action: #selector(backYearsViewController), for: .touchUpInside)
         button.contentVerticalAlignment = .bottom
         return button
     }
-    
-    private func setupSubViewControllers() {
-        mottoVC = MonthlyMottoViewController(viewModel: viewModel)
-        mottoVC.delegate = self
-        addChild(mottoVC)
-        contentView.addSubview(mottoVC.view)
-        mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
-        mottoVC.didMove(toParent: self)
-        
-        let todoListViewModel = MonthlyTodoListViewModel()
-        todoListVC = MonthlyTodoListViewController(viewModel: todoListViewModel)
-        todoListVC.delegate = self
-        addChild(todoListVC)
-        contentView.addSubview(todoListVC.view)
-        todoListVC.view.translatesAutoresizingMaskIntoConstraints = false
-        todoListVC.didMove(toParent: self)
-        
-        todoListVC.onContentHeightUpdated = { [weak self] updatedHeight in
-            if let heightConstraint = self?.todoListVC.view.constraints.first(where: { $0.firstAttribute == .height }) {
-                heightConstraint.isActive = false
-            }
-            let adjustedHeight = updatedHeight + 82
-            self?.todoListVC.view.heightAnchor.constraint(equalToConstant: adjustedHeight).isActive = true
-            self?.updateScrollViewContentSize()
-        }
 
-        DispatchQueue.main.async {
-            self.updateSettingButton()
+    @objc private func backYearsViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapDeleteAllButton() {
+        let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            self?.toDoListViewModel.removeAllToDoList()
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+                self?.updateCompletionLabel()
+                self?.updateEmptyStateView(isEmpty: self?.toDoListViewModel.isEmpty ?? true)
+                self?.updateSettingButton()
+                
+                self?.tableView.layoutIfNeeded()
+            }
         }
         
-        NSLayoutConstraint.activate([
-            mottoVC.view.topAnchor.constraint(equalTo: contentView.topAnchor),
-            mottoVC.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mottoVC.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            mottoVC.view.heightAnchor.constraint(equalToConstant: 250),
-            
-            todoListVC.view.topAnchor.constraint(equalTo: mottoVC.view.bottomAnchor, constant: -55),
-            todoListVC.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            todoListVC.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            todoListVC.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
+    func updateSettingButton() {
+        guard let viewModel = toDoListViewModel else { return }
+
+        let hasToDoList = !viewModel.toDoList.isEmpty
+        
+        let settingButton = UIButton(type: .system)
+        settingButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+        settingButton.tintColor = .hhAccent
+        settingButton.showsMenuAsPrimaryAction = true
+        settingButton.menu = createMenu(hasTodoList: hasToDoList)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
+    }
+
+    private func createMenu(hasTodoList: Bool) -> UIMenu {
+        let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
+            self?.enterEditingMode()
+        })
+        editAction.attributes = hasTodoList ? [] : [.disabled]
+
+        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
+            // MARK: 설정 연결
+        })
+        
+        let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
+            self?.didTapDeleteAllButton()
+        })
+        deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
+        
+        let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
+        
+        return UIMenu(title: "", children: [divider, deleteAction])
+    }
+
+    private func enterEditingMode() {
+        isEditingMode = true
+        tableView.setEditing(true, animated: true)
+        toDoListViewModel.didTapEditListButton()
+        
+        let doneButton = createDoneButton(selector: #selector(exitEditingMode))
+
+        navigationItem.rightBarButtonItem = doneButton
+        
+        toolbar.isHidden = true
+    }
+    
+    @objc private func exitEditingMode() {
+        isEditingMode = false
+        tableView.setEditing(false, animated: true)
+        toDoListViewModel.didTapEditListButton()
+        updateSettingButton()
+        
+        toolbar.isHidden = false
+    }
+
+    private func createDoneButton(selector: Selector) -> UIBarButtonItem {
+        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
+        doneButton.tintColor = .hhAccent
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.hhHeadLine,
+            .foregroundColor: UIColor.hhAccent
+        ]
+        doneButton.setTitleTextAttributes(attributes, for: .normal)
+        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
+        return doneButton
+    }
+    
+    // MARK: 목표량 관련 메서드
+    private func setupCompletionFooterView() {
+        completionLabel = UILabel()
+        completionLabel.translatesAutoresizingMaskIntoConstraints = false
+        completionLabel.font = UIFont.hhTitle
+        completionLabel.textColor = .hhLightGray
+        completionLabel.textAlignment = .right
+
+        let footerView = UIView()
+        footerView.addSubview(completionLabel)
+
+        NSLayoutConstraint.activate([
+            completionLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
+            completionLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
+            completionLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: 45),
+            completionLabel.heightAnchor.constraint(equalToConstant: 33)
+        ])
+
+        tableView.tableFooterView = footerView
+    }
+
+    private func updateCompletionLabel() {
+        let percentage = Int(toDoListViewModel.completionPercentage())
+        let fullText = "목표 \(percentage)% 달성"
+        
+        let attributedText = NSMutableAttributedString(string: fullText)
+        let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
+        attributedText.addAttributes([
+            .foregroundColor: UIColor.hhAccent,
+            .font: UIFont.hhLargeTitle
+        ], range: percentageRange)
+        
+        let defaultRange = (fullText as NSString).range(of: "목표량 달성")
+        attributedText.addAttributes([
+            .foregroundColor: UIColor.hhLightGray,
+            .font: UIFont.hhTitle
+        ], range: defaultRange)
+        
+        completionLabel.attributedText = attributedText
+    }
+    
+    // MARK: 엠티뷰 관련 메서드
+    private func setupEmptyStateView() {
+        emptyStateImageView = UIImageView()
+        emptyStateImageView.image = UIImage(systemName: "swift")
+        emptyStateImageView.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateImageView.contentMode = .scaleAspectFit
+        emptyStateImageView.tintColor = .hhAccent
+
+        emptyStateLabel = UILabel()
+        emptyStateLabel.text = "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!"
+        emptyStateLabel.numberOfLines = 2
+        emptyStateLabel.font = .hhTitle
+        emptyStateLabel.textColor = .hhLightGray
+        emptyStateLabel.textAlignment = .center
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(emptyStateImageView)
+        view.addSubview(emptyStateLabel)
+
+        NSLayoutConstraint.activate([
+            emptyStateImageView.topAnchor.constraint(equalTo: tableView.tableHeaderView!.topAnchor, constant: 250),
+            emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateImageView.widthAnchor.constraint(equalToConstant: 100),
+            emptyStateImageView.heightAnchor.constraint(equalToConstant: 100),
+
+            emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: 20),
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+
+    private func updateEmptyStateView(isEmpty: Bool) {
+        emptyStateImageView.isHidden = !isEmpty
+        emptyStateLabel.isHidden = !isEmpty
+        tableView.isHidden = false
+        completionLabel.isHidden = isEmpty
+    }
+    
+    // MARK: 툴바 세팅
     private func setupToolbar() {
         let addTodoListButton = createAddTodoListButton()
         
         let addTodoListBarButton = UIBarButtonItem(customView: addTodoListButton)
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
-        let toolbar = UIToolbar()
+        toolbar = UIToolbar()
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.items = [addTodoListBarButton, flexSpace]
         toolbar.tintColor = .hhAccent
@@ -145,188 +332,163 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     @objc private func didTapAddTodoListButton() {
-        todoListVC.didTapAddTodoListButton()
+        toDoListViewModel.addToDo()
         
-        DispatchQueue.main.async {
-            self.todoListVC.view.layoutIfNeeded()
-            self.updateScrollViewContentSize()
-            self.updateSettingButton()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.scrollToBottom()
+        let newIndexPath = IndexPath(row: toDoListViewModel.toDoList.count - 1, section: 0)
+        tableView.reloadData()
+        tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let cell = self.tableView.cellForRow(at: newIndexPath) as? ToDoListTableViewCell {
+                cell.toDoListTextView.becomeFirstResponder()
             }
         }
-    }
-    
-    @objc private func didTapDeleteAllButton() {
-        todoListVC.didTapDeleteAllButton()
-        
-        DispatchQueue.main.async {
-            self.updateSettingButton()
-            self.todoListVC.view.layoutIfNeeded()
-            self.updateScrollViewContentSize()
-            self.scrollToTop()
-        }
-    }
-    
-    @objc private func popMonthlyViewController() {
-        navigationController?.popViewController(animated: true)
-    }
 
-    func updateSettingButton() {
-        guard let todoListVC = todoListVC, let viewModel = todoListVC.viewModel else { return }
-        
-        let hasTodoList = !viewModel.todoList.isEmpty
-        
-        let settingButton = UIButton(type: .system)
-        settingButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
-        settingButton.tintColor = .hhAccent
-        settingButton.showsMenuAsPrimaryAction = true
-        settingButton.menu = createMenu(hasTodoList: hasTodoList)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
-    }
-
-    private func createMenu(hasTodoList: Bool) -> UIMenu {
-        let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
-            self?.enterEditingMode()
-        })
-        editAction.attributes = hasTodoList ? [] : [.disabled]
-
-        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
-            // MARK: 설정 연결
-        })
-        
-        let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
-            self?.todoListVC.didTapDeleteAllButton()
-        })
-        deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
-        
-        let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
-        
-        return UIMenu(title: "", children: [divider, deleteAction])
-    }
-    
-    private func enterEditingMode() {
-        isEditingMode = true
-        todoListVC.didTapEditListButton()
-        
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(exitEditingMode))
-        
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhHeadLine,
-            .foregroundColor: UIColor.hhAccent
-        ]
-        doneButton.setTitleTextAttributes(attributes, for: .normal)
-        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
-        
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    @objc private func exitEditingMode() {
-        isEditingMode = false
-        todoListVC.didTapEditListButton()
+        tableView.layoutIfNeeded()
+        updateCompletionLabel()
+        updateEmptyStateView(isEmpty: toDoListViewModel.toDoList.isEmpty)
         updateSettingButton()
     }
     
-    @objc private func endTodoEditing() {
-        view.endEditing(true)
-        todoListVC.finishEditing()
-    }
-
-    private func createDoneButton(selector: Selector) -> UIBarButtonItem {
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
-        doneButton.tintColor = .hhAccent
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.hhHeadLine,
-            .foregroundColor: UIColor.hhAccent
-        ]
-        doneButton.setTitleTextAttributes(attributes, for: .normal)
-        doneButton.setTitleTextAttributes(attributes, for: .highlighted)
-        return doneButton
-    }
-}
-
-extension MonthlyViewController: TodoListEditingDelegate {
-    func todoListEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endTodoEditing))
+    // MARK: 텍스트뷰 완료 메서드
+    func showDoneButton(_ textView: UITextView) {
+        let doneButton = createDoneButton(selector: #selector(endEditing))
         navigationItem.rightBarButtonItem = doneButton
     }
     
-    func todoListEditingDidEnd() {
-        setupNavigationBar()
-    }
-}
-
-extension MonthlyViewController: MonthlyMottoDelegate {
-    func mottoEditingDidBegin() {
-        let doneButton = createDoneButton(selector: #selector(endMottoEditing))
-        navigationItem.rightBarButtonItem = doneButton
-    }
-    
-    func mottoEditingDidEnd() {
+    func hideDoneButton() {
         setupNavigationBar()
     }
     
-    @objc private func endMottoEditing() {
+    @objc private func endEditing() {
         view.endEditing(true)
+        toDoListViewModel.finishEditing()
+    }
+    
+    // MARK: 키보드 이벤트 핸들러
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            
+            let contentInsets = UIEdgeInsets(top: originalContentInset.top, left: originalContentInset.left, bottom: keyboardHeight, right: originalContentInset.right)
+            tableView.contentInset = contentInsets
+            tableView.scrollIndicatorInsets = contentInsets
+
+            if let activeTextView = UIResponder.currentFirstResponder() as? UITextView {
+                var contentOffset = tableView.contentOffset
+                let textViewFrame = activeTextView.convert(activeTextView.bounds, to: tableView)
+
+                let visibleRectHeight = tableView.bounds.height - keyboardHeight
+                let offsetY = textViewFrame.maxY - visibleRectHeight
+
+                if offsetY > 0 {
+                    contentOffset.y = offsetY
+                    tableView.setContentOffset(contentOffset, animated: false)
+                }
+            }
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        tableView.contentInset = originalContentInset
+        tableView.scrollIndicatorInsets = .zero
     }
 }
 
-extension MonthlyViewController: UIScrollViewDelegate {
-    func setupScrollView() {
-        scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.delegate = self
-        
-        contentView = UIView()
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
+// MARK: - 테이블뷰
+extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func setupTableView() {
+        tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ToDoListTableViewCell.self, forCellReuseIdentifier: "TodoListCell")
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = .init(top: 0, left: 55, bottom: 0, right: 20)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.backgroundColor = .clear
+        tableView.contentInset.bottom = 250
+
+        let mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
+        addChild(mottoVC)
+        mottoVC.didMove(toParent: self)
+        mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200))
+        headerView.addSubview(mottoVC.view)
+
+        view.addSubview(tableView)
+        tableView.tableHeaderView = headerView
+        setupCompletionFooterView()
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            mottoVC.view.topAnchor.constraint(equalTo: headerView.topAnchor),
+            mottoVC.view.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            mottoVC.view.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            mottoVC.view.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
+
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
-    func updateScrollViewContentSize() {
-        let mottoHeight = mottoVC.view.frame.height
-        let todoHeight = todoListVC.view.frame.height
-        let totalHeight = mottoHeight + todoHeight + 20
-        
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: totalHeight)
-        scrollView.layoutIfNeeded()
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return toDoListViewModel.toDoList.count
     }
-    
-    func scrollToTop() {
-        let extraOffset: CGFloat = 10
-        let topOffset = CGPoint(x: 0, y: -scrollView.adjustedContentInset.top - extraOffset)
-        
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
-            self.scrollView.setContentOffset(topOffset, animated: false)
-        }, completion: nil)
-    }
-    
-    func scrollToBottom() {
-        let completionLabelHeight = todoListVC.completionLabel.frame.height
-        
-        let bottomOffset = CGPoint(
-            x: 0,
-            y: scrollView.contentSize.height - scrollView.bounds.size.height + completionLabelHeight
-        )
-        
-        if bottomOffset.y > 0 {
-            scrollView.setContentOffset(bottomOffset, animated: true)
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoListCell", for: indexPath) as? ToDoListTableViewCell {
+            let todo = toDoListViewModel.toDoList[indexPath.row]
+            cell.configure(toDo: todo, index: indexPath.row, delegate: self, viewModel: toDoListViewModel)
+
+            cell.backgroundColor = .clear
+            return cell
+        } else {
+            return UITableViewCell()
         }
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            
+            toDoListViewModel.removeToDo(at: indexPath.row)
+            
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+            
+            updateSettingButton()
+            
+            if tableView.isEditing {
+                let doneButton = createDoneButton(selector: #selector(exitEditingMode))
+                navigationItem.rightBarButtonItem = doneButton
+            }
+        }
+    }
+
+    func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        toDoListViewModel.moveToDo(from: fromIndexPath.row, to: to.row)
+    }
+}
+
+// MARK: - UIResponder 확장
+extension UIResponder {
+    private static weak var _currentFirstResponder: UIResponder?
+
+    static func currentFirstResponder() -> UIResponder? {
+        _currentFirstResponder = nil
+        UIApplication.shared.sendAction(#selector(findFirstResponder(_:)), to: nil, from: nil, for: nil)
+        return _currentFirstResponder
+    }
+
+    @objc fileprivate func findFirstResponder(_ sender: AnyObject) {
+        UIResponder._currentFirstResponder = self
     }
 }
