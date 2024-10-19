@@ -55,6 +55,16 @@ extension HHMonth {
 
     @objc(removeToDoList:)
     @NSManaged public func removeFromToDoList(_ values: NSOrderedSet)
+    
+    func moveToDo(fromIndex: Int, toIndex: Int) {
+        guard let toDoList else { return }
+        
+        var toDoListArray = toDoList.array as! [ToDo]
+        let movedToDo = toDoListArray.remove(at: fromIndex)
+        toDoListArray.insert(movedToDo, at: toIndex)
+        
+        self.toDoList = NSOrderedSet(array: toDoListArray)
+    }
 
 }
 
