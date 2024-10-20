@@ -73,7 +73,7 @@ final class CoreDataManager {
         }
     }
     
-    func addTodo(
+    func addToDo(
         forYearIndex yearIndex: Int,
         monthIndex: Int
     ) {

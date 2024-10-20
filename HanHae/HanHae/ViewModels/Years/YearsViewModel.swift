@@ -38,9 +38,9 @@ final class YearsViewModel {
     func makeMonthlyTDLViewModelAt(
         yearIndex: Int,
         monthIndex: Int
-    ) -> TestMonthlyTDLViewModel {
+    ) -> MonthlyTDLViewModel {
         let monthData = (years[yearIndex].months?.array as! [HHMonth])[monthIndex]
-        return TestMonthlyTDLViewModel(monthlyData: monthData)
+        return MonthlyTDLViewModel(monthlyData: monthData)
     }
     
     // MARK: - logic
