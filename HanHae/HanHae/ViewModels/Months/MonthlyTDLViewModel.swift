@@ -20,10 +20,13 @@ final class MonthlyTDLViewModel {
         monthData.toDoList?.array as! [ToDo]
     }
     
-    init(yearIndex: Int, monthIndex: Int, monthlyData: HHMonth) {
+    var onMottoUpdated: ((String) -> Void)?
+    lazy var mottoPlaceholder = "\(monthData.month)월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요."
+    
+    init(yearIndex: Int, monthIndex: Int, monthData: HHMonth) {
         self.yearIndex = yearIndex
         self.monthIndex = monthIndex
-        self.monthData = monthlyData
+        self.monthData = monthData
     }
     
     // MARK: - input
@@ -64,6 +67,14 @@ final class MonthlyTDLViewModel {
         }
         
         return (toDoCountString, percentString)
+    }
+    
+    func getMonthlyMottoText() -> String {
+        if let monthlyMotto = monthData.monthlyMotto {
+            return monthlyMotto
+        } else {
+            return mottoPlaceholder
+        }
     }
     
     // MARK: - logic

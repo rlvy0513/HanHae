@@ -9,7 +9,7 @@ import UIKit
 
 class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     
-    private var viewModel: MonthlyMottoViewModel!
+    private var viewModel: MonthlyTDLViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
 
     private let monthlyMottoTextView: UITextView = {
@@ -27,7 +27,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     
     private lazy var monthlyMottoFooterLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(viewModel.currentMonth.month)월의 나에게"
+        label.text = "\(viewModel.monthData.month)월의 나에게"
         label.font = .hhCaption1
         label.textColor = .hhLightGray
         label.textAlignment = .center
@@ -69,7 +69,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         return view
     }()
     
-    init(viewModel: MonthlyMottoViewModel) {
+    init(viewModel: MonthlyTDLViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -86,7 +86,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         setupView()
         bindViewModel()
         
-        let savedMotto = viewModel.loadMotto()
+        let savedMotto = viewModel.getMonthlyMottoText()
         monthlyMottoTextView.text = savedMotto
         updateMottoTextView(for: savedMotto)
         
@@ -133,8 +133,8 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     }
     
     private func updateMottoTextView(for text: String) {
-        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == viewModel.defaultMottoText {
-            monthlyMottoTextView.text = viewModel.defaultMottoText
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || text == viewModel.mottoPlaceholder {
+            monthlyMottoTextView.text = viewModel.mottoPlaceholder
             monthlyMottoTextView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
@@ -146,7 +146,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     private func updateTextViewPosition(for textView: UITextView) {
         DispatchQueue.main.async {
             let numberOfLines = self.calculateNumberOfLines(for: textView)
-            self.adjustTextViewPosition(for: numberOfLines, isDefaultText: textView.text == self.viewModel.defaultMottoText)
+            self.adjustTextViewPosition(for: numberOfLines, isDefaultText: textView.text == self.viewModel.mottoPlaceholder)
             self.view.layoutIfNeeded()
         }
     }
@@ -180,7 +180,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == viewModel.defaultMottoText {
+        if textView.text == viewModel.mottoPlaceholder {
             textView.text = ""
             textView.textColor = .hhText
             showFooterAndQuoteLabels()
@@ -198,11 +198,11 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if trimmedText.isEmpty {
-            textView.text = viewModel.defaultMottoText
+            textView.text = viewModel.mottoPlaceholder
             textView.textColor = .hhLightGray
             hideFooterAndQuoteLabels()
         } else {
-            viewModel.updateMotto(textView.text)
+            viewModel.updateMonthlyMotto(textView.text)
             textView.textColor = .hhText
             showFooterAndQuoteLabels()
         }
@@ -232,7 +232,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
                 self.view.layoutIfNeeded()
             }
             
-            viewModel.updateMotto(textView.text)
+            viewModel.updateMonthlyMotto(textView.text)
         }
     }
     

@@ -40,7 +40,12 @@ final class YearsViewModel {
         monthIndex: Int
     ) -> MonthlyTDLViewModel {
         let monthData = (years[yearIndex].months?.array as! [HHMonth])[monthIndex]
-        return MonthlyTDLViewModel(monthlyData: monthData)
+        
+        return MonthlyTDLViewModel(
+            yearIndex: yearIndex,
+            monthIndex: monthIndex,
+            monthData: monthData
+        )
     }
     
     // MARK: - logic
@@ -56,6 +61,7 @@ final class YearsViewModel {
     func getScrollIndexPath(atYear: Int, atMonth: Int) -> IndexPath {
         let section = atYear - 2020
         let item = atMonth - 1
+        
         return IndexPath(item: item, section: section)
     }
     
