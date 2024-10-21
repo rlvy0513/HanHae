@@ -23,6 +23,7 @@
 		427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */; };
 		427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EE32C91CC8B00DE7844 /* Colors.xcassets */; };
 		427C4EE62C91D5B200DE7844 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C4EE52C91D5B200DE7844 /* ViewController.swift */; };
+		42AECC2D2CC684B30068F47D /* CoreDataInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42AECC2C2CC6848C0068F47D /* CoreDataInitializer.swift */; };
 		42BC1FED2CAE4F9100BED6F2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */; };
 		42CE1D7D2CA933D900270234 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7C2CA933D000270234 /* Date+Extension.swift */; };
 		42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */; };
@@ -62,6 +63,7 @@
 		427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		427C4EE32C91CC8B00DE7844 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		427C4EE52C91D5B200DE7844 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		42AECC2C2CC6848C0068F47D /* CoreDataInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataInitializer.swift; sourceTree = "<group>"; };
 		42BC1FEC2CAE4F9100BED6F2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		42CE1D7C2CA933D000270234 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 		42CE1D7E2CA93B5400270234 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				42AECC2C2CC6848C0068F47D /* CoreDataInitializer.swift */,
 				42CE1D7F2CA93B9B00270234 /* CoreDataManager.swift */,
 			);
 			path = Services;
@@ -377,6 +380,7 @@
 				42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */,
 				42FD5ADD2C9C6DB100B1AF81 /* YearsViewController.swift in Sources */,
 				4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */,
+				42AECC2D2CC684B30068F47D /* CoreDataInitializer.swift in Sources */,
 				422010842CA68EAE00721175 /* MonthlyViewModel.swift in Sources */,
 				42DBE6DC2C9FD3330012BC63 /* YearHeaderView.swift in Sources */,
 				42CE1D802CA93BA200270234 /* CoreDataManager.swift in Sources */,
