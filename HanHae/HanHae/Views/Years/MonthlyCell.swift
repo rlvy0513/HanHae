@@ -11,7 +11,7 @@ final class MonthlyCell: UICollectionViewCell {
     
     static let identifier = "MonthlyCell"
     
-    var viewModel: TestMonthlyTDLViewModel? {
+    var viewModel: MonthlyViewModel? {
         didSet {
             configureUI()
         }

@@ -9,7 +9,7 @@ import UIKit
 
 final class YearsViewModel {
     
-    let coreDataManager = CoreDataManager.shared
+    private let coreDataManager = CoreDataManager.shared
     
     // MARK: - data
     private var years: [HHYear] {
@@ -35,24 +35,43 @@ final class YearsViewModel {
         }
     }
     
-    func makeMonthlyTDLViewModelAt(yearIndex: Int, monthIndex: Int) -> TestMonthlyTDLViewModel {
-        let month = years[yearIndex].months[monthIndex]
-        return TestMonthlyTDLViewModel(monthlyData: month)
+    func makeMonthlyTDLViewModelAt(
+        yearIndex: Int,
+        monthIndex: Int
+    ) -> MonthlyViewModel {
+        let monthData = (years[yearIndex].months?.array as! [HHMonth])[monthIndex]
+        
+        return MonthlyViewModel(
+            yearIndex: yearIndex,
+            monthIndex: monthIndex,
+            monthData: monthData
+        )
     }
     
     // MARK: - logic
-    func getMonthlyTDL(yearIndex: Int, monthIndex: Int) -> [ToDo] {
-        return years[yearIndex].months[monthIndex].toDoList
+    func getMonthlyTDL(
+        yearIndex: Int,
+        monthIndex: Int
+    ) -> [ToDo] {
+        let monthData = (years[yearIndex].months?.array as! [HHMonth])[monthIndex]
+        
+        return monthData.toDoList?.array as! [ToDo]
     }
     
     func getScrollIndexPath(atYear: Int, atMonth: Int) -> IndexPath {
         let section = atYear - 2020
         let item = atMonth - 1
+        
         return IndexPath(item: item, section: section)
     }
     
-    func pushMonthlyViewController(vc: UIViewController) {
-        let monthlyVC = MonthlyViewController()
+    func pushMonthlyViewController(
+        yearIndex: Int,
+        monthIndex: Int,
+        vc: UIViewController
+    ) {
+        let viewModel = makeMonthlyTDLViewModelAt(yearIndex: yearIndex, monthIndex: monthIndex)
+        let monthlyVC = MonthlyViewController(viewModel: viewModel)
         vc.navigationController?.pushViewController(monthlyVC, animated: true)
     }
     

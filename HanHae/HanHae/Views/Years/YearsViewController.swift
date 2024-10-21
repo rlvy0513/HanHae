@@ -154,9 +154,11 @@ final class YearsViewController: HHBaseViewController {
         }
         
         if isAlreadyVisible {
-            // TODO: - MonthlyTDLView로 이동하는 로직 구현하기
-            print("MonntlyTDLView로 이동")
-            viewModel.pushMonthlyViewController(vc: self)
+            viewModel.pushMonthlyViewController(
+                yearIndex: targetSection,
+                monthIndex: targetRow,
+                vc: self
+            )
             return
         } else {
             scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
@@ -331,6 +333,17 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateNavigationBarTitle()
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        viewModel.pushMonthlyViewController(
+            yearIndex: indexPath.section,
+            monthIndex: indexPath.row,
+            vc: self
+        )
     }
     
 }

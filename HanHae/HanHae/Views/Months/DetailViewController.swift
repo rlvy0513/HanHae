@@ -12,7 +12,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     var index: Int?
     var start: Date?
     var completion: Date?
-    var viewModel: MonthlyToDoListViewModel!
+    var viewModel: MonthlyViewModel!
     private var tableView: UITableView!
     private var toDoListTextView: UITextView!
     private var noteTextView: UITextView!
@@ -144,29 +144,29 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             startDateImage.image = UIImage(systemName: "flag")
             startDateImage.tintColor = .hhAccent
             startDateImage.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let startLabel = UILabel()
             startLabel.text = "목표 시작일"
             startLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             startLabel.textAlignment = .left
             startLabel.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let startDate = UILabel()
             startDate.text = formattedDate(start ?? Date())
             startDate.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             startDate.textAlignment = .right
             startDate.textColor = .hhLightGray
             startDate.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let stackView = UIStackView(arrangedSubviews: [startDateImage, startLabel, startDate])
             stackView.axis = .horizontal
             stackView.alignment = .center
             stackView.distribution = .fill
             stackView.spacing = 10
             stackView.translatesAutoresizingMaskIntoConstraints = false
-
+            
             cell.contentView.addSubview(stackView)
-
+            
             NSLayoutConstraint.activate([
                 startDateImage.widthAnchor.constraint(equalToConstant: 24),
                 startDateImage.heightAnchor.constraint(equalToConstant: 24),
@@ -176,35 +176,35 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
                 stackView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
                 stackView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
             ])
-
+            
         case (1, 1):
             let completionDateImage = UIImageView()
             completionDateImage.image = UIImage(systemName: "flag.checkered")
             completionDateImage.tintColor = .hhAccent
             completionDateImage.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let completionLabel = UILabel()
             completionLabel.text = "목표 완료일"
             completionLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             completionLabel.textAlignment = .left
             completionLabel.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let completionDate = UILabel()
             completionDate.text = formattedDate(completion) ?? "-"
             completionDate.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             completionDate.textAlignment = .right
             completionDate.textColor = .hhLightGray
             completionDate.translatesAutoresizingMaskIntoConstraints = false
-
+            
             let completionStackView = UIStackView(arrangedSubviews: [completionDateImage, completionLabel, completionDate])
             completionStackView.axis = .horizontal
             completionStackView.alignment = .center
             completionStackView.distribution = .fill
             completionStackView.spacing = 10
             completionStackView.translatesAutoresizingMaskIntoConstraints = false
-
+            
             cell.contentView.addSubview(completionStackView)
-
+            
             NSLayoutConstraint.activate([
                 completionDateImage.widthAnchor.constraint(equalToConstant: 24),
                 completionDateImage.heightAnchor.constraint(equalToConstant: 24),
@@ -272,10 +272,10 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         if let updatedTitle = toDoListTextView.text {
             NotificationCenter.default.post(name: NSNotification.Name("TitleUpdated"), object: nil, userInfo: ["updatedTitle": updatedTitle])
         }
-
+        
         if let index = index {
-            viewModel?.updateNoteText(at: index, note: noteTextView.text)
-            viewModel?.updateToDoText(at: index, text: toDoListTextView.text)
+            viewModel?.updateToDoNote(at: index, newNote: noteTextView.text)
+            viewModel?.updateToDoTitle(at: index, newTitle: toDoListTextView.text)
         }
         dismiss(animated: true, completion: nil)
     }
