@@ -158,7 +158,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.leadingAnchor.constraint(equalTo: checkBoxImageView.trailingAnchor, constant: 10),
             noteTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             noteTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-
+            
             detailButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             detailButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             detailButton.widthAnchor.constraint(equalToConstant: 24),
@@ -232,43 +232,43 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     @objc private func toggleCheckBox() {
-            guard index >= 0 && index < viewModel.toDoList.count else { return }
-
-            if toDoListTextView.isFirstResponder {
-                toDoListTextView.resignFirstResponder()
-                viewModel.updateToDoTitle(at: index, newTitle: toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines))
-            }
+        guard let indexPath = findIndexPath() else { return }
         
-            if noteTextView.isFirstResponder {
-                noteTextView.resignFirstResponder()
-                viewModel.updateToDoNote(at: index, newNote: noteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines))
-            }
-
-            let todo = viewModel.toDoList[index]
-            
-            if todo.isCompleted {
-                let alertController = UIAlertController(
-                    title: "목표 상태 변경하기",
-                    message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
-                    preferredStyle: .alert
-                )
-                
-                let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
-                alertController.addAction(cancelAction)
-                
-                let confirmAction = UIAlertAction(title: "변경하기", style: .default) { [weak self] _ in
-                    guard let self = self else { return }
-                    self.viewModel.updateToDoCompletionStatus(at: self.index, isCompleted: false)
-                    self.updateCheckBoxImage(toDo: self.viewModel.toDoList[self.index])
-                }
-                alertController.addAction(confirmAction)
-                
-                delegate?.present(alertController, animated: true, completion: nil)
-            } else {
-                viewModel.updateToDoCompletionStatus(at: index, isCompleted: true)
-                updateCheckBoxImage(toDo: viewModel.toDoList[index])
-            }
+        if toDoListTextView.isFirstResponder {
+            toDoListTextView.resignFirstResponder()
+            viewModel.updateToDoTitle(at: indexPath.row, newTitle: toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines))
         }
+        
+        if noteTextView.isFirstResponder {
+            noteTextView.resignFirstResponder()
+            viewModel.updateToDoNote(at: indexPath.row, newNote: noteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines))
+        }
+        
+        let todo = viewModel.toDoList[indexPath.row]
+        
+        if todo.isCompleted {
+            let alertController = UIAlertController(
+                title: "목표 상태 변경하기",
+                message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
+                preferredStyle: .alert
+            )
+            
+            let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let confirmAction = UIAlertAction(title: "변경하기", style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.updateToDoCompletionStatus(at: indexPath.row, isCompleted: false)
+                self.updateCheckBoxImage(toDo: self.viewModel.toDoList[indexPath.row])
+            }
+            alertController.addAction(confirmAction)
+            
+            delegate?.present(alertController, animated: true, completion: nil)
+        } else {
+            viewModel.updateToDoCompletionStatus(at: indexPath.row, isCompleted: true)
+            updateCheckBoxImage(toDo: viewModel.toDoList[indexPath.row])
+        }
+    }
     
     @objc private func detailButtonTapped() {
         if toDoListTextView.isFirstResponder {
@@ -278,6 +278,11 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.resignFirstResponder()
         }
         delegate?.showModalForTodoList(at: index)
+    }
+    
+    private func findIndexPath() -> IndexPath? {
+        guard let tableView = findTableView() else { return nil }
+        return tableView.indexPath(for: self)
     }
     
     private func findTableView() -> UITableView? {
