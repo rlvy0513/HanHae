@@ -87,6 +87,12 @@ final class YearsViewController: HHBaseViewController {
         setupNavigationBarButtons()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
