@@ -9,9 +9,9 @@ import UIKit
 
 class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     
-    private var viewModel: MonthlyTDLViewModel!
+    private var viewModel: MonthlyViewModel!
     private var mottoTextViewTopConstraint: NSLayoutConstraint!
-
+    
     private let monthlyMottoTextView: UITextView = {
         let textView = UITextView()
         textView.font = .hhBody
@@ -69,7 +69,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         return view
     }()
     
-    init(viewModel: MonthlyTDLViewModel) {
+    init(viewModel: MonthlyViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -142,7 +142,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
             showFooterAndQuoteLabels()
         }
     }
-
+    
     private func updateTextViewPosition(for textView: UITextView) {
         DispatchQueue.main.async {
             let numberOfLines = self.calculateNumberOfLines(for: textView)
@@ -157,7 +157,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         let lineHeight = textView.font?.lineHeight ?? 0
         return Int(textViewSize.height / lineHeight)
     }
-
+    
     private func adjustTextViewPosition(for numberOfLines: Int, isDefaultText: Bool) {
         mottoTextViewTopConstraint.isActive = false
         
@@ -178,7 +178,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         
         mottoTextViewTopConstraint.isActive = true
     }
-
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == viewModel.mottoPlaceholder {
             textView.text = ""

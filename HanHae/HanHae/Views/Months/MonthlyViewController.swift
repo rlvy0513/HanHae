@@ -10,8 +10,10 @@ import UIKit
 class MonthlyViewController: HHBaseViewController {
     
     private var mottoView: MonthlyMottoViewController!
-    private var mottoViewModel: MonthlyMottoViewModel!
-    var toDoListViewModel: MonthlyToDoListViewModel!
+    //private var mottoViewModel: MonthlyMottoViewModel!
+    //var toDoListViewModel: MonthlyToDoListViewModel!
+    
+    var viewModel: MonthlyViewModel
     
     private var tableView: UITableView!
     private var emptyStateImageView: UIImageView!
@@ -21,16 +23,27 @@ class MonthlyViewController: HHBaseViewController {
     private var isEditingMode = false
     private var toolbar: UIToolbar!
     
+    init(viewModel: MonthlyViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @MainActor
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
-        toDoListViewModel = MonthlyToDoListViewModel()
+        //mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
+        //toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
         setupTableView()
         setupEmptyStateView()
-        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+        updateEmptyStateView(isEmpty: viewModel.isEmptyToDoList)
         updateCompletionLabel()
         setupToolbar()
         
@@ -70,25 +83,25 @@ class MonthlyViewController: HHBaseViewController {
         
         view.endEditing(true)
         
-        let indicesToRemove = toDoListViewModel.toDoList.enumerated().compactMap { index, todo in
+        let indicesToRemove = viewModel.toDoList.enumerated().compactMap { index, todo in
             return todo.title == "목표를 입력하세요." ? index : nil
         }
         
         tableView.beginUpdates()
         
         for index in indicesToRemove.reversed() {
-            toDoListViewModel.removeToDo(at: index)
+            viewModel.removeToDo(at: index)
             tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         }
         
         tableView.endUpdates()
         
         updateCompletionLabel()
-        updateEmptyStateView(isEmpty: toDoListViewModel.isEmpty)
+        updateEmptyStateView(isEmpty: viewModel.isEmptyToDoList)
     }
     
     private func bindViewModel() {
-        toDoListViewModel.onToDoListUpdated = { [weak self] toDoList in
+        viewModel.onToDoListUpdated = { [weak self] toDoList in
             self?.updateEmptyStateView(isEmpty: toDoList.isEmpty)
             self?.tableView.reloadData()
             self?.updateCompletionLabel()
@@ -99,7 +112,7 @@ class MonthlyViewController: HHBaseViewController {
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(mottoViewModel.currentMonth.month)월"
+        navigationItem.title = "\(viewModel.monthData.month)월"
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhText
@@ -123,21 +136,21 @@ class MonthlyViewController: HHBaseViewController {
         button.contentVerticalAlignment = .bottom
         return button
     }
-
+    
     @objc private func backYearsViewController() {
         navigationController?.popViewController(animated: true)
     }
-
+    
     @objc private func didTapDeleteAllButton() {
         let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
         
         let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
-            self?.toDoListViewModel.removeAllToDoList()
+            self?.viewModel.removeToDoList()
             
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
                 self?.updateCompletionLabel()
-                self?.updateEmptyStateView(isEmpty: self?.toDoListViewModel.isEmpty ?? true)
+                self?.updateEmptyStateView(isEmpty: self?.viewModel.isEmptyToDoList ?? true)
                 self?.updateSettingButton()
                 
                 self?.tableView.layoutIfNeeded()
@@ -153,8 +166,8 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     func updateSettingButton() {
-        guard let viewModel = toDoListViewModel else { return }
-
+        //guard let viewModel = viewModel else { return }
+        
         let hasToDoList = !viewModel.toDoList.isEmpty
         
         let settingButton = UIButton(type: .system)
@@ -165,13 +178,13 @@ class MonthlyViewController: HHBaseViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
     }
-
+    
     private func createMenu(hasTodoList: Bool) -> UIMenu {
         let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
             self?.enterEditingMode()
         })
         editAction.attributes = hasTodoList ? [] : [.disabled]
-
+        
         let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
             // MARK: 설정 연결
         })
@@ -185,14 +198,14 @@ class MonthlyViewController: HHBaseViewController {
         
         return UIMenu(title: "", children: [divider, deleteAction])
     }
-
+    
     private func enterEditingMode() {
         isEditingMode = true
         tableView.setEditing(true, animated: true)
-        toDoListViewModel.didTapEditListButton()
+        viewModel.didTapEditListButton()
         
         let doneButton = createDoneButton(selector: #selector(exitEditingMode))
-
+        
         navigationItem.rightBarButtonItem = doneButton
         
         toolbar.isHidden = true
@@ -201,12 +214,12 @@ class MonthlyViewController: HHBaseViewController {
     @objc private func exitEditingMode() {
         isEditingMode = false
         tableView.setEditing(false, animated: true)
-        toDoListViewModel.didTapEditListButton()
+        viewModel.didTapEditListButton()
         updateSettingButton()
         
         toolbar.isHidden = false
     }
-
+    
     private func createDoneButton(selector: Selector) -> UIBarButtonItem {
         let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
         doneButton.tintColor = .hhAccent
@@ -226,22 +239,23 @@ class MonthlyViewController: HHBaseViewController {
         completionLabel.font = UIFont.hhTitle
         completionLabel.textColor = .hhLightGray
         completionLabel.textAlignment = .right
-
+        
         let footerView = UIView()
         footerView.addSubview(completionLabel)
-
+        
         NSLayoutConstraint.activate([
             completionLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
             completionLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
             completionLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: 45),
             completionLabel.heightAnchor.constraint(equalToConstant: 33)
         ])
-
+        
         tableView.tableFooterView = footerView
     }
-
+    
     private func updateCompletionLabel() {
-        let percentage = Int(toDoListViewModel.completionPercentage())
+        //let percentage = Int(toDoListViewModel.completionPercentage())
+        let percentage = viewModel.getNumericLabelText().percent
         let fullText = "목표 \(percentage)% 달성"
         
         let attributedText = NSMutableAttributedString(string: fullText)
@@ -267,7 +281,7 @@ class MonthlyViewController: HHBaseViewController {
         emptyStateImageView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateImageView.contentMode = .scaleAspectFit
         emptyStateImageView.tintColor = .hhAccent
-
+        
         emptyStateLabel = UILabel()
         emptyStateLabel.text = "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!"
         emptyStateLabel.numberOfLines = 2
@@ -275,21 +289,21 @@ class MonthlyViewController: HHBaseViewController {
         emptyStateLabel.textColor = .hhLightGray
         emptyStateLabel.textAlignment = .center
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         view.addSubview(emptyStateImageView)
         view.addSubview(emptyStateLabel)
-
+        
         NSLayoutConstraint.activate([
             emptyStateImageView.topAnchor.constraint(equalTo: tableView.tableHeaderView!.topAnchor, constant: 250),
             emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyStateImageView.widthAnchor.constraint(equalToConstant: 100),
             emptyStateImageView.heightAnchor.constraint(equalToConstant: 100),
-
+            
             emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: 20),
             emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
-
+    
     private func updateEmptyStateView(isEmpty: Bool) {
         emptyStateImageView.isHidden = !isEmpty
         emptyStateLabel.isHidden = !isEmpty
@@ -332,9 +346,9 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     @objc private func didTapAddTodoListButton() {
-        toDoListViewModel.addToDo()
+        viewModel.addToDo()
         
-        let newIndexPath = IndexPath(row: toDoListViewModel.toDoList.count - 1, section: 0)
+        let newIndexPath = IndexPath(row: viewModel.toDoList.count - 1, section: 0)
         tableView.reloadData()
         tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
         
@@ -343,10 +357,10 @@ class MonthlyViewController: HHBaseViewController {
                 cell.toDoListTextView.becomeFirstResponder()
             }
         }
-
+        
         tableView.layoutIfNeeded()
         updateCompletionLabel()
-        updateEmptyStateView(isEmpty: toDoListViewModel.toDoList.isEmpty)
+        updateEmptyStateView(isEmpty: viewModel.toDoList.isEmpty)
         updateSettingButton()
     }
     
@@ -362,7 +376,7 @@ class MonthlyViewController: HHBaseViewController {
     
     @objc private func endEditing() {
         view.endEditing(true)
-        toDoListViewModel.finishEditing()
+        viewModel.finishEditing()
     }
     
     // MARK: 키보드 이벤트 핸들러
@@ -373,14 +387,14 @@ class MonthlyViewController: HHBaseViewController {
             let contentInsets = UIEdgeInsets(top: originalContentInset.top, left: originalContentInset.left, bottom: keyboardHeight, right: originalContentInset.right)
             tableView.contentInset = contentInsets
             tableView.scrollIndicatorInsets = contentInsets
-
+            
             if let activeTextView = UIResponder.currentFirstResponder() as? UITextView {
                 var contentOffset = tableView.contentOffset
                 let textViewFrame = activeTextView.convert(activeTextView.bounds, to: tableView)
-
+                
                 let visibleRectHeight = tableView.bounds.height - keyboardHeight
                 let offsetY = textViewFrame.maxY - visibleRectHeight
-
+                
                 if offsetY > 0 {
                     contentOffset.y = offsetY
                     tableView.setContentOffset(contentOffset, animated: false)
@@ -388,7 +402,7 @@ class MonthlyViewController: HHBaseViewController {
             }
         }
     }
-
+    
     @objc private func keyboardWillHide(notification: NSNotification) {
         tableView.contentInset = originalContentInset
         tableView.scrollIndicatorInsets = .zero
@@ -397,7 +411,7 @@ class MonthlyViewController: HHBaseViewController {
 
 // MARK: - 테이블뷰
 extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
-
+    
     func setupTableView() {
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -409,15 +423,15 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
         tableView.contentInset.bottom = 250
-
-        let mottoVC = MonthlyMottoViewController(viewModel: mottoViewModel)
+        
+        let mottoVC = MonthlyMottoViewController(viewModel: self.viewModel)
         addChild(mottoVC)
         mottoVC.didMove(toParent: self)
         mottoVC.view.translatesAutoresizingMaskIntoConstraints = false
-
+        
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200))
         headerView.addSubview(mottoVC.view)
-
+        
         view.addSubview(tableView)
         tableView.tableHeaderView = headerView
         setupCompletionFooterView()
@@ -427,39 +441,39 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
             mottoVC.view.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
             mottoVC.view.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
             mottoVC.view.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
-
+            
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return toDoListViewModel.toDoList.count
+        return viewModel.toDoList.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoListCell", for: indexPath) as? ToDoListTableViewCell {
-            let todo = toDoListViewModel.toDoList[indexPath.row]
-            cell.configure(toDo: todo, index: indexPath.row, delegate: self, viewModel: toDoListViewModel)
-
+            let todo = viewModel.toDoList[indexPath.row]
+            cell.configure(toDo: todo, index: indexPath.row, delegate: self, viewModel: viewModel)
+            
             cell.backgroundColor = .clear
             return cell
         } else {
             return UITableViewCell()
         }
     }
-
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             tableView.beginUpdates()
             
-            toDoListViewModel.removeToDo(at: indexPath.row)
+            viewModel.removeToDo(at: indexPath.row)
             
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
@@ -472,22 +486,22 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-
+    
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-        toDoListViewModel.moveToDo(from: fromIndexPath.row, to: to.row)
+        viewModel.moveToDo(fromIndex: fromIndexPath.row, toIndex: to.row)
     }
 }
 
 // MARK: - UIResponder 확장
 extension UIResponder {
     private static weak var _currentFirstResponder: UIResponder?
-
+    
     static func currentFirstResponder() -> UIResponder? {
         _currentFirstResponder = nil
         UIApplication.shared.sendAction(#selector(findFirstResponder(_:)), to: nil, from: nil, for: nil)
         return _currentFirstResponder
     }
-
+    
     @objc fileprivate func findFirstResponder(_ sender: AnyObject) {
         UIResponder._currentFirstResponder = self
     }

@@ -38,10 +38,10 @@ final class YearsViewModel {
     func makeMonthlyTDLViewModelAt(
         yearIndex: Int,
         monthIndex: Int
-    ) -> MonthlyTDLViewModel {
+    ) -> MonthlyViewModel {
         let monthData = (years[yearIndex].months?.array as! [HHMonth])[monthIndex]
         
-        return MonthlyTDLViewModel(
+        return MonthlyViewModel(
             yearIndex: yearIndex,
             monthIndex: monthIndex,
             monthData: monthData
@@ -65,8 +65,13 @@ final class YearsViewModel {
         return IndexPath(item: item, section: section)
     }
     
-    func pushMonthlyViewController(vc: UIViewController) {
-        let monthlyVC = MonthlyViewController()
+    func pushMonthlyViewController(
+        yearIndex: Int,
+        monthIndex: Int,
+        vc: UIViewController
+    ) {
+        let viewModel = makeMonthlyTDLViewModelAt(yearIndex: yearIndex, monthIndex: monthIndex)
+        let monthlyVC = MonthlyViewController(viewModel: viewModel)
         vc.navigationController?.pushViewController(monthlyVC, animated: true)
     }
     

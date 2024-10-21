@@ -41,7 +41,7 @@ final class SettingDetailViewController: SettingsBaseViewController {
         
         super.setupNavigationBar()
     }
-
+    
 }
 
 

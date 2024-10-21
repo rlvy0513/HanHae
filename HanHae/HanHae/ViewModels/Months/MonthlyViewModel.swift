@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MonthlyTDLViewModel {
+final class MonthlyViewModel {
     
     private let coreDataManager = CoreDataManager.shared
     
@@ -16,17 +16,27 @@ final class MonthlyTDLViewModel {
     let monthIndex: Int
     
     let monthData: HHMonth
-    var toDoList: [ToDo] {
-        monthData.toDoList?.array as! [ToDo]
+    private(set) var toDoList: [ToDo] = [] {
+        didSet {
+            onToDoListUpdated?(toDoList)
+        }
     }
     
     var onMottoUpdated: ((String) -> Void)?
     lazy var mottoPlaceholder = "\(monthData.month)월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요."
     
+    var onToDoListUpdated: (([ToDo]) -> Void)?
+    var isEmptyToDoList: Bool {
+        return toDoList.isEmpty
+    }
+    private var isEditingMode = false
+    
     init(yearIndex: Int, monthIndex: Int, monthData: HHMonth) {
         self.yearIndex = yearIndex
         self.monthIndex = monthIndex
         self.monthData = monthData
+        
+        fetchUpdatedToDoList()
     }
     
     // MARK: - input
@@ -84,6 +94,7 @@ final class MonthlyTDLViewModel {
             monthIndex: monthIndex,
             newMotto: newMotto
         )
+        onMottoUpdated?(newMotto)
     }
     
     func addToDo() {
@@ -91,6 +102,8 @@ final class MonthlyTDLViewModel {
             forYearIndex: yearIndex,
             monthIndex: monthIndex
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func removeToDo(at index: Int) {
@@ -99,6 +112,8 @@ final class MonthlyTDLViewModel {
             monthIndex: monthIndex,
             atToDoIndex: index
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func removeToDoList() {
@@ -106,6 +121,8 @@ final class MonthlyTDLViewModel {
             forYearIndex: yearIndex,
             monthIndex: monthIndex
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func moveToDo(fromIndex: Int, toIndex: Int) {
@@ -115,6 +132,8 @@ final class MonthlyTDLViewModel {
             fromToDoIndex: fromIndex,
             toToDoIndex: toIndex
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func updateToDoTitle(at index: Int, newTitle: String) {
@@ -126,6 +145,8 @@ final class MonthlyTDLViewModel {
             atToDoIndex: index,
             newTitle: newTitle
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func updateToDoNote(at index: Int, newNote: String) {
@@ -137,6 +158,8 @@ final class MonthlyTDLViewModel {
             atToDoIndex: index,
             newNote: newNote
         )
+        
+        fetchUpdatedToDoList()
     }
     
     func updateToDoCompletionStatus(at index: Int, isCompleted: Bool) {
@@ -146,6 +169,20 @@ final class MonthlyTDLViewModel {
             atToDoIndex: index,
             isCompleted: isCompleted
         )
+        
+        fetchUpdatedToDoList()
+    }
+    
+    private func fetchUpdatedToDoList() {
+        toDoList = monthData.toDoList?.array as! [ToDo]
+    }
+    
+    func didTapEditListButton() {
+        isEditingMode.toggle()
+    }
+    
+    func finishEditing() {
+        isEditingMode = false
     }
     
 }
