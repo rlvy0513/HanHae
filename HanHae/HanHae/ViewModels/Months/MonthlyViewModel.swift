@@ -88,8 +88,8 @@ final class MonthlyViewModel {
     }
     
     func getYearText() -> String {
-        return "\(yearIndex + 2020)"
-    }
+          return " \(yearIndex + 2020)"
+      }
     
     // MARK: - logic
     func updateMonthlyMotto(_ newMotto: String) {
@@ -189,4 +189,11 @@ final class MonthlyViewModel {
         isEditingMode = false
     }
     
+    func presentSettingsViewController(vc: UIViewController) {
+        let settingsVC = SettingsViewController()
+        let naviController = UINavigationController(rootViewController: settingsVC)
+        naviController.modalPresentationStyle = .formSheet
+        
+        vc.present(naviController, animated: true)
+    }
 }

@@ -165,6 +165,9 @@ class MonthlyViewController: HHBaseViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    @objc private func didTapSettingButton() {
+        viewModel.presentSettingsViewController(vc: self)
+    }
     func updateSettingButton() {
         //guard let viewModel = viewModel else { return }
         
@@ -185,8 +188,8 @@ class MonthlyViewController: HHBaseViewController {
         })
         editAction.attributes = hasTodoList ? [] : [.disabled]
         
-        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
-            // MARK: 설정 연결
+        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { [weak self] _ in
+            self?.didTapSettingButton()
         })
         
         let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
