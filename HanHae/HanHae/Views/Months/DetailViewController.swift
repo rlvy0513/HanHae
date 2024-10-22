@@ -138,6 +138,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             
             if let todoNote = toDo?.note?.trimmingCharacters(in: .whitespacesAndNewlines), !todoNote.isEmpty {
                 noteTextView.text = todoNote
+                noteTextView.textColor = .hhLightGray
             } else {
                 noteTextView.text = "노트 추가하기"
                 noteTextView.textColor = .hhLightGray

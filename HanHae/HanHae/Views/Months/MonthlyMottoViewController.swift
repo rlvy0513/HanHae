@@ -16,6 +16,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         let textView = UITextView()
         textView.font = .hhBody
         textView.textColor = .hhText
+        textView.tintColor = .hhAccent
         textView.textAlignment = .center
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
