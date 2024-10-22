@@ -126,7 +126,7 @@ class MonthlyViewController: HHBaseViewController {
     
     private func createYearsButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle(" \(Date.todayYear)", for: .normal)
+        button.setTitle(viewModel.getYearText(), for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)
         let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))

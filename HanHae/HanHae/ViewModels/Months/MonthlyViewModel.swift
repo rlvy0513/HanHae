@@ -87,6 +87,10 @@ final class MonthlyViewModel {
         }
     }
     
+    func getYearText() -> String {
+        return "\(yearIndex + 2020)"
+    }
+    
     // MARK: - logic
     func updateMonthlyMotto(_ newMotto: String) {
         coreDataManager.updateMonthlyMotto(
