@@ -73,6 +73,8 @@ final class YearsViewController: HHBaseViewController {
         "\(currentSection + 2020)년"
     }
     
+    private var selectedItemIndexPath = IndexPath()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,6 +93,8 @@ final class YearsViewController: HHBaseViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.prefersLargeTitles = false
+        
+        collectionView.reloadItems(at: [selectedItemIndexPath])
     }
     
     private func setupConstraints() {
@@ -165,6 +169,9 @@ final class YearsViewController: HHBaseViewController {
                 monthIndex: targetRow,
                 vc: self
             )
+            
+            selectedItemIndexPath = IndexPath(row: targetRow, section: targetSection)
+            
             return
         } else {
             scrollCollectionView(atYear: Date.todayYear, atMonth: Date.todayMonth)
@@ -350,6 +357,8 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
             monthIndex: indexPath.row,
             vc: self
         )
+        
+        selectedItemIndexPath = indexPath
     }
     
 }
