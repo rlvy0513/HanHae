@@ -84,7 +84,7 @@ class MonthlyViewController: HHBaseViewController {
         view.endEditing(true)
         
         let indicesToRemove = viewModel.toDoList.enumerated().compactMap { index, todo in
-            return todo.title == "" ? index : nil
+            return todo.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todo.title == "목표를 입력하세요." ? index : nil
         }
         
         tableView.beginUpdates()
