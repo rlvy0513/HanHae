@@ -215,6 +215,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         } else if textView == noteTextView {
             let trimmedNote = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedNote.isEmpty {
+                viewModel.updateToDoNote(at: index, newNote: "")
                 textView.text = "노트 추가하기"
                 textView.textColor = .hhLightGray
             } else {
@@ -299,11 +300,11 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
 
 extension MonthlyViewController {
     func showModalForTodoList(at index: Int) {
-        let todo = viewModel.toDoList[index]
-        let startDate = todo.startDate
-        let completionDate = todo.completionDate
+        let toDo = viewModel.toDoList[index]
+        let startDate = toDo.startDate
+        let completionDate = toDo.completionDate
         let detailVC = DetailViewController()
-        detailVC.todo = todo
+        detailVC.toDo = toDo
         detailVC.index = index
         detailVC.start = startDate
         detailVC.completion = completionDate

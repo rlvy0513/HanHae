@@ -8,7 +8,7 @@
 import UIKit
 
 class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
-    var todo: ToDo?
+    var toDo: ToDo?
     var index: Int?
     var start: Date?
     var completion: Date?
@@ -103,15 +103,21 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             toDoListTextView = UITextView()
-            toDoListTextView.text = todo?.title ?? "목표가 아직 없습니다!"
             toDoListTextView.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
-            toDoListTextView.textColor = .hhBlack
             toDoListTextView.tintColor = .hhAccent
             toDoListTextView.backgroundColor = .clear
             toDoListTextView.isScrollEnabled = false
             toDoListTextView.delegate = self
             toDoListTextView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(toDoListTextView)
+            
+            if let todoTitle = toDo?.title, todoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todoTitle == "목표를 입력하세요." {
+                toDoListTextView.text = "목표를 입력하세요."
+                toDoListTextView.textColor = .hhLightGray
+            } else {
+                toDoListTextView.text = toDo?.title
+                toDoListTextView.textColor = .hhText
+            }
             
             NSLayoutConstraint.activate([
                 toDoListTextView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 5),
@@ -122,15 +128,20 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             
         case (0, 1):
             noteTextView = UITextView()
-            noteTextView.text = todo?.note ?? "노트 추가하기"
             noteTextView.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
-            noteTextView.textColor = .hhLightGray
             noteTextView.tintColor = .hhAccent
             noteTextView.delegate = self
             noteTextView.backgroundColor = .clear
             noteTextView.isScrollEnabled = false
             noteTextView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(noteTextView)
+            
+            if let todoNote = toDo?.note?.trimmingCharacters(in: .whitespacesAndNewlines), !todoNote.isEmpty {
+                noteTextView.text = todoNote
+            } else {
+                noteTextView.text = "노트 추가하기"
+                noteTextView.textColor = .hhLightGray
+            }
             
             NSLayoutConstraint.activate([
                 noteTextView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 0),
@@ -226,21 +237,32 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "노트 추가하기" {
+        if textView == noteTextView, textView.text == "노트 추가하기" {
             textView.text = ""
+        }
+        
+        if textView == toDoListTextView, textView.text == "목표를 입력하세요." {
+            textView.text = ""
+            textView.textColor = .hhText
         }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if trimmedText.isEmpty {
             if textView == noteTextView {
                 textView.text = "노트 추가하기"
+                textView.textColor = .hhLightGray
+            } else if textView == toDoListTextView {
+                textView.text = "목표를 입력하세요."
+                textView.textColor = .hhLightGray
             }
         } else {
             if textView == noteTextView {
-                todo?.note = textView.text
+                toDo?.note = textView.text
             } else if textView == toDoListTextView {
-                todo?.title = textView.text
+                toDo?.title = textView.text
             }
         }
     }
@@ -257,7 +279,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func doneTapped() {
-        let isTodoTextEmpty = toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let isTodoTextEmpty = toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoListTextView.text == "목표를 입력하세요."
         
         if isTodoTextEmpty {
             shakeTextView(toDoListTextView)
