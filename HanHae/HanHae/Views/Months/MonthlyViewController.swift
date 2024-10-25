@@ -10,8 +10,6 @@ import UIKit
 class MonthlyViewController: HHBaseViewController {
     
     private var mottoView: MonthlyMottoViewController!
-    //private var mottoViewModel: MonthlyMottoViewModel!
-    //var toDoListViewModel: MonthlyToDoListViewModel!
     
     var viewModel: MonthlyViewModel
     
@@ -36,9 +34,6 @@ class MonthlyViewController: HHBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
-        //toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
         setupTableView()
@@ -169,8 +164,6 @@ class MonthlyViewController: HHBaseViewController {
         viewModel.presentSettingsViewController(vc: self)
     }
     func updateSettingButton() {
-        //guard let viewModel = viewModel else { return }
-        
         let hasToDoList = !viewModel.toDoList.isEmpty
         
         let settingButton = UIButton(type: .system)
@@ -257,7 +250,6 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     private func updateCompletionLabel() {
-        //let percentage = Int(toDoListViewModel.completionPercentage())
         let percentage = viewModel.getNumericLabelText().percent
         let fullText = "목표 \(percentage)% 달성"
         
