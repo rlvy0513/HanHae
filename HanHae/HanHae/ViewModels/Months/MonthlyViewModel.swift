@@ -149,8 +149,6 @@ final class MonthlyViewModel {
             atToDoIndex: index,
             newTitle: newTitle
         )
-        
-        fetchUpdatedToDoList()
     }
     
     func updateToDoNote(at index: Int, newNote: String) {
@@ -162,8 +160,6 @@ final class MonthlyViewModel {
             atToDoIndex: index,
             newNote: newNote
         )
-        
-        fetchUpdatedToDoList()
     }
     
     func updateToDoCompletionStatus(at index: Int, isCompleted: Bool) {
@@ -177,7 +173,7 @@ final class MonthlyViewModel {
         fetchUpdatedToDoList()
     }
     
-    private func fetchUpdatedToDoList() {
+    func fetchUpdatedToDoList() {
         toDoList = monthData.toDoList?.array as! [ToDo]
     }
     

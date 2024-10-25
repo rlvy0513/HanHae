@@ -17,6 +17,8 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     var viewModel: MonthlyViewModel!
     var index: Int!
     private var toDoListTextViewTrailingConstraint: NSLayoutConstraint!
+    private var noteTextViewBottomConstraint: NSLayoutConstraint!
+    private var isEditingCell: Bool = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,10 +32,18 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         toDoListTextView.text = ""
-        noteTextView.text = ""
+        toDoListTextView.textColor = .hhLightGray
+    
         checkBoxImageView.image = UIImage(systemName: "square")
+        
         detailButton.isHidden = true
+
+        noteTextView.text = ""
+        noteTextView.isHidden = true
+        noteTextView.textColor = .hhLightGray
+        noteTextViewBottomConstraint.constant = 15
     }
     
     deinit {
@@ -66,11 +76,24 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             toDoListTextView.textColor = .hhText
         }
         
-        if let note = toDo.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
-            noteTextView.text = note
+        updateNoteTextView(toDo.note)
+    }
+    
+    private func updateNoteTextView(_ note: String?) {
+        let trimmedNote = note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        
+        if !trimmedNote.isEmpty && trimmedNote != "노트 추가하기" {
+            noteTextView.text = trimmedNote
+            noteTextViewBottomConstraint.constant = -10
+            noteTextView.isHidden = false
         } else {
             noteTextView.text = "노트 추가하기"
+            noteTextViewBottomConstraint.constant = 15
+            noteTextView.isHidden = true
         }
+
+        contentView.setNeedsLayout()
+        contentView.layoutIfNeeded()
     }
     
     private func setupCheckBoxImageView(toDo: ToDo) {
@@ -126,6 +149,13 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         noteTextView.isEditable = true
         noteTextView.backgroundColor = .clear
         contentView.addSubview(noteTextView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleNoteTextViewTap))
+        tapGesture.delegate = self
+        noteTextView.addGestureRecognizer(tapGesture)
+        
+        noteTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
+
     }
     
     private func setupDetailButton() {
@@ -143,6 +173,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     private func setupConstraints() {
         toDoListTextViewTrailingConstraint = toDoListTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        noteTextViewBottomConstraint = noteTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         
         NSLayoutConstraint.activate([
             checkBoxImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -157,7 +188,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.topAnchor.constraint(equalTo: toDoListTextView.bottomAnchor, constant: 8),
             noteTextView.leadingAnchor.constraint(equalTo: checkBoxImageView.trailingAnchor, constant: 10),
             noteTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            noteTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            noteTextViewBottomConstraint,
             
             detailButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             detailButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -174,12 +205,27 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        isEditingCell = true
+
         if textView == toDoListTextView {
             if textView.text == "목표를 입력하세요." {
                 textView.text = ""
                 textView.textColor = .hhText
             }
-            
+
+            if noteTextView.text == "노트 추가하기" || noteTextView.text.isEmpty {
+                noteTextViewBottomConstraint.constant = -10
+                noteTextView.isHidden = false
+            }
+
+            contentView.setNeedsLayout()
+            contentView.layoutIfNeeded()
+
+            if let tableView = findTableView() {
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+
             detailButton.isHidden = false
             toDoListTextViewTrailingConstraint.constant = -50
             UIView.animate(withDuration: 0.1) {
@@ -189,7 +235,11 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             if noteTextView.text == "노트 추가하기" {
                 noteTextView.text = ""
             }
+            noteTextView.isHidden = false
+            noteTextViewBottomConstraint.constant = -10
             noteTextView.becomeFirstResponder()
+            contentView.setNeedsLayout()
+            contentView.layoutIfNeeded()
         }
         delegate?.showDoneButton(textView)
     }
@@ -197,7 +247,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView == toDoListTextView {
             let trimmedText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            
+
             if trimmedText.isEmpty {
                 viewModel.updateToDoTitle(at: index, newTitle: "")
                 textView.text = "목표를 입력하세요."
@@ -206,20 +256,29 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 viewModel.updateToDoTitle(at: index, newTitle: trimmedText)
                 textView.textColor = .hhText
             }
-            
+
             detailButton.isHidden = true
             toDoListTextViewTrailingConstraint.constant = -20
             UIView.animate(withDuration: 0.1) {
                 self.contentView.layoutIfNeeded()
+            }
+
+            if !noteTextView.isFirstResponder {
+                isEditingCell = false
+                updateNoteTextView(noteTextView.text)
             }
         } else if textView == noteTextView {
             let trimmedNote = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedNote.isEmpty {
                 viewModel.updateToDoNote(at: index, newNote: "")
                 textView.text = "노트 추가하기"
-                textView.textColor = .hhLightGray
             } else {
                 viewModel.updateToDoNote(at: index, newNote: trimmedNote)
+            }
+
+            if !toDoListTextView.isFirstResponder {
+                isEditingCell = false
+                updateNoteTextView(noteTextView.text)
             }
         }
         delegate?.hideDoneButton()
@@ -227,9 +286,28 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         if let tableView = findTableView() {
-            tableView.beginUpdates()
-            tableView.endUpdates()
+            tableView.performBatchUpdates(nil, completion: nil)
+            
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                self.contentView.layoutIfNeeded()
+            })
         }
+    }
+    
+    @objc private func handleNoteTextViewTap() {
+        if noteTextView.isHidden {
+            noteTextView.isHidden = false
+            noteTextViewBottomConstraint.constant = -10
+        }
+
+        if noteTextView.text == "노트 추가하기" {
+            noteTextView.text = ""
+        }
+
+        noteTextView.becomeFirstResponder()
+
+        contentView.setNeedsLayout()
+        contentView.layoutIfNeeded()
     }
     
     @objc private func toggleCheckBox() {
