@@ -111,7 +111,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             toDoListTextView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(toDoListTextView)
             
-            if let todoTitle = toDo?.title, todoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todoTitle == "목표를 입력하세요." {
+            if let toDoTitle = toDo?.title, toDoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoTitle == "목표를 입력하세요." {
                 toDoListTextView.text = "목표를 입력하세요."
                 toDoListTextView.textColor = .hhLightGray
             } else {

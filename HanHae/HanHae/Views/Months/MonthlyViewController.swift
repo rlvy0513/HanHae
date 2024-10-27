@@ -163,6 +163,7 @@ class MonthlyViewController: HHBaseViewController {
     @objc private func didTapSettingButton() {
         viewModel.presentSettingsViewController(vc: self)
     }
+    
     func updateSettingButton() {
         let hasToDoList = !viewModel.toDoList.isEmpty
         
