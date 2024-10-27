@@ -16,6 +16,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         let textView = UITextView()
         textView.font = .hhBody
         textView.textColor = .hhText
+        textView.tintColor = .hhAccent
         textView.textAlignment = .center
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
@@ -186,7 +187,6 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
             showFooterAndQuoteLabels()
         }
         
-        // 기본 문구일 때도 바로 줄 수에 따른 위치 조정
         updateTextViewPosition(for: textView)
         
         if let monthlyView = self.parent as? MonthlyViewController {

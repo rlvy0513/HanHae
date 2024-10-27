@@ -88,8 +88,8 @@ final class MonthlyViewModel {
     }
     
     func getYearText() -> String {
-        return "\(yearIndex + 2020)"
-    }
+          return " \(yearIndex + 2020)"
+      }
     
     // MARK: - logic
     func updateMonthlyMotto(_ newMotto: String) {
@@ -149,8 +149,6 @@ final class MonthlyViewModel {
             atToDoIndex: index,
             newTitle: newTitle
         )
-        
-        fetchUpdatedToDoList()
     }
     
     func updateToDoNote(at index: Int, newNote: String) {
@@ -162,8 +160,6 @@ final class MonthlyViewModel {
             atToDoIndex: index,
             newNote: newNote
         )
-        
-        fetchUpdatedToDoList()
     }
     
     func updateToDoCompletionStatus(at index: Int, isCompleted: Bool) {
@@ -177,7 +173,7 @@ final class MonthlyViewModel {
         fetchUpdatedToDoList()
     }
     
-    private func fetchUpdatedToDoList() {
+    func fetchUpdatedToDoList() {
         toDoList = monthData.toDoList?.array as! [ToDo]
     }
     
@@ -189,4 +185,11 @@ final class MonthlyViewModel {
         isEditingMode = false
     }
     
+    func presentSettingsViewController(vc: UIViewController) {
+        let settingsVC = SettingsViewController()
+        let naviController = UINavigationController(rootViewController: settingsVC)
+        naviController.modalPresentationStyle = .formSheet
+        
+        vc.present(naviController, animated: true)
+    }
 }
