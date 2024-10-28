@@ -214,9 +214,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 noteTextView.isHidden = false
             }
 
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
-
             if let tableView = findTableView() {
                 tableView.beginUpdates()
                 tableView.endUpdates()
@@ -234,10 +231,9 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = false
             noteTextViewBottomConstraint.constant = -10
             noteTextView.becomeFirstResponder()
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
         }
         delegate?.showDoneButton(textView)
+        delegate?.updateTableViewLayout()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
