@@ -276,9 +276,16 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func cancelTapped() {
+        if let originalTitle = toDo?.title {
+            toDoListTextView.text = originalTitle
+        }
+        
+        if let originalNote = toDo?.note {
+            noteTextView.text = originalNote.isEmpty ? "노트 추가하기" : originalNote
+        }
         
         NotificationCenter.default.post(name: NSNotification.Name("UpdateTableViewLayout"), object: nil)
-
+        
         dismiss(animated: true, completion: nil)
     }
     
