@@ -10,8 +10,6 @@ import UIKit
 class MonthlyViewController: HHBaseViewController {
     
     private var mottoView: MonthlyMottoViewController!
-    //private var mottoViewModel: MonthlyMottoViewModel!
-    //var toDoListViewModel: MonthlyToDoListViewModel!
     
     var viewModel: MonthlyViewModel
     
@@ -36,9 +34,6 @@ class MonthlyViewController: HHBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //mottoViewModel = MonthlyMottoViewModel(model: HHMonth(year: 2024, month: 9, monthlyComment: nil, toDoList: []))
-        //toDoListViewModel = MonthlyToDoListViewModel()
         
         setupNavigationBar()
         setupTableView()
@@ -84,7 +79,7 @@ class MonthlyViewController: HHBaseViewController {
         view.endEditing(true)
         
         let indicesToRemove = viewModel.toDoList.enumerated().compactMap { index, todo in
-            return todo.title == "목표를 입력하세요." ? index : nil
+            return todo.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todo.title == "목표를 입력하세요." ? index : nil
         }
         
         tableView.beginUpdates()
@@ -165,9 +160,11 @@ class MonthlyViewController: HHBaseViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    @objc private func didTapSettingButton() {
+        viewModel.presentSettingsViewController(vc: self)
+    }
+    
     func updateSettingButton() {
-        //guard let viewModel = viewModel else { return }
-        
         let hasToDoList = !viewModel.toDoList.isEmpty
         
         let settingButton = UIButton(type: .system)
@@ -185,8 +182,8 @@ class MonthlyViewController: HHBaseViewController {
         })
         editAction.attributes = hasTodoList ? [] : [.disabled]
         
-        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { (_) in
-            // MARK: 설정 연결
+        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { [weak self] _ in
+            self?.didTapSettingButton()
         })
         
         let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
@@ -254,7 +251,6 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     private func updateCompletionLabel() {
-        //let percentage = Int(toDoListViewModel.completionPercentage())
         let percentage = viewModel.getNumericLabelText().percent
         let fullText = "목표 \(percentage)% 달성"
         
