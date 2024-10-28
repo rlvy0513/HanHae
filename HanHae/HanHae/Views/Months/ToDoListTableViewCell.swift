@@ -18,7 +18,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     var index: Int!
     private var toDoListTextViewTrailingConstraint: NSLayoutConstraint!
     private var noteTextViewBottomConstraint: NSLayoutConstraint!
-    private var isEditingCell: Bool = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -92,8 +91,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = true
         }
 
-        contentView.setNeedsLayout()
-        contentView.layoutIfNeeded()
+        delegate?.updateTableViewLayout()
     }
     
     private func setupCheckBoxImageView(toDo: ToDo) {
@@ -205,8 +203,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        isEditingCell = true
-
         if textView == toDoListTextView {
             if textView.text == "목표를 입력하세요." {
                 textView.text = ""
@@ -264,7 +260,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
 
             if !noteTextView.isFirstResponder {
-                isEditingCell = false
                 updateNoteTextView(noteTextView.text)
             }
         } else if textView == noteTextView {
@@ -277,7 +272,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
 
             if !toDoListTextView.isFirstResponder {
-                isEditingCell = false
                 updateNoteTextView(noteTextView.text)
             }
         }
