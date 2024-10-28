@@ -16,6 +16,7 @@
 		4207D6132CC284B600B61B2E /* ToDo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4207D60D2CC284B600B61B2E /* ToDo+CoreDataProperties.swift */; };
 		422010842CA68EAE00721175 /* MonthlyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422010832CA68E9200721175 /* MonthlyViewModel.swift */; };
 		4223B9662CA02CAF00BD9708 /* YearsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223B9652CA02CA600BD9708 /* YearsViewModel.swift */; };
+		422B28F62CCBC380008A5327 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 422B28F52CCBC380008A5327 /* Localizable.xcstrings */; };
 		4231E7592CB17E11006EFD99 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */; };
 		42322B432C9F12AA008C54FD /* MonthlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42322B422C9F12AA008C54FD /* MonthlyCell.swift */; };
 		427C4EDD2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */; };
@@ -56,6 +57,7 @@
 		4207D60D2CC284B600B61B2E /* ToDo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		422010832CA68E9200721175 /* MonthlyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyViewModel.swift; sourceTree = "<group>"; };
 		4223B9652CA02CA600BD9708 /* YearsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsViewModel.swift; sourceTree = "<group>"; };
+		422B28F52CCBC380008A5327 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		4231E7582CB17E05006EFD99 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		42322B422C9F12AA008C54FD /* MonthlyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCell.swift; sourceTree = "<group>"; };
 		427C4EDB2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EliceDigitalBaeumOTF_Bold.otf; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				427C4ED92C91C39400DE7844 /* Resources */,
 				42FA32032C918A6600AB5469 /* Info.plist */,
 				42FA31FB2C918A6500AB5469 /* HanHae.xcdatamodeld */,
+				422B28F52CCBC380008A5327 /* Localizable.xcstrings */,
 			);
 			path = HanHae;
 			sourceTree = "<group>";
@@ -317,11 +320,12 @@
 			};
 			buildConfigurationList = 42FA31EA2C918A6500AB5469 /* Build configuration list for PBXProject "HanHae" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 42FA31E62C918A6500AB5469;
 			productRefGroup = 42FA31F02C918A6500AB5469 /* Products */;
@@ -340,6 +344,7 @@
 			files = (
 				427C4EE42C91CC8B00DE7844 /* Colors.xcassets in Resources */,
 				42FA31FF2C918A6600AB5469 /* Assets.xcassets in Resources */,
+				422B28F62CCBC380008A5327 /* Localizable.xcstrings in Resources */,
 				42FA32022C918A6600AB5469 /* Base in Resources */,
 				427C4EDE2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Regular.otf in Resources */,
 				427C4EDD2C91C3F100DE7844 /* EliceDigitalBaeumOTF_Bold.otf in Resources */,
@@ -461,6 +466,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -517,6 +523,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
