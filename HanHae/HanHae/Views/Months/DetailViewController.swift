@@ -276,6 +276,9 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func cancelTapped() {
+        
+        NotificationCenter.default.post(name: NSNotification.Name("UpdateTableViewLayout"), object: nil)
+
         dismiss(animated: true, completion: nil)
     }
     

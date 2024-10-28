@@ -190,6 +190,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
         updateTextViewPosition(for: textView)
         
         if let monthlyView = self.parent as? MonthlyViewController {
+            monthlyView.updateTableViewLayout()
             monthlyView.showDoneButton(textView)
         }
     }
