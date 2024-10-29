@@ -24,7 +24,7 @@ final class YearsViewModel {
     }
     
     func getYearLabelText(index: Int) -> String {
-        return "\(years[index].year)년"
+        return String(localized: "\(String(years[index].year))년")
     }
     
     func getYearLabelColor(index: Int) -> UIColor {

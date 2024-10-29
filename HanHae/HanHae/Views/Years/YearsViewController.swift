@@ -19,7 +19,7 @@ final class YearsViewController: HHBaseViewController {
     
     private lazy var moveThisMonthBarButton: UIBarButtonItem = {
         let barBtn = UIBarButtonItem(
-            title: "이번 달",
+            title: String(localized: "이번 달"),
             style: .plain,
             target: self,
             action: #selector(moveThisMonthBarButtonTapped)
@@ -70,7 +70,7 @@ final class YearsViewController: HHBaseViewController {
     
     private var currentSection = 0
     private var yearTitle: String {
-        "\(currentSection + 2020)년"
+        String(localized: "\(String(currentSection + 2020))년")
     }
     
     private var selectedItemIndexPath = IndexPath()

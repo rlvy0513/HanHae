@@ -84,7 +84,7 @@ final class MonthlyCell: UICollectionViewCell {
     
     let toDoEmptyLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "해당 월의 목표가 없습니다."
+        lb.text = String(localized: "해당 월의 목표가 없습니다.")
         lb.textColor = .hhLightGray
         lb.font = .hhBody
         lb.textAlignment = .left

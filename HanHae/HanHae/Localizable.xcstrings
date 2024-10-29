@@ -1,7 +1,36 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
-
+    "%@년" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "이번 달" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current"
+          }
+        }
+      }
+    },
+    "해당 월의 목표가 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No goal set for this month."
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }
