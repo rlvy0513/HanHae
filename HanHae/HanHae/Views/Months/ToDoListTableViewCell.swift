@@ -50,7 +50,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     private func setupNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: NSNotification.Name("NoteUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: .noteUpdated, object: nil)
     }
     
     func configure(toDo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyViewModel) {
@@ -91,7 +91,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = true
         }
 
-        delegate?.updateTableViewLayout()
+        NotificationCenter.default.post(name: .updateTableViewLayout, object: nil)
     }
     
     private func setupCheckBoxImageView(toDo: ToDo) {
@@ -233,7 +233,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.becomeFirstResponder()
         }
         delegate?.showDoneButton(textView)
-        delegate?.updateTableViewLayout()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {

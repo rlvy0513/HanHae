@@ -23,7 +23,6 @@ class MonthlyViewController: HHBaseViewController {
     
     init(viewModel: MonthlyViewModel) {
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,14 +45,13 @@ class MonthlyViewController: HHBaseViewController {
         
         bindViewModel()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewLayout), name: NSNotification.Name("UpdateTableViewLayout"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewLayout), name: .updateTableViewLayout, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
