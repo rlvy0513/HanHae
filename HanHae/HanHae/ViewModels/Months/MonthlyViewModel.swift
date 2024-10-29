@@ -43,7 +43,21 @@ final class MonthlyViewModel {
     
     // MARK: - output
     func getMonthLabelText() -> String {
-        return "\(monthData.month)월"
+        let preferredLanguage = Locale.preferredLanguages.first?.prefix(2)
+        
+        if preferredLanguage == "en" {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = .current
+            dateFormatter.dateFormat = "MMM"
+            
+            var dateComponent = DateComponents()
+            dateComponent.month = Int(monthData.month)
+            let date = Calendar.current.date(from: dateComponent)!
+            
+            return dateFormatter.string(from: date)
+        } else {
+            return "\(monthData.month)월"
+        }
     }
     
     func getMonthLabelColor() -> UIColor {
