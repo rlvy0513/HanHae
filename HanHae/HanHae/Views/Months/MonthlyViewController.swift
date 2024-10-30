@@ -23,7 +23,6 @@ class MonthlyViewController: HHBaseViewController {
     
     init(viewModel: MonthlyViewModel) {
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,13 +45,13 @@ class MonthlyViewController: HHBaseViewController {
         
         bindViewModel()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableViewLayout), name: .updateTableViewLayout, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -372,9 +371,16 @@ class MonthlyViewController: HHBaseViewController {
     
     @objc private func endEditing() {
         view.endEditing(true)
+        updateTableViewLayout()
         viewModel.finishEditing()
     }
     
+    @objc func updateTableViewLayout() {
+        DispatchQueue.main.async {
+            self.tableView.performBatchUpdates(nil, completion: nil)
+            self.tableView.layoutIfNeeded()
+        }
+    }
     // MARK: 키보드 이벤트 핸들러
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {

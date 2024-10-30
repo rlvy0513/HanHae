@@ -18,7 +18,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     var index: Int!
     private var toDoListTextViewTrailingConstraint: NSLayoutConstraint!
     private var noteTextViewBottomConstraint: NSLayoutConstraint!
-    private var isEditingCell: Bool = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -51,7 +50,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     private func setupNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: NSNotification.Name("NoteUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNoteText(_:)), name: .noteUpdated, object: nil)
     }
     
     func configure(toDo: ToDo, index: Int, delegate: MonthlyViewController, viewModel: MonthlyViewModel) {
@@ -92,8 +91,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = true
         }
 
-        contentView.setNeedsLayout()
-        contentView.layoutIfNeeded()
+        NotificationCenter.default.post(name: .updateTableViewLayout, object: nil)
     }
     
     private func setupCheckBoxImageView(toDo: ToDo) {
@@ -205,8 +203,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        isEditingCell = true
-
         if textView == toDoListTextView {
             if textView.text == "목표를 입력하세요." {
                 textView.text = ""
@@ -217,9 +213,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 noteTextViewBottomConstraint.constant = -10
                 noteTextView.isHidden = false
             }
-
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
 
             if let tableView = findTableView() {
                 tableView.beginUpdates()
@@ -238,8 +231,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = false
             noteTextViewBottomConstraint.constant = -10
             noteTextView.becomeFirstResponder()
-            contentView.setNeedsLayout()
-            contentView.layoutIfNeeded()
         }
         delegate?.showDoneButton(textView)
     }
@@ -264,7 +255,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
 
             if !noteTextView.isFirstResponder {
-                isEditingCell = false
                 updateNoteTextView(noteTextView.text)
             }
         } else if textView == noteTextView {
@@ -277,7 +267,6 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             }
 
             if !toDoListTextView.isFirstResponder {
-                isEditingCell = false
                 updateNoteTextView(noteTextView.text)
             }
         }

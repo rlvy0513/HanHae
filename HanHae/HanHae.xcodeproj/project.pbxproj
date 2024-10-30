@@ -41,6 +41,7 @@
 		D787E0742CAC9AD6006010F4 /* MonthlyMottoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */; };
 		D787E0782CAC9AEF006010F4 /* ToDoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0772CAC9AE9006010F4 /* ToDoListTableViewCell.swift */; };
 		D787E07A2CAC9B03006010F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787E0792CAC9AFF006010F4 /* DetailViewController.swift */; };
+		D7B0F9BF2CD1312B006BE46A /* Notification+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B0F9BE2CD1311B006BE46A /* Notification+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,7 @@
 		D787E0732CAC9AD4006010F4 /* MonthlyMottoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMottoViewController.swift; sourceTree = "<group>"; };
 		D787E0772CAC9AE9006010F4 /* ToDoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListTableViewCell.swift; sourceTree = "<group>"; };
 		D787E0792CAC9AFF006010F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		D7B0F9BE2CD1311B006BE46A /* Notification+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +200,7 @@
 			children = (
 				42CE1D7C2CA933D000270234 /* Date+Extension.swift */,
 				427C4EE12C91C59C00DE7844 /* UIFont+Extension.swift */,
+				D7B0F9BE2CD1311B006BE46A /* Notification+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				42FA31FD2C918A6500AB5469 /* HanHae.xcdatamodeld in Sources */,
 				42FA31F32C918A6500AB5469 /* AppDelegate.swift in Sources */,
 				427C4EE22C91C59C00DE7844 /* UIFont+Extension.swift in Sources */,
+				D7B0F9BF2CD1312B006BE46A /* Notification+Extension.swift in Sources */,
 				42FA31F52C918A6500AB5469 /* SceneDelegate.swift in Sources */,
 				D787E0782CAC9AEF006010F4 /* ToDoListTableViewCell.swift in Sources */,
 				42E2BB402CB107D100C102DE /* SettingDetailViewController.swift in Sources */,
