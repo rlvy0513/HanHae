@@ -40,6 +40,7 @@ class MonthlyViewController: HHBaseViewController {
         updateEmptyStateView(isEmpty: viewModel.isEmptyToDoList)
         updateCompletionLabel()
         setupToolbar()
+        setupSwipeGesture()
         
         originalContentInset = tableView.contentInset
         
@@ -494,7 +495,6 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - UIResponder 확장
 extension UIResponder {
     private static weak var _currentFirstResponder: UIResponder?
     
@@ -506,5 +506,15 @@ extension UIResponder {
     
     @objc fileprivate func findFirstResponder(_ sender: AnyObject) {
         UIResponder._currentFirstResponder = self
+    }
+}
+
+extension MonthlyViewController: UIGestureRecognizerDelegate {
+    func setupSwipeGesture() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

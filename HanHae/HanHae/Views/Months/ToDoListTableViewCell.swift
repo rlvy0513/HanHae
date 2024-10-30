@@ -91,7 +91,8 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextView.isHidden = true
         }
 
-        NotificationCenter.default.post(name: .updateTableViewLayout, object: nil)
+        contentView.setNeedsLayout()
+        contentView.layoutIfNeeded()
     }
     
     private func setupCheckBoxImageView(toDo: ToDo) {
