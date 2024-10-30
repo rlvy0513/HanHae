@@ -46,8 +46,6 @@ final class SettingsViewModel {
                     String(localized: "라이트 모드"),
                     String(localized: "다크 모드")
                 ]
-            case .language:
-                return ["한국어", "English"]
             default:
                 return []
             }
@@ -68,7 +66,6 @@ final class SettingsViewModel {
     
     private let userDefaults = UserDefaults.standard
     private let themeKey = "selectedTheme"
-    private let languageKey = "selectedLanguage"
     private let reminderKey = "isReminderOn"
     
     var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
@@ -77,15 +74,6 @@ final class SettingsViewModel {
         }
         set {
             userDefaults.setValue(newValue, forKey: themeKey)
-        }
-    }
-    
-    var selectedLanguage: Int? {          // 0: 한국어, 1: 영어
-        get {
-            return userDefaults.integer(forKey: languageKey)
-        }
-        set {
-            userDefaults.setValue(newValue, forKey: languageKey)
         }
     }
     
@@ -119,7 +107,7 @@ final class SettingsViewModel {
     }
     
     func getDetailOptionTextForRow(at index: Int) -> String {
-        guard let currentSetting = currentSetting else { return "" }
+        guard let currentSetting else { return "" }
         let options = currentSetting.detailOptions
         
         return options[index]
@@ -145,8 +133,6 @@ final class SettingsViewModel {
         switch currentSetting {
         case .theme:
             return indexPathOfRow == selectedTheme ? UIImageView(image: checkmarkImage) : nil
-        case .language:
-            return indexPathOfRow == selectedLanguage ? UIImageView(image: checkmarkImage) : nil
         default:
             return nil
         }
@@ -158,11 +144,13 @@ final class SettingsViewModel {
         viewController: UIViewController
     ) {
         switch option {
-        case .theme, .language:
+        case .theme:
             self.currentSetting = option
             
             let detailVC = SettingDetailViewController(viewModel: self)
             viewController.navigationController?.pushViewController(detailVC, animated: true)
+        case .language:
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
         case .reminder:
             break
         case .feedback:
@@ -181,17 +169,6 @@ final class SettingsViewModel {
         case .theme:
             selectedTheme = detailOptionIndexOfRow
             applyTheme(detailOptionIndexOfRow)
-        case .language:
-            selectedLanguage = detailOptionIndexOfRow
-            
-            switch detailOptionIndexOfRow {
-            case 0:
-                print("한국어")
-            case 1:
-                print("영어")
-            default:
-                break
-            }
         default:
             break
         }
@@ -238,19 +215,9 @@ final class SettingsViewModel {
         }
     }
     
-    private func applyLanguage(_ languageIndex: Int?) {
-        // TODO: - 기능 구현 필요
-        // guard let languageIndex else { return }
-    }
-    
     func loadSavedTheme() {
         let savedThemeIndex = userDefaults.integer(forKey: themeKey)
         applyTheme(savedThemeIndex)
-    }
-    
-    func loadSavedLanguage() {
-        let savedLanguageIndex = userDefaults.integer(forKey: languageKey)
-        applyLanguage(savedLanguageIndex)
     }
     
 }
