@@ -276,6 +276,16 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func cancelTapped() {
+        if let originalTitle = toDo?.title {
+            toDoListTextView.text = originalTitle
+        }
+        
+        if let originalNote = toDo?.note {
+            noteTextView.text = originalNote.isEmpty ? "노트 추가하기" : originalNote
+        }
+        
+        NotificationCenter.default.post(name: .updateTableViewLayout, object: nil)
+
         dismiss(animated: true, completion: nil)
     }
     
@@ -289,11 +299,11 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         }
         
         if let updatedNote = noteTextView.text {
-            NotificationCenter.default.post(name: NSNotification.Name("NoteUpdated"), object: nil, userInfo: ["updatedNote": updatedNote])
+            NotificationCenter.default.post(name: .noteUpdated, object: nil, userInfo: ["updatedNote": updatedNote])
         }
         
         if let updatedTitle = toDoListTextView.text {
-            NotificationCenter.default.post(name: NSNotification.Name("TitleUpdated"), object: nil, userInfo: ["updatedTitle": updatedTitle])
+            NotificationCenter.default.post(name: .titleUpdated, object: nil, userInfo: ["updatedTitle": updatedTitle])
         }
         
         if let index = index {
