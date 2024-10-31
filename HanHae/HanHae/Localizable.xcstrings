@@ -21,6 +21,26 @@
         }
       }
     },
+    "%@의 나에게" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To Myself in %@"
+          }
+        }
+      }
+    },
+    "%@의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Write an encouraging message\nto yourself in %@ \nfor achieving your goals."
+          }
+        }
+      }
+    },
     "<html>\n<body>\n   <p><small>피드백이나 문의사항을을 작성해 주세요.</small></p><br>\n\n   <br>\n   <p>===============================<br>\n   iPhone Model : %@<br>\n   iOS Version : %@<br>\n   App Version : %@<br>\n   ===============================<br>\n   <small>* iPhone Model이 올바르지 않은 경우, 수동으로 입력해 주세요.</small></p>\n</body>\n</html>" : {
       "localizations" : {
         "en" : {
@@ -33,6 +53,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "<html>\n<body>\n   <p><small>피드백이나 문의사항을을 작성해 주세요.</small></p><br>\n\n   <br>\n   <p>===============================<br>\n   iPhone Model : %1$@<br>\n   iOS Version : %2$@<br>\n   App Version : %3$@<br>\n   ===============================<br>\n   <small>* iPhone Model이 올바르지 않은 경우, 수동으로 입력해 주세요.</small></p>\n</body>\n</html>"
+          }
+        }
+      }
+    },
+    "노트 추가하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Note"
           }
         }
       }
@@ -197,6 +227,17 @@
         }
       }
     },
+    "목표 %@%% 달성" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Goal Achieved"
+          }
+        }
+      }
+    },
     "목표 상태 변경하기" : {
       "localizations" : {
         "en" : {
@@ -233,6 +274,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completion Date"
+          }
+        }
+      }
+    },
+    "목표를 입력하세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your goal."
           }
         }
       }

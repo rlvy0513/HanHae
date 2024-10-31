@@ -78,7 +78,7 @@ class MonthlyViewController: HHBaseViewController {
         view.endEditing(true)
         
         let indicesToRemove = viewModel.toDoList.enumerated().compactMap { index, todo in
-            return todo.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todo.title == "목표를 입력하세요." ? index : nil
+            return todo.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || todo.title == String(localized: "목표를 입력하세요.") ? index : nil
         }
         
         tableView.beginUpdates()
@@ -191,23 +191,23 @@ class MonthlyViewController: HHBaseViewController {
             title: String(localized: "목록 편집하기"),
             image: UIImage(systemName: "pencil.and.list.clipboard"),
             handler: { [weak self] _ in
-            self?.enterEditingMode()
-        })
+                self?.enterEditingMode()
+            })
         editAction.attributes = hasTodoList ? [] : [.disabled]
         
         let appSettingsAction = UIAction(
             title: String(localized: "앱 설정하기"),
             image: UIImage(systemName: "gearshape"),
             handler: { [weak self] _ in
-            self?.didTapSettingButton()
-        })
+                self?.didTapSettingButton()
+            })
         
         let deleteAction = UIAction(
             title: String(localized: "모든 목표 삭제하기"),
             image: UIImage(systemName: "trash"),
             handler: { [weak self] _ in
-            self?.didTapDeleteAllButton()
-        })
+                self?.didTapDeleteAllButton()
+            })
         deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
         
         let divider = UIMenu(title: "", options: .displayInline, children: [editAction, appSettingsAction])
@@ -276,20 +276,31 @@ class MonthlyViewController: HHBaseViewController {
     
     private func updateCompletionLabel() {
         let percentage = viewModel.getNumericLabelText().percent
-        let fullText = "목표 \(percentage)% 달성"
+        
+        var fullText: String
+        var defaultRange: NSRange
+        
+        let preferredLanguage = Locale.preferredLanguages.first?.prefix(2)
+        
+        if preferredLanguage == "en" {
+            fullText = "Goal \(percentage)% Achieved"
+            defaultRange = (fullText as NSString).range(of: "Goal Achieved")
+        } else {
+            fullText = "목표 \(percentage)% 달성"
+            defaultRange = (fullText as NSString).range(of: "목표 달성")
+        }
         
         let attributedText = NSMutableAttributedString(string: fullText)
         let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
-        attributedText.addAttributes([
-            .foregroundColor: UIColor.hhAccent,
-            .font: UIFont.hhLargeTitle
-        ], range: percentageRange)
         
-        let defaultRange = (fullText as NSString).range(of: "목표 달성")
-        attributedText.addAttributes([
-            .foregroundColor: UIColor.hhLightGray,
-            .font: UIFont.hhTitle
-        ], range: defaultRange)
+        attributedText.addAttributes(
+            [.foregroundColor: UIColor.hhAccent, .font: UIFont.hhLargeTitle],
+            range: percentageRange
+        )
+        attributedText.addAttributes(
+            [.foregroundColor: UIColor.hhLightGray, .font: UIFont.hhTitle],
+            range: defaultRange
+        )
         
         completionLabel.attributedText = attributedText
     }

@@ -28,7 +28,7 @@ class MonthlyMottoViewController: UIViewController, UITextViewDelegate {
     
     private lazy var monthlyMottoFooterLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(viewModel.monthData.month)월의 나에게"
+        label.text = String(localized: "\(viewModel.getMonthLabelText(for: .monthView))의 나에게")
         label.font = .hhCaption1
         label.textColor = .hhLightGray
         label.textAlignment = .center

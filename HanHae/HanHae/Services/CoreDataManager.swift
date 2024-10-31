@@ -90,7 +90,7 @@ final class CoreDataManager {
             guard let monthToUpdate = fetchedMonths.first else { return }
             let newToDo = ToDo(context: safeContext)
             newToDo.id = UUID().uuidString
-            newToDo.title = "목표를 입력하세요."
+            newToDo.title = String(localized: "목표를 입력하세요.")
             newToDo.note = nil
             newToDo.priority = 4
             newToDo.startDate = Date()

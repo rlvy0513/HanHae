@@ -23,7 +23,7 @@ final class MonthlyViewModel {
     }
     
     var onMottoUpdated: ((String) -> Void)?
-    lazy var mottoPlaceholder = "\(monthData.month)월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요."
+    lazy var mottoPlaceholder = String(localized: "\(getMonthLabelText(for: .monthView))의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.")
     
     var onToDoListUpdated: (([ToDo]) -> Void)?
     var isEmptyToDoList: Bool {
