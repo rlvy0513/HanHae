@@ -106,7 +106,7 @@ class MonthlyViewController: HHBaseViewController {
     private func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "\(viewModel.monthData.month)월"
+        navigationItem.title = viewModel.getMonthLabelText(for: .monthView)
         navigationController?.navigationBar.largeTitleTextAttributes = [
             .font: UIFont.hhLargeTitle,
             .foregroundColor: UIColor.hhText
@@ -136,9 +136,16 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     @objc private func didTapDeleteAllButton() {
-        let alertController = UIAlertController(title: "모든 목표 삭제", message: "정말로 모든 목표를 삭제하시겠습니까?", preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: String(localized: "모든 목표 삭제"),
+            message: String(localized: "정말로 모든 목표를 삭제하시겠습니까?"),
+            preferredStyle: .alert
+        )
         
-        let confirmAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+        let confirmAction = UIAlertAction(
+            title: String(localized: "삭제"),
+            style: .destructive
+        ) { [weak self] _ in
             self?.viewModel.removeToDoList()
             
             DispatchQueue.main.async {
@@ -151,7 +158,11 @@ class MonthlyViewController: HHBaseViewController {
             }
         }
         
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(
+            title: String(localized: "취소"),
+            style: .cancel,
+            handler: nil
+        )
         
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
@@ -176,16 +187,25 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     private func createMenu(hasTodoList: Bool) -> UIMenu {
-        let editAction = UIAction(title: "목록 편집하기", image: UIImage(systemName: "pencil.and.list.clipboard"), handler: { [weak self] _ in
+        let editAction = UIAction(
+            title: String(localized: "목록 편집하기"),
+            image: UIImage(systemName: "pencil.and.list.clipboard"),
+            handler: { [weak self] _ in
             self?.enterEditingMode()
         })
         editAction.attributes = hasTodoList ? [] : [.disabled]
         
-        let appSettingsAction = UIAction(title: "앱 설정하기", image: UIImage(systemName: "gearshape"), handler: { [weak self] _ in
+        let appSettingsAction = UIAction(
+            title: String(localized: "앱 설정하기"),
+            image: UIImage(systemName: "gearshape"),
+            handler: { [weak self] _ in
             self?.didTapSettingButton()
         })
         
-        let deleteAction = UIAction(title: "모든 목표 삭제하기", image: UIImage(systemName: "trash"), handler: { [weak self] _ in
+        let deleteAction = UIAction(
+            title: String(localized: "모든 목표 삭제하기"),
+            image: UIImage(systemName: "trash"),
+            handler: { [weak self] _ in
             self?.didTapDeleteAllButton()
         })
         deleteAction.attributes = hasTodoList ? [.destructive] : [.disabled]
@@ -217,7 +237,12 @@ class MonthlyViewController: HHBaseViewController {
     }
     
     private func createDoneButton(selector: Selector) -> UIBarButtonItem {
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: selector)
+        let doneButton = UIBarButtonItem(
+            title: String(localized: "완료"),
+            style: .done,
+            target: self,
+            action: selector
+        )
         doneButton.tintColor = .hhAccent
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.hhHeadLine,
@@ -260,7 +285,7 @@ class MonthlyViewController: HHBaseViewController {
             .font: UIFont.hhLargeTitle
         ], range: percentageRange)
         
-        let defaultRange = (fullText as NSString).range(of: "목표량 달성")
+        let defaultRange = (fullText as NSString).range(of: "목표 달성")
         attributedText.addAttributes([
             .foregroundColor: UIColor.hhLightGray,
             .font: UIFont.hhTitle
@@ -278,8 +303,8 @@ class MonthlyViewController: HHBaseViewController {
         emptyStateImageView.tintColor = .hhAccent
         
         emptyStateLabel = UILabel()
-        emptyStateLabel.text = "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!"
-        emptyStateLabel.numberOfLines = 2
+        emptyStateLabel.text = String(localized: "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!")
+        emptyStateLabel.numberOfLines = 3
         emptyStateLabel.font = .hhTitle
         emptyStateLabel.textColor = .hhLightGray
         emptyStateLabel.textAlignment = .center
@@ -329,7 +354,7 @@ class MonthlyViewController: HHBaseViewController {
     
     private func createAddTodoListButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle(" 목표 추가하기", for: .normal)
+        button.setTitle(String(localized: " 목표 추가하기"), for: .normal)
         button.setImage(UIImage(systemName: "plus.square.fill"), for: .normal)
         button.titleLabel?.font = .hhBody
         button.setTitleColor(.hhAccent, for: .normal)

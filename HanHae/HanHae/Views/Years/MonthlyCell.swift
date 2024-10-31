@@ -292,7 +292,7 @@ final class MonthlyCell: UICollectionViewCell {
             }
         }
         
-        monthLabel.text = viewModel.getMonthLabelText()
+        monthLabel.text = viewModel.getMonthLabelText(for: .monthlyCell)
         monthLabel.textColor = viewModel.getMonthLabelColor()
         
         let numericLableText = viewModel.getNumericLabelText()

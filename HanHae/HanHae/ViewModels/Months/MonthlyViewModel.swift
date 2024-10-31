@@ -42,13 +42,20 @@ final class MonthlyViewModel {
     // MARK: - input
     
     // MARK: - output
-    func getMonthLabelText() -> String {
+    func getMonthLabelText(for kindOfView: HHView) -> String {
         let preferredLanguage = Locale.preferredLanguages.first?.prefix(2)
         
         if preferredLanguage == "en" {
             let dateFormatter = DateFormatter()
             dateFormatter.locale = .current
-            dateFormatter.dateFormat = "MMM"
+            
+            switch kindOfView {
+            case .yearsView, .monthlyCell:
+                dateFormatter.dateFormat = "MMM"
+            case .monthView:
+                dateFormatter.dateFormat = "MMMM"
+            }
+            
             
             var dateComponent = DateComponents()
             dateComponent.month = Int(monthData.month)
@@ -206,4 +213,10 @@ final class MonthlyViewModel {
         
         vc.present(naviController, animated: true)
     }
+}
+
+enum HHView {
+    case yearsView
+    case monthView
+    case monthlyCell
 }

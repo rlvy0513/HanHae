@@ -30,21 +30,21 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         view.addSubview(headerView)
         
         let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle("취소", for: .normal)
+        cancelButton.setTitle(String(localized: "취소"), for: .normal)
         cancelButton.titleLabel?.font = .hhBody
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         cancelButton.tintColor = .hhAccent
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         let doneButton = UIButton(type: .system)
-        doneButton.setTitle("완료", for: .normal)
+        doneButton.setTitle(String(localized: "완료"), for: .normal)
         doneButton.titleLabel?.font = .hhHeadLine
         doneButton.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         doneButton.tintColor = .hhAccent
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
         let titleLabel = UILabel()
-        titleLabel.text = "자세한 내용"
+        titleLabel.text = String(localized: "자세한 내용")
         titleLabel.font = .hhHeadLine
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -158,7 +158,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             startDateImage.translatesAutoresizingMaskIntoConstraints = false
             
             let startLabel = UILabel()
-            startLabel.text = "목표 시작일"
+            startLabel.text = String(localized: "목표 시작일")
             startLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             startLabel.textAlignment = .left
             startLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -196,7 +196,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             completionDateImage.translatesAutoresizingMaskIntoConstraints = false
             
             let completionLabel = UILabel()
-            completionLabel.text = "목표 완료일"
+            completionLabel.text = String(localized: "목표 완료일")
             completionLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             completionLabel.textAlignment = .left
             completionLabel.translatesAutoresizingMaskIntoConstraints = false

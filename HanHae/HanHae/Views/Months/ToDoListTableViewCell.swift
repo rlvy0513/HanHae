@@ -316,15 +316,15 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         
         if todo.isCompleted {
             let alertController = UIAlertController(
-                title: "목표 상태 변경하기",
-                message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
+                title: String(localized: "목표 상태 변경하기"),
+                message: String(localized: "목표 상태를 미완료 상태로 변경하시겠습니까?"),
                 preferredStyle: .alert
             )
             
-            let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: String(localized: "취소하기"), style: .cancel, handler: nil)
             alertController.addAction(cancelAction)
             
-            let confirmAction = UIAlertAction(title: "변경하기", style: .default) { [weak self] _ in
+            let confirmAction = UIAlertAction(title: String(localized: "변경하기"), style: .default) { [weak self] _ in
                 guard let self = self else { return }
                 self.viewModel.updateToDoCompletionStatus(at: indexPath.row, isCompleted: false)
                 self.updateCheckBoxImage(toDo: self.viewModel.toDoList[indexPath.row])
