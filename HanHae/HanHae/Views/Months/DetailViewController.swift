@@ -30,21 +30,21 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         view.addSubview(headerView)
         
         let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle("취소", for: .normal)
+        cancelButton.setTitle(String(localized: "취소"), for: .normal)
         cancelButton.titleLabel?.font = .hhBody
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         cancelButton.tintColor = .hhAccent
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         let doneButton = UIButton(type: .system)
-        doneButton.setTitle("완료", for: .normal)
+        doneButton.setTitle(String(localized: "완료"), for: .normal)
         doneButton.titleLabel?.font = .hhHeadLine
         doneButton.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         doneButton.tintColor = .hhAccent
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
         let titleLabel = UILabel()
-        titleLabel.text = "자세한 내용"
+        titleLabel.text = String(localized: "자세한 내용")
         titleLabel.font = .hhHeadLine
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -111,8 +111,8 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             toDoListTextView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(toDoListTextView)
             
-            if let toDoTitle = toDo?.title, toDoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoTitle == "목표를 입력하세요." {
-                toDoListTextView.text = "목표를 입력하세요."
+            if let toDoTitle = toDo?.title, toDoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoTitle == String(localized: "목표를 입력하세요.") {
+                toDoListTextView.text = String(localized: "목표를 입력하세요.")
                 toDoListTextView.textColor = .hhLightGray
             } else {
                 toDoListTextView.text = toDo?.title
@@ -140,7 +140,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
                 noteTextView.text = todoNote
                 noteTextView.textColor = .hhLightGray
             } else {
-                noteTextView.text = "노트 추가하기"
+                noteTextView.text = String(localized: "노트 추가하기")
                 noteTextView.textColor = .hhLightGray
             }
             
@@ -158,7 +158,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             startDateImage.translatesAutoresizingMaskIntoConstraints = false
             
             let startLabel = UILabel()
-            startLabel.text = "목표 시작일"
+            startLabel.text = String(localized: "목표 시작일")
             startLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             startLabel.textAlignment = .left
             startLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -196,7 +196,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
             completionDateImage.translatesAutoresizingMaskIntoConstraints = false
             
             let completionLabel = UILabel()
-            completionLabel.text = "목표 완료일"
+            completionLabel.text = String(localized: "목표 완료일")
             completionLabel.font = .hhFont(.eliceDigitalBaeumRegular, ofSize: 16)
             completionLabel.textAlignment = .left
             completionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -238,11 +238,11 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == noteTextView, textView.text == "노트 추가하기" {
+        if textView == noteTextView, textView.text == String(localized: "노트 추가하기") {
             textView.text = ""
         }
         
-        if textView == toDoListTextView, textView.text == "목표를 입력하세요." {
+        if textView == toDoListTextView, textView.text == String(localized: "목표를 입력하세요.") {
             textView.text = ""
             textView.textColor = .hhText
         }
@@ -253,10 +253,10 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         
         if trimmedText.isEmpty {
             if textView == noteTextView {
-                textView.text = "노트 추가하기"
+                textView.text = String(localized: "노트 추가하기")
                 textView.textColor = .hhLightGray
             } else if textView == toDoListTextView {
-                textView.text = "목표를 입력하세요."
+                textView.text = String(localized: "목표를 입력하세요.")
                 textView.textColor = .hhLightGray
             }
         } else {
@@ -281,7 +281,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         }
         
         if let originalNote = toDo?.note {
-            noteTextView.text = originalNote.isEmpty ? "노트 추가하기" : originalNote
+            noteTextView.text = originalNote.isEmpty ? String(localized: "노트 추가하기") : originalNote
         }
         
         NotificationCenter.default.post(name: .updateTableViewLayout, object: nil)
@@ -290,7 +290,7 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func doneTapped() {
-        let isTodoTextEmpty = toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoListTextView.text == "목표를 입력하세요."
+        let isTodoTextEmpty = toDoListTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || toDoListTextView.text == String(localized: "목표를 입력하세요.")
         
         if isTodoTextEmpty {
             shakeTextView(toDoListTextView)

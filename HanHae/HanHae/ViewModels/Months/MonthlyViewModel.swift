@@ -23,7 +23,7 @@ final class MonthlyViewModel {
     }
     
     var onMottoUpdated: ((String) -> Void)?
-    lazy var mottoPlaceholder = "\(monthData.month)월의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요."
+    lazy var mottoPlaceholder = String(localized: "\(getMonthLabelText(for: .monthView))의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요.")
     
     var onToDoListUpdated: (([ToDo]) -> Void)?
     var isEmptyToDoList: Bool {
@@ -42,8 +42,28 @@ final class MonthlyViewModel {
     // MARK: - input
     
     // MARK: - output
-    func getMonthLabelText() -> String {
-        return "\(monthData.month)월"
+    func getMonthLabelText(for kindOfView: HHView) -> String {
+        let preferredLanguage = Locale.preferredLanguages.first?.prefix(2)
+        
+        if preferredLanguage == "en" {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = .current
+            
+            switch kindOfView {
+            case .yearsView, .monthlyCell:
+                dateFormatter.dateFormat = "MMM"
+            case .monthView:
+                dateFormatter.dateFormat = "MMMM"
+            }
+            
+            var dateComponent = DateComponents()
+            dateComponent.month = Int(monthData.month)
+            let date = Calendar.current.date(from: dateComponent)!
+            
+            return dateFormatter.string(from: date)
+        } else {
+            return "\(monthData.month)월"
+        }
     }
     
     func getMonthLabelColor() -> UIColor {
@@ -192,4 +212,10 @@ final class MonthlyViewModel {
         
         vc.present(naviController, animated: true)
     }
+}
+
+enum HHView {
+    case yearsView
+    case monthView
+    case monthlyCell
 }

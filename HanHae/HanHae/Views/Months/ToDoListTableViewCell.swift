@@ -67,8 +67,8 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         setupConstraints()
         updateCheckBoxImage(toDo: toDo)
         
-        if toDo.title.isEmpty || toDo.title == "목표를 입력하세요." {
-            toDoListTextView.text = "목표를 입력하세요."
+        if toDo.title.isEmpty || toDo.title == String(localized: "목표를 입력하세요.") {
+            toDoListTextView.text = String(localized: "목표를 입력하세요.")
             toDoListTextView.textColor = .hhLightGray
         } else {
             toDoListTextView.text = toDo.title
@@ -81,12 +81,12 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private func updateNoteTextView(_ note: String?) {
         let trimmedNote = note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         
-        if !trimmedNote.isEmpty && trimmedNote != "노트 추가하기" {
+        if !trimmedNote.isEmpty && trimmedNote != String(localized: "노트 추가하기") {
             noteTextView.text = trimmedNote
             noteTextViewBottomConstraint.constant = -10
             noteTextView.isHidden = false
         } else {
-            noteTextView.text = "노트 추가하기"
+            noteTextView.text = String(localized: "노트 추가하기")
             noteTextViewBottomConstraint.constant = 15
             noteTextView.isHidden = true
         }
@@ -117,7 +117,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private func setupTodoListTextView(toDo: ToDo) {
         toDoListTextView = UITextView()
         toDoListTextView.text = toDo.title
-        toDoListTextView.textColor = toDo.title == "목표를 입력하세요." ? .hhLightGray : .hhText
+        toDoListTextView.textColor = toDo.title == String(localized: "목표를 입력하세요.") ? .hhLightGray : .hhText
         toDoListTextView.font = .hhBody
         toDoListTextView.isScrollEnabled = false
         toDoListTextView.textContainer.lineBreakMode = .byWordWrapping
@@ -134,7 +134,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     private func setupNoteTextView(toDo: ToDo) {
         noteTextView = UITextView()
         let noteText = toDo.note?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        noteTextView.text = noteText.isEmpty ? "노트 추가하기" : noteText
+        noteTextView.text = noteText.isEmpty ? String(localized: "노트 추가하기") : noteText
         noteTextView.textColor = .hhLightGray
         noteTextView.tintColor = .hhAccent
         noteTextView.font = .hhCaption1
@@ -205,12 +205,12 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView == toDoListTextView {
-            if textView.text == "목표를 입력하세요." {
+            if textView.text == String(localized: "목표를 입력하세요.") {
                 textView.text = ""
                 textView.textColor = .hhText
             }
 
-            if noteTextView.text == "노트 추가하기" || noteTextView.text.isEmpty {
+            if noteTextView.text == String(localized: "노트 추가하기") || noteTextView.text.isEmpty {
                 noteTextViewBottomConstraint.constant = -10
                 noteTextView.isHidden = false
             }
@@ -226,7 +226,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
                 self.contentView.layoutIfNeeded()
             }
         } else if textView == noteTextView {
-            if noteTextView.text == "노트 추가하기" {
+            if noteTextView.text == String(localized: "노트 추가하기") {
                 noteTextView.text = ""
             }
             noteTextView.isHidden = false
@@ -242,7 +242,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
 
             if trimmedText.isEmpty {
                 viewModel.updateToDoTitle(at: index, newTitle: "")
-                textView.text = "목표를 입력하세요."
+                textView.text = String(localized: "목표를 입력하세요.")
                 textView.textColor = .hhLightGray
             } else {
                 viewModel.updateToDoTitle(at: index, newTitle: trimmedText)
@@ -262,7 +262,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             let trimmedNote = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedNote.isEmpty {
                 viewModel.updateToDoNote(at: index, newNote: "")
-                textView.text = "노트 추가하기"
+                textView.text = String(localized: "노트 추가하기")
             } else {
                 viewModel.updateToDoNote(at: index, newNote: trimmedNote)
             }
@@ -290,7 +290,7 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
             noteTextViewBottomConstraint.constant = -10
         }
 
-        if noteTextView.text == "노트 추가하기" {
+        if noteTextView.text == String(localized: "노트 추가하기") {
             noteTextView.text = ""
         }
 
@@ -317,15 +317,15 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         
         if todo.isCompleted {
             let alertController = UIAlertController(
-                title: "목표 상태 변경하기",
-                message: "목표 상태를 미완료 상태로 변경하시겠습니까?",
+                title: String(localized: "목표 상태 변경하기"),
+                message: String(localized: "목표 상태를 미완료 상태로 변경하시겠습니까?"),
                 preferredStyle: .alert
             )
             
-            let cancelAction = UIAlertAction(title: "취소하기", style: .cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: String(localized: "취소하기"), style: .cancel, handler: nil)
             alertController.addAction(cancelAction)
             
-            let confirmAction = UIAlertAction(title: "변경하기", style: .default) { [weak self] _ in
+            let confirmAction = UIAlertAction(title: String(localized: "변경하기"), style: .default) { [weak self] _ in
                 guard let self = self else { return }
                 self.viewModel.updateToDoCompletionStatus(at: indexPath.row, isCompleted: false)
                 self.updateCheckBoxImage(toDo: self.viewModel.toDoList[indexPath.row])

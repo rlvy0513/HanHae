@@ -1,0 +1,513 @@
+{
+  "sourceLanguage" : "ko",
+  "strings" : {
+    " 목표 추가하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " Add Goal"
+          }
+        }
+      }
+    },
+    "%@년" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@의 나에게" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To Myself in %@"
+          }
+        }
+      }
+    },
+    "%@의 나에게\n목표 달성을 위한\n응원의 메시지를 적어주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Write an encouraging message\nto yourself in %@ \nfor achieving your goals."
+          }
+        }
+      }
+    },
+    "<html>\n<body>\n   <p><small>피드백이나 문의사항을을 작성해 주세요.</small></p><br>\n\n   <br>\n   <p>===============================<br>\n   iPhone Model : %@<br>\n   iOS Version : %@<br>\n   App Version : %@<br>\n   ===============================<br>\n   <small>* iPhone Model이 올바르지 않은 경우, 수동으로 입력해 주세요.</small></p>\n</body>\n</html>" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "<html>\n<body>\n   <p><small>Please enter your feedback or inquiries.</small></p><br>\n\n   <br>\n   <p>===============================<br>\n   iPhone Model : %1$@<br>\n   iOS Version : %2$@<br>\n   App Version : %3$@<br>\n   ===============================<br>\n   <small>* If the iPhone model is incorrect, please enter it manually.</small></p>\n</body>\n</html>"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "<html>\n<body>\n   <p><small>피드백이나 문의사항을을 작성해 주세요.</small></p><br>\n\n   <br>\n   <p>===============================<br>\n   iPhone Model : %1$@<br>\n   iOS Version : %2$@<br>\n   App Version : %3$@<br>\n   ===============================<br>\n   <small>* iPhone Model이 올바르지 않은 경우, 수동으로 입력해 주세요.</small></p>\n</body>\n</html>"
+          }
+        }
+      }
+    },
+    "노트 추가하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Note"
+          }
+        }
+      }
+    },
+    "다크 모드" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Mode"
+          }
+        }
+      }
+    },
+    "닫기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "디바이스에 메일 계정이 설정되어 있지 않습니다.\n메일 앱에서 사용자의 메일 계정을 설정해 주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The device does not have an email account set up.Please configure your email account in the Mail app."
+          }
+        }
+      }
+    },
+    "라이트 모드" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light Mode"
+          }
+        }
+      }
+    },
+    "리마인드 알림" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "메일 저장됨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail Saved"
+          }
+        }
+      }
+    },
+    "메일 전송 실패" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail Sending Failed"
+          }
+        }
+      }
+    },
+    "메일 전송 완료" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail Sent Successfully"
+          }
+        }
+      }
+    },
+    "메일 전송 취소" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel Sending Mail"
+          }
+        }
+      }
+    },
+    "메일 전송에 실패했습니다. 다시 시도해 주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail sending failed.\nPlease try again."
+          }
+        }
+      }
+    },
+    "메일 전송이 취소되었습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The mail has been canceled."
+          }
+        }
+      }
+    },
+    "메일을 보낼 수 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to send mail."
+          }
+        }
+      }
+    },
+    "메일이 저장되었습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The mail has been saved."
+          }
+        }
+      }
+    },
+    "모든 목표 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Goals"
+          }
+        }
+      }
+    },
+    "모든 목표 삭제하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Goals"
+          }
+        }
+      }
+    },
+    "목록 편집하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit List"
+          }
+        }
+      }
+    },
+    "목표 %@%% 달성" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Goal Achieved"
+          }
+        }
+      }
+    },
+    "목표 상태 변경하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Goal Status"
+          }
+        }
+      }
+    },
+    "목표 상태를 미완료 상태로 변경하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Would you like to change the goal status to incomplete?"
+          }
+        }
+      }
+    },
+    "목표 시작일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Date"
+          }
+        }
+      }
+    },
+    "목표 완료일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completion Date"
+          }
+        }
+      }
+    },
+    "목표를 입력하세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your goal."
+          }
+        }
+      }
+    },
+    "변경하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        }
+      }
+    },
+    "삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "시스템 설정과 동일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same as System Settings"
+          }
+        }
+      }
+    },
+    "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no goals\nfor this month yet!\nTry adding a new goal!"
+          }
+        }
+      }
+    },
+    "알 수 없는 오류" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Error"
+          }
+        }
+      }
+    },
+    "알 수 없는 오류가 발생했습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An unknown error has occurred."
+          }
+        }
+      }
+    },
+    "앱 설정하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "앱 테마 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Theme"
+          }
+        }
+      }
+    },
+    "앱 평점 남기기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate the App"
+          }
+        }
+      }
+    },
+    "앱 피드백 남기기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave App Feedback"
+          }
+        }
+      }
+    },
+    "언어 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
+    "완료" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "이번 달" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current"
+          }
+        }
+      }
+    },
+    "자세한 내용" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
+          }
+        }
+      }
+    },
+    "정말로 모든 목표를 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all goals?"
+          }
+        }
+      }
+    },
+    "취소" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "취소하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "한해 앱에 대한 피드백을 주셔서 감사합니다.\n이용자분의 의견을 반영하여 발전하는 한해가 되겠습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you for your feedback on the HanHae app.\nWe will strive to improve HanHae based on your input."
+          }
+        }
+      }
+    },
+    "한해(HanHae) 앱 피드백 메일입니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is the app(HANHAE) feedback mail."
+          }
+        }
+      }
+    },
+    "해당 월의 목표가 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No goal set for this month."
+          }
+        }
+      }
+    },
+    "확인" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
