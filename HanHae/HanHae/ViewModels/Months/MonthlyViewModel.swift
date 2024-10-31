@@ -56,7 +56,6 @@ final class MonthlyViewModel {
                 dateFormatter.dateFormat = "MMMM"
             }
             
-            
             var dateComponent = DateComponents()
             dateComponent.month = Int(monthData.month)
             let date = Calendar.current.date(from: dateComponent)!
