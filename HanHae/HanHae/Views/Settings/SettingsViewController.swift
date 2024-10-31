@@ -12,18 +12,6 @@ final class SettingsViewController: SettingsBaseViewController {
     
     private let viewModel = SettingsViewModel()
     
-    private lazy var remindAlarmSwitch: UISwitch = {
-        let alarmSwitch = UISwitch()
-        alarmSwitch.onTintColor = .hhAccent
-        alarmSwitch.isOn = viewModel.isReminderOn
-        alarmSwitch.addTarget(
-            self,
-            action: #selector(reminderSwitchToggled),
-            for: .valueChanged
-        )
-        return alarmSwitch
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -75,11 +63,6 @@ final class SettingsViewController: SettingsBaseViewController {
             alert.addAction(UIAlertAction(title: String(localized: "확인"), style: .default))
             present(alert, animated: true, completion: nil)
         }
-    }
-    
-    @objc
-    private func reminderSwitchToggled(_ sender: UISwitch) {
-        viewModel.handleReminderSwitchToggled(sender)
     }
     
 }
@@ -139,12 +122,7 @@ extension SettingsViewController: UITableViewDataSource {
         content.image = viewModel.getOptionImage(for: option)
         content.text = viewModel.getOptionTitle(for: option)
         
-        if option == .reminder {
-            cell.accessoryView = remindAlarmSwitch
-        } else {
-            cell.accessoryType = .disclosureIndicator
-        }
-        
+        cell.accessoryType = .disclosureIndicator
         cell.contentConfiguration = content
         cell.backgroundColor = .hhModalCell
         cell.selectionStyle = .none
