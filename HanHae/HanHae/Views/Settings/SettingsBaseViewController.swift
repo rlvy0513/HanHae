@@ -17,7 +17,7 @@ class SettingsBaseViewController: HHBaseViewController {
     
     lazy var closeSettingsBarButton: UIBarButtonItem = {
         let barBtn = UIBarButtonItem(
-            title: "닫기",
+            title: String(localized: "닫기"),
             style: .plain,
             target: self,
             action: #selector(dismissView)
