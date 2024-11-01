@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let initializer = CoreDataInitializer(context: context)
         
         initializer.initializeDataIfNeeded()
+        
+        UNUserNotificationCenter.current().delegate = self
+        
+        requestNotificationPermission()
+        scheduleMonthlyNotifications()
         
         return true
     }
@@ -82,3 +88,71 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    //MARK: 권한 요청
+    func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("푸시알림 권한 요청 실패: \(error.localizedDescription)")
+            } else if granted {
+                print("푸시알림 권한 요청 성공")
+            } else {
+                print("푸시알림 권한 거부됨")
+            }
+        }
+    }
+    
+    //MARK: 알림 예약
+    func scheduleMonthlyNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        
+        scheduleNotification(day: 1, title: "매월 1일 알림", body: "이번 달의 첫날입니다!")
+        scheduleNotification(day: 15, title: "매월 15일 알림", body: "이번 달의 중간입니다!")
+        
+        if let lastDay = lastDayOfCurrentMonth() {
+            scheduleNotification(day: lastDay, title: "마지막 날 알림", body: "이번 달의 마지막 날입니다!")
+        }
+    }
+    
+    //MARK: 알림 날짜 지정
+    private func scheduleNotification(day: Int, title: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        
+        var dateComponents = DateComponents()
+        dateComponents.day = day
+        dateComponents.hour = 13
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let identifier = "매달 \(day)일마다 알림"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("알림설정 실패: \(error.localizedDescription)")
+            } else {
+                print("알림설정 성공: \(identifier)")
+            }
+        }
+    }
+
+    //MARK: 막날 구하기
+    private func lastDayOfCurrentMonth() -> Int? {
+        let calendar = Calendar.current
+        let date = Date()
+        if let range = calendar.range(of: .day, in: .month, for: date) {
+            return range.last
+        }
+        return nil
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound, .badge])
+    }
+}
