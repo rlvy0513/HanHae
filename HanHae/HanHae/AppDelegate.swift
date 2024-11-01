@@ -11,7 +11,9 @@ import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
+    let notificationCenter = UNUserNotificationCenter.current()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let context = self.persistentContainer.viewContext
@@ -19,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         initializer.initializeDataIfNeeded()
         
-        UNUserNotificationCenter.current().delegate = self
+        notificationCenter.delegate = self
         
         requestNotificationPermission()
         scheduleMonthlyNotifications()
@@ -92,8 +94,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     //MARK: 권한 요청
     func requestNotificationPermission() {
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
                 print("푸시알림 권한 요청 실패: \(error.localizedDescription)")
             } else if granted {
@@ -106,8 +107,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     //MARK: 알림 예약
     func scheduleMonthlyNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.removeAllPendingNotificationRequests()
+        notificationCenter.removeAllPendingNotificationRequests()
         
         scheduleNotification(day: 1, title: "매월 1일 알림", body: "이번 달의 첫날입니다!")
         scheduleNotification(day: 15, title: "매월 15일 알림", body: "이번 달의 중간입니다!")
@@ -133,7 +133,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let identifier = "매달 \(day)일마다 알림"
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         
-        UNUserNotificationCenter.current().add(request) { error in
+        notificationCenter.add(request) { error in
             if let error = error {
                 print("알림설정 실패: \(error.localizedDescription)")
             } else {
