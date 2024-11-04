@@ -62,6 +62,7 @@ final class YearsViewController: HHBaseViewController {
         bottom: 30,
         right: collectionViewSideInset
     )
+    private let collectionViewHeaderViewHeight: CGFloat = 50
     
     private lazy var cellWidth = ((UIScreen.main.bounds.width - (collectionViewSideInset * 2)) - (collectionViewInteritemSpacing * (collectionViewCollumsCount - 1))) / collectionViewCollumsCount
     private lazy var cellHeight = cellWidth
@@ -253,13 +254,13 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func updateNavigationBarTitle() {
-        let centerPoint = CGPoint(
+        let topPoint = CGPoint(
             x: collectionView.bounds.midX,
-            y: collectionView.bounds.midY
+            y: collectionView.bounds.minY + view.safeAreaLayoutGuide.layoutFrame.origin.y + collectionViewHeaderViewHeight
         )
         
-        if let centerIndexPath = collectionView.indexPathForItem(at: centerPoint) {
-            let newSection = centerIndexPath.section
+        if let topIndexPath = collectionView.indexPathForItem(at: topPoint) {
+            let newSection = topIndexPath.section
             
             if newSection != currentSection {
                 currentSection = newSection
@@ -287,7 +288,10 @@ extension YearsViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 50)
+        return CGSize(
+            width: collectionView.frame.width,
+            height: collectionViewHeaderViewHeight
+        )
     }
     
     func collectionView(
