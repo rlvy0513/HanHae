@@ -97,6 +97,20 @@ final class YearsViewController: HHBaseViewController {
         collectionView.reloadItems(at: [selectedItemIndexPath])
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let yPoint = getYPointForSectionHeader(
+            Date.todayYear - 2020,
+            collectionView: collectionView
+        ) {
+            collectionView.contentOffset = CGPoint(
+                x: 0,
+                y: yPoint - view.safeAreaInsets.top
+            )
+        }
+    }
+    
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -276,6 +290,22 @@ final class YearsViewController: HHBaseViewController {
     private func generateHapticFeedback() {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .light, view: view)
         feedbackGenerator.impactOccurred()
+    }
+    
+    private func getYPointForSectionHeader(
+        _ section: Int,
+        collectionView: UICollectionView
+    ) -> CGFloat? {
+        let indexPath = IndexPath(item: 0, section: section)
+        
+        if let attributes = collectionView.layoutAttributesForSupplementaryElement(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            at: indexPath
+        ) {
+            return attributes.frame.origin.y
+        }
+        
+        return nil
     }
     
 }
