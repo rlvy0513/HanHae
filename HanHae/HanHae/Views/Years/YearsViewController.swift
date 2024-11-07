@@ -237,8 +237,6 @@ final class YearsViewController: HHBaseViewController {
         UIView.animate(withDuration: 0.4) {
             self.collectionView.setCollectionViewLayout(newFlowLayout, animated: true)
         }
-        
-        updateNavigationBarTitle()
     }
     
     private func scrollCollectionView(atYear: Int, atMonth: Int) {
@@ -268,22 +266,25 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func updateNavigationBarTitle() {
-        let topPoint = CGPoint(
-            x: collectionView.bounds.midX,
-            y: collectionView.bounds.minY + view.safeAreaLayoutGuide.layoutFrame.origin.y + collectionViewHeaderViewHeight
-        )
+        var sortedIndexPaths = collectionView.indexPathsForVisibleItems.sorted { $0 < $1 }
         
-        if let topIndexPath = collectionView.indexPathForItem(at: topPoint) {
-            let newSection = topIndexPath.section
+        guard !sortedIndexPaths.isEmpty else { return }
+        
+        if isSingleColumn {
+            sortedIndexPaths.removeFirst()
+        } else {
+            sortedIndexPaths.removeFirst(3)
+        }
+        
+        guard let newSection = sortedIndexPaths.first?.section else { return }
+        
+        if newSection != currentSection {
+            currentSection = newSection
             
-            if newSection != currentSection {
-                currentSection = newSection
-                
-                generateHapticFeedback()
-                
-                if isSingleColumn {
-                    title = yearTitle
-                }
+            generateHapticFeedback()
+            
+            if isSingleColumn {
+                title = yearTitle
             }
         }
     }
