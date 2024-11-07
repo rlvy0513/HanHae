@@ -66,7 +66,6 @@ final class SettingsViewModel {
     
     private let userDefaults = UserDefaults.standard
     private let themeKey = "selectedTheme"
-    private let reminderKey = "isReminderOn"
     
     var selectedTheme: Int? {          // 0: 시스템, 1: 라이트, 2: 다크
         get {
@@ -76,20 +75,7 @@ final class SettingsViewModel {
             userDefaults.setValue(newValue, forKey: themeKey)
         }
     }
-    
-    var isReminderOn: Bool {
-        get {
-            return userDefaults.object(forKey: reminderKey) != nil ? userDefaults.bool(forKey: reminderKey) : true
-        }
-        set {
-            userDefaults.set(newValue, forKey: reminderKey)
-        }
-    }
-    
     // MARK: - input
-    func handleReminderSwitchToggled(_ sender: UISwitch) {
-        isReminderOn = sender.isOn
-    }
     
     // MARK: - output
     func getOptionImage(for option: SettingOption) -> UIImage? {
@@ -149,10 +135,8 @@ final class SettingsViewModel {
             
             let detailVC = SettingDetailViewController(viewModel: self)
             viewController.navigationController?.pushViewController(detailVC, animated: true)
-        case .language:
+        case .language, .reminder:
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-        case .reminder:
-            break
         case .feedback:
             guard let settingsVC = viewController as? SettingsViewController else { return }
             settingsVC.presentFeedbackEmail()
