@@ -95,6 +95,10 @@ final class YearsViewController: HHBaseViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = false
         
+        selectedItemIndexPath = .init(
+            row: Date.todayMonth - 1,
+            section: Date.todayYear - 2020
+        )
         collectionView.reloadItems(at: [selectedItemIndexPath])
     }
     
