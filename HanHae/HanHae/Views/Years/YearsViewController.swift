@@ -74,7 +74,10 @@ final class YearsViewController: HHBaseViewController {
         String(localized: "\(String(currentSection + 2020))년")
     }
     
-    private var selectedItemIndexPath = IndexPath()
+    private var selectedItemIndexPath = IndexPath(
+        row: Date.todayMonth - 1,
+        section: Date.todayYear - 2020
+    )
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,10 +98,6 @@ final class YearsViewController: HHBaseViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        selectedItemIndexPath = .init(
-            row: Date.todayMonth - 1,
-            section: Date.todayYear - 2020
-        )
         collectionView.reloadItems(at: [selectedItemIndexPath])
     }
     
