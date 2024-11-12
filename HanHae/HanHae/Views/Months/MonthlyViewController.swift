@@ -65,6 +65,8 @@ class MonthlyViewController: HHBaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         if let navigationBar = navigationController?.navigationBar {
             let navigationBarHeight = navigationBar.frame.height
             let largeTitleHeight = 44.0

@@ -74,7 +74,10 @@ final class YearsViewController: HHBaseViewController {
         String(localized: "\(String(currentSection + 2020))년")
     }
     
-    private var selectedItemIndexPath = IndexPath()
+    private var selectedItemIndexPath = IndexPath(
+        row: Date.todayMonth - 1,
+        section: Date.todayYear - 2020
+    )
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,14 +101,28 @@ final class YearsViewController: HHBaseViewController {
         collectionView.reloadItems(at: [selectedItemIndexPath])
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let yPoint = getYPointForSectionHeader(
+            Date.todayYear - 2020,
+            collectionView: collectionView
+        ) {
+            collectionView.contentOffset = CGPoint(
+                x: 0,
+                y: yPoint
+            )
+        }
+    }
+    
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -223,8 +240,6 @@ final class YearsViewController: HHBaseViewController {
         UIView.animate(withDuration: 0.4) {
             self.collectionView.setCollectionViewLayout(newFlowLayout, animated: true)
         }
-        
-        updateNavigationBarTitle()
     }
     
     private func scrollCollectionView(atYear: Int, atMonth: Int) {
@@ -254,22 +269,19 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func updateNavigationBarTitle() {
-        let topPoint = CGPoint(
-            x: collectionView.bounds.midX,
-            y: collectionView.bounds.minY + view.safeAreaLayoutGuide.layoutFrame.origin.y + collectionViewHeaderViewHeight
-        )
+        let sortedIndexPaths = collectionView.indexPathsForVisibleItems.sorted { $0 < $1 }
         
-        if let topIndexPath = collectionView.indexPathForItem(at: topPoint) {
-            let newSection = topIndexPath.section
+        guard !sortedIndexPaths.isEmpty else { return }
+        
+        guard let newSection = sortedIndexPaths.first?.section else { return }
+        
+        if newSection != currentSection {
+            currentSection = newSection
             
-            if newSection != currentSection {
-                currentSection = newSection
-                
-                generateHapticFeedback()
-                
-                if isSingleColumn {
-                    title = yearTitle
-                }
+            generateHapticFeedback()
+            
+            if isSingleColumn {
+                title = yearTitle
             }
         }
     }
@@ -277,6 +289,22 @@ final class YearsViewController: HHBaseViewController {
     private func generateHapticFeedback() {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: .light, view: view)
         feedbackGenerator.impactOccurred()
+    }
+    
+    private func getYPointForSectionHeader(
+        _ section: Int,
+        collectionView: UICollectionView
+    ) -> CGFloat? {
+        let indexPath = IndexPath(item: 0, section: section)
+        
+        if let attributes = collectionView.layoutAttributesForSupplementaryElement(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            at: indexPath
+        ) {
+            return attributes.frame.origin.y
+        }
+        
+        return nil
     }
     
 }

@@ -19,16 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let settingsVM = SettingsViewModel()
         settingsVM.loadSavedTheme()
         
-        let navigationVC = UINavigationController(rootViewController: YearsViewController())
+        let yearsVC = YearsViewController()
+        let yearsVM = YearsViewModel()
+        let navigationVC = UINavigationController(rootViewController: yearsVC)
         
-        // TODO: - 앱을 실행했을 때, 네비게이션 스택이 하나 쌓인 상태로 앱 실행되는지
-        /*
-        let monthlyTDLView = MonthlyTDLView()
-        
-        DispatchQueue.main.async {
-            navigationVC.pushViewController(monthlyTDLView, animated: false)
-        }
-         */
+        yearsVM.pushMonthlyViewController(
+            yearIndex: Date.todayYear - 2020,
+            monthIndex: Date.todayMonth - 1,
+            vc: yearsVC
+        )
         
         window?.rootViewController = navigationVC
         window?.makeKeyAndVisible()
