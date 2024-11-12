@@ -288,6 +288,13 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
         }
     }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            return false
+        }
+        return true
+    }
+    
     @objc private func handleNoteTextViewTap() {
         if noteTextView.isHidden {
             noteTextView.isHidden = false
