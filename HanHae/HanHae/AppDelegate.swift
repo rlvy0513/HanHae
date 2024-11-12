@@ -91,7 +91,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    
     //MARK: 권한 요청
     func requestNotificationPermission() {
         notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
@@ -108,8 +107,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     //MARK: 알림 예약
     func scheduleMonthlyNotifications() {
         notificationCenter.removeAllPendingNotificationRequests()
-        
-        scheduleNotification(day: 1, title: "매월 1일 알림", body: "이번 달의 첫날입니다!")
+    
         scheduleNotification(day: 15, title: "매월 15일 알림", body: "이번 달의 중간입니다!")
         
         if let lastDay = lastDayOfCurrentMonth() {
@@ -142,17 +140,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
 
-    //MARK: 막날 구하기
+    //MARK: 마지막날 구하기
     private func lastDayOfCurrentMonth() -> Int? {
         let calendar = Calendar.current
         let date = Date()
         if let range = calendar.range(of: .day, in: .month, for: date) {
             return range.last
         }
+        
         return nil
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
         completionHandler([.banner, .sound, .badge])
     }
 }
