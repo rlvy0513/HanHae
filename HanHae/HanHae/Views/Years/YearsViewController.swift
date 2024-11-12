@@ -110,7 +110,7 @@ final class YearsViewController: HHBaseViewController {
         ) {
             collectionView.contentOffset = CGPoint(
                 x: 0,
-                y: yPoint - view.safeAreaInsets.top
+                y: yPoint
             )
         }
     }
@@ -119,10 +119,10 @@ final class YearsViewController: HHBaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -272,12 +272,6 @@ final class YearsViewController: HHBaseViewController {
         var sortedIndexPaths = collectionView.indexPathsForVisibleItems.sorted { $0 < $1 }
         
         guard !sortedIndexPaths.isEmpty else { return }
-        
-        if isSingleColumn {
-            sortedIndexPaths.removeFirst()
-        } else {
-            sortedIndexPaths.removeFirst(3)
-        }
         
         guard let newSection = sortedIndexPaths.first?.section else { return }
         
