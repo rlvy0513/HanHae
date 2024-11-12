@@ -269,7 +269,7 @@ final class YearsViewController: HHBaseViewController {
     }
     
     private func updateNavigationBarTitle() {
-        var sortedIndexPaths = collectionView.indexPathsForVisibleItems.sorted { $0 < $1 }
+        let sortedIndexPaths = collectionView.indexPathsForVisibleItems.sorted { $0 < $1 }
         
         guard !sortedIndexPaths.isEmpty else { return }
         
