@@ -204,6 +204,10 @@ class ToDoListTableViewCell: UITableViewCell, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        if let monthlyViewController = delegate, monthlyViewController.isEditingMode {
+            monthlyViewController.exitEditingMode()
+        }
+        
         if textView == toDoListTextView {
             if textView.text == String(localized: "목표를 입력하세요.") {
                 textView.text = ""

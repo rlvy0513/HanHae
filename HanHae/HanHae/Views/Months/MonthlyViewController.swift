@@ -18,7 +18,7 @@ class MonthlyViewController: HHBaseViewController {
     private var emptyStateLabel: UILabel!
     private var completionLabel: UILabel!
     private var originalContentInset: UIEdgeInsets = .zero
-    private var isEditingMode = false
+    var isEditingMode = false
     private var toolbar: UIToolbar!
     
     init(viewModel: MonthlyViewModel) {
@@ -230,7 +230,7 @@ class MonthlyViewController: HHBaseViewController {
         toolbar.isHidden = true
     }
     
-    @objc private func exitEditingMode() {
+    @objc func exitEditingMode() {
         isEditingMode = false
         tableView.setEditing(false, animated: true)
         viewModel.didTapEditListButton()
@@ -412,6 +412,10 @@ class MonthlyViewController: HHBaseViewController {
         view.endEditing(true)
         updateTableViewLayout()
         viewModel.finishEditing()
+        
+        if isEditingMode {
+            exitEditingMode()
+        }
     }
     
     @objc func updateTableViewLayout() {
