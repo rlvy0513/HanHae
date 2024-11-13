@@ -268,6 +268,13 @@ class DetailViewController: HHBaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            return false
+        }
+        return true
+    }
+    
     private func formattedDate(_ date: Date?) -> String? {
         guard let date = date else { return nil }
         let dateFormatter = DateFormatter()
