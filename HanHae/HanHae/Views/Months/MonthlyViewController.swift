@@ -469,7 +469,6 @@ extension MonthlyViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.backgroundColor = .clear
         tableView.contentInset.bottom = 250
         tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
         
         let mottoVC = MonthlyMottoViewController(viewModel: self.viewModel)
         addChild(mottoVC)
