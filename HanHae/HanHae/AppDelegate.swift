@@ -108,10 +108,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func scheduleMonthlyNotifications() {
         notificationCenter.removeAllPendingNotificationRequests()
     
-        scheduleNotification(day: 15, title: "매월 15일 알림", body: "이번 달의 중간입니다!")
+        scheduleNotification(
+            day: 13,
+            title: String(localized: "이번 달의 절반이 지나가고 있어요."),
+            body: String(localized: "목표를 다시 한번 확인하고, 목표 달성을 위해 힘내보아요!👊")
+        )
         
         if let lastDay = lastDayOfCurrentMonth() {
-            scheduleNotification(day: lastDay, title: "마지막 날 알림", body: "이번 달의 마지막 날입니다!")
+            scheduleNotification(
+                day: lastDay,
+                title: String(localized: "이번 달의 마지막 날이에요."),
+                body: String(localized: "목표를 얼마나 달성했는지 확인해볼까요!👀")
+            )
         }
     }
     
@@ -124,7 +132,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         var dateComponents = DateComponents()
         dateComponents.day = day
-        dateComponents.hour = 13
+        dateComponents.hour = 11
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         

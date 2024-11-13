@@ -227,17 +227,6 @@
         }
       }
     },
-    "목표 %@%% 달성" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ Goal Achieved"
-          }
-        }
-      }
-    },
     "목표 상태 변경하기" : {
       "localizations" : {
         "en" : {
@@ -274,6 +263,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completion Date"
+          }
+        }
+      }
+    },
+    "목표를 다시 한번 확인하고, 목표 달성을 위해 힘내보아요!👊" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let's review our goals and give it our best to achieve them!"
+          }
+        }
+      }
+    },
+    "목표를 얼마나 달성했는지 확인해볼까요!👀" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shall we check how much progress we've made towards our goals?"
           }
         }
       }
@@ -424,6 +433,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Current"
+          }
+        }
+      }
+    },
+    "이번 달의 마지막 날이에요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is the last day of the month."
+          }
+        }
+      }
+    },
+    "이번 달의 절반이 지나가고 있어요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Half of this month is passing by."
           }
         }
       }
