@@ -311,10 +311,9 @@ class MonthlyViewController: HHBaseViewController {
     // MARK: 엠티뷰 관련 메서드
     private func setupEmptyStateView() {
         emptyStateImageView = UIImageView()
-        emptyStateImageView.image = UIImage(systemName: "swift")
+        emptyStateImageView.image = UIImage(named: "EmptyViewImage")
         emptyStateImageView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateImageView.contentMode = .scaleAspectFit
-        emptyStateImageView.tintColor = .hhAccent
         
         emptyStateLabel = UILabel()
         emptyStateLabel.text = String(localized: "아직 이번 달 목표가 없어요!\n새로운 목표를 추가해보세요!")
@@ -328,12 +327,12 @@ class MonthlyViewController: HHBaseViewController {
         view.addSubview(emptyStateLabel)
         
         NSLayoutConstraint.activate([
-            emptyStateImageView.topAnchor.constraint(equalTo: tableView.tableHeaderView!.topAnchor, constant: 250),
+            emptyStateImageView.topAnchor.constraint(equalTo: tableView.tableHeaderView!.topAnchor, constant: 195),
             emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyStateImageView.widthAnchor.constraint(equalToConstant: 100),
-            emptyStateImageView.heightAnchor.constraint(equalToConstant: 100),
+            emptyStateImageView.widthAnchor.constraint(equalToConstant: 220),
+            emptyStateImageView.heightAnchor.constraint(equalToConstant: 220),
             
-            emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: 20),
+            emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: -25),
             emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
