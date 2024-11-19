@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24A348" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="HHMonth" representedClassName="HHMonth" syncable="YES">
+        <attribute name="month" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="monthlyMotto" optional="YES" attributeType="String"/>
+        <relationship name="toDoList" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ToDo" inverseName="month" inverseEntity="ToDo"/>
+        <relationship name="year" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HHYear" inverseName="months" inverseEntity="HHYear"/>
+    </entity>
+    <entity name="HHYear" representedClassName="HHYear" syncable="YES">
+        <attribute name="year" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="months" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="HHMonth" inverseName="year" inverseEntity="HHMonth"/>
+    </entity>
+    <entity name="ToDo" representedClassName="ToDo" syncable="YES">
+        <attribute name="completionDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="isCompleted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="priority" attributeType="Integer 64" defaultValueString="4" usesScalarValueType="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="month" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HHMonth" inverseName="toDoList" inverseEntity="HHMonth"/>
+    </entity>
+</model>
