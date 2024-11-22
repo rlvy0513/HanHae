@@ -111,7 +111,7 @@ class MonthlyViewController: HHBaseViewController {
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = viewModel.getMonthLabelText(for: .monthView)
         navigationController?.navigationBar.largeTitleTextAttributes = [
-            .font: UIFont.hhLargeTitle,
+            .font: UIFont.hhFont(.eliceDigitalBaeumBold, ofSize: 32),
             .foregroundColor: UIColor.hhText
         ]
         
